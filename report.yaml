@@ -1,16 +1,16 @@
 company:
-- name: Amazon
-- logo: http://www.pc-bubble.de/wp-content/uploads/2015/02/amazon1.gif
-how-might-we: How might we utilize commuters to enhance Amazon Deliveries?
+  name: Amazon
+  logo: http://www.pc-bubble.de/wp-content/uploads/2015/02/amazon1.gif
+how_might_we: How might we utilize commuters to enhance Amazon Deliveries?
 
-product-narrative: |
+product_narrative: |
   Amazon has separate retail websites for the United States, the United Kingdom and Ireland, France, Canada, Germany, Italy, Spain, Netherlands, Australia, Brazil, Japan, China, India, and Mexico.
   Amazon also offers international shipping to certain other countries for some of its products.[5] In 2016, Dutch, Polish, and Turkish language
   versions of the German Amazon website were also launched.
 
 team:
-- picture: team_pic.png
-- roster:
+  picture: team_pic.png
+  roster:
   - name: J McLoughlin
     email: j@cornell.edu
   - name: Khoa

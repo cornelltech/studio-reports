@@ -1,25 +1,27 @@
-team_name: The Foundry
-company_name: Amazon
-company_logo: "http://www.pc-bubble.de/wp-content/uploads/2015/02/amazon1.gif"
-product_narrative: >
- Amazon has separate retail websites for the United States,
- the United Kingdom and Ireland, France, Canada, Germany, Italy, Spain,
- Netherlands, Australia, Brazil, Japan, China, India, and Mexico. Amazon
- also offers international shipping to certain other countries for some of its
- products.[5] In 2016, Dutch, Polish, and Turkish language versions of the
- German Amazon website were also launched.
+company:
+- name: Amazon
+- logo: http://www.pc-bubble.de/wp-content/uploads/2015/02/amazon1.gif
+how-might-we: How might we utilize commuters to enhance Amazon Deliveries?
 
-team_names:
-  - J McLoughlin
-  - Leland Rechis
-  - Khoa Ma
-team_picture: "team_picture.jpg"
-team_emails:
-  - j.mclo@cornell.edu
-  - lrechis@cornell.edu
-  - khoama@cornell.edu
+product-narrative: |
+  Amazon has separate retail websites for the United States, the United Kingdom and Ireland, France, Canada, Germany, Italy, Spain, Netherlands, Australia, Brazil, Japan, China, India, and Mexico.
+  Amazon also offers international shipping to certain other countries for some of its products.[5] In 2016, Dutch, Polish, and Turkish language
+  versions of the German Amazon website were also launched.
 
-presentations:
-  - https://drive.google.com/file/d/0BwvkTd1vx8M7b2NUWE9YLUZiQVk/view?usp=sharing
-  - https://drive.google.com/file/d/0BwvkTd1vx8M7TUg3eDI2VUJHdUk/view?usp=sharing
-  - https://drive.google.com/file/d/0BwvkTd1vx8M7X19kWlhQMVAzczA/view?usp=sharing
+team:
+- picture: team_pic.png
+- roster:
+  - name: J McLoughlin
+    email: j@cornell.edu
+  - name: Khoa
+    email: khoa@cornell.edu
+  - name: Leland Rechis
+    email: leland@cornell.edu
+
+assets:
+- title: Sprint 1
+  url: https://drive.google.com/file/d/0BwvkTd1vx8M7b2NUWE9YLUZiQVk/view?usp=sharing
+- title: Sprint 2
+  url: https://drive.google.com/file/d/0BwvkTd1vx8M7TUg3eDI2VUJHdUk/view?usp=sharing
+- title: Sprint 3
+  url: https://drive.google.com/file/d/0BwvkTd1vx8M7X19kWlhQMVAzczA/view?usp=sharing

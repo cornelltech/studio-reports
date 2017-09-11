@@ -32,7 +32,6 @@ ASSETS_KEYS = ['url', 'title']
 class Team:
     def __init__(self, doc):
         self.roster = build_team(doc['team']['roster'])
-        # make_team_map(doc['team']['roster'])
         self.how_might_we = doc['how_might_we']
         self.product_narrative = doc['product_narrative']
         self.company = doc['company']
@@ -47,12 +46,6 @@ def build_team(roster):
     team = []
     for person in roster:
         team.append(Team.Teammate(person['name'], person['email']))
-    return team
-
-def make_team_map(roster):
-    team = {}
-    for person in roster:
-        team[person['name']] = person['email']
     return team
 
 def get_teams():

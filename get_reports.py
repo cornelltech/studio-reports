@@ -1,12 +1,10 @@
 import github
-import flask
 import os
 import requests
 import shutil
 import yaml
 
 from dotenv import load_dotenv
-from flask import Flask, render_template
 from os.path import join, dirname
 
 try:
@@ -33,24 +31,29 @@ ASSETS_KEYS = ['url', 'title']
 
 class Team:
     def __init__(self, doc):
-        self.roster = make_team_map(doc['team']['roster'])
+        self.roster = build_team(doc['team']['roster'])
+        # make_team_map(doc['team']['roster'])
         self.how_might_we = doc['how_might_we']
         self.product_narrative = doc['product_narrative']
         self.company = doc['company']
         self.assets = doc['assets']
+
+    class Teammate:
+        def __init__(self, name, email):
+            self.name = name
+            self.email = email
+
+def build_team(roster):
+    team = []
+    for person in roster:
+        team.append(Team.Teammate(person['name'], person['email']))
+    return team
 
 def make_team_map(roster):
     team = {}
     for person in roster:
         team[person['name']] = person['email']
     return team
-
-app = Flask(__name__)
-
-@app.route('/')
-def report():
-    teams = get_teams()
-    return render_template('full_report.html', teams=teams)
 
 def get_teams():
     teams = []
@@ -73,5 +76,11 @@ def save_team_picture(repo, img_name):
     with open(team_img_file, 'wb') as outfile:
         shutil.copyfileobj(response.raw, outfile)
 
+# def save_company_picture(repo, img_url):
+#     response = requests.get(img_url, stream=True)
+#     company_img_file = repo.name + '-' +
+#     with open(team_img_file, 'wb') as outfile:
+#         shutil.copyfileobj(response.raw, outfile)
+
 if __name__ == '__main__':
-    app.run()
+    print get_teams()

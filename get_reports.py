@@ -67,7 +67,7 @@ def build_assets(assets):
 
 def get_photo_name(repo, img_name):
     team_img_file = repo.name + '-' + img_name
-    return team_img_file
+    return TEAM_PHOTO_DIR + team_img_file
 
 def get_teams():
     teams = []
@@ -87,6 +87,8 @@ def save_team_picture(repo, img_name):
     url = 'https://raw.githubusercontent.com/' + repo.full_name + '/master/' + img_name
     response = requests.get(url, stream=True, auth=(GITHUB_USER, GITHUB_PASSWORD))
     team_img_file = get_photo_name(repo, img_name)
+    if (not os.path.exists(TEAM_PHOTO_DIR)):
+        os.makedirs(TEAM_PHOTO_DIR)
     with open(team_img_file, 'wb') as outfile:
         shutil.copyfileobj(response.raw, outfile)
 

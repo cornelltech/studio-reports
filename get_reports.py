@@ -89,5 +89,4 @@ def create_index_page():
 
 
 if __name__ == '__main__':
-    with open(OUTPUT_PATH, 'w') as outfile:
-        outfile.write(create_index_page())
+    print create_index_page()

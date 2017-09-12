@@ -1,10 +1,12 @@
 import github
+import jinja2
 import os
 import requests
 import shutil
 import yaml
 
 from dotenv import load_dotenv
+from jinja2 import Environment, PackageLoader, select_autoescape
 from os.path import join, dirname
 
 try:
@@ -20,6 +22,8 @@ TEAMS_FILE = "team-repos"
 
 REPO_NAME = "cornelltech/studio-reports"
 FILE_NAME = "report.yaml"
+
+TEAM_PHOTO_DIR = "team_photos/"
 
 TOP_LEVEL_KEYS = ['product_narrative', 'company', 'how_might_we',
                     'assets', 'team']
@@ -76,4 +80,10 @@ def save_team_picture(repo, img_name):
 #         shutil.copyfileobj(response.raw, outfile)
 
 if __name__ == '__main__':
-    print get_teams()
+    teams = get_teams()
+    env = Environment(loader=PackageLoader('get_reports', 'templates'),
+                        autoescape=select_autoescape(['html', 'xml'])
+    )
+    template = env.get_template('buildboard.html')
+    with open('index.html', 'w') as outfile:
+        outfile.write(template.render(teams=teams))

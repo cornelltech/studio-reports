@@ -23,6 +23,9 @@ TEAMS_FILE = "team-repos"
 REPO_NAME = "cornelltech/studio-reports"
 FILE_NAME = "report.yaml"
 
+OUTPUT_PATH = "/home/ubuntu/www/mysite/index.html"
+# OUTPUT_PATH = "index.html"
+
 TEAM_PHOTO_DIR = "team_photos/"
 
 TOP_LEVEL_KEYS = ['product_narrative', 'company', 'how_might_we',
@@ -85,5 +88,5 @@ if __name__ == '__main__':
                         autoescape=select_autoescape(['html', 'xml'])
     )
     template = env.get_template('buildboard.html')
-    with open('index.html', 'w') as outfile:
+    with open(OUTPUT_PATH, 'w') as outfile:
         outfile.write(template.render(teams=teams))

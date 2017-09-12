@@ -20,11 +20,8 @@ GITHUB_PASSWORD = os.environ.get('GITHUB_PASSWORD', None)
 
 TEAMS_FILE = "team-repos"
 
-REPO_NAME = "cornelltech/studio-reports"
 FILE_NAME = "report.yaml"
-
-OUTPUT_PATH = "/home/ubuntu/www/mysite/index.html"
-# OUTPUT_PATH = "index.html"
+OUTPUT_PATH = "index.html"
 
 TEAM_PHOTO_DIR = "team_photos/"
 
@@ -61,7 +58,7 @@ def get_teams():
     with open(TEAMS_FILE) as rd:
         team_repos = [repo.strip() for repo in rd.readlines()]
     for team in team_repos:
-        repo = g.get_repo(REPO_NAME)
+        repo = g.get_repo(team)
         yaml_file = repo.get_file_contents(FILE_NAME)
         doc = yaml.load(yaml_file.decoded_content)
         save_team_picture(repo, doc['team']['picture'])
@@ -82,11 +79,15 @@ def save_team_picture(repo, img_name):
 #     with open(team_img_file, 'wb') as outfile:
 #         shutil.copyfileobj(response.raw, outfile)
 
-if __name__ == '__main__':
+def create_index_page():
     teams = get_teams()
     env = Environment(loader=PackageLoader('get_reports', 'templates'),
                         autoescape=select_autoescape(['html', 'xml'])
     )
     template = env.get_template('buildboard.html')
+    return template.render(teams=teams)
+
+
+if __name__ == '__main__':
     with open(OUTPUT_PATH, 'w') as outfile:
-        outfile.write(template.render(teams=teams))
+        outfile.write(create_index_page())

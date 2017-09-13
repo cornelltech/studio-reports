@@ -18,12 +18,20 @@ except Exception as e:
 GITHUB_USER = os.environ.get('GITHUB_USER', None)
 GITHUB_PASSWORD = os.environ.get('GITHUB_PASSWORD', None)
 
-TEAMS_FILE = "team-repos"
+TEAMS_FILE = "create-team-repos"
 
+ORG_NAME = "ct-product-challenge-2017"
 FILE_NAME = "report.yaml"
 OUTPUT_PATH = "index.html"
 
 TEAM_PHOTO_DIR = "team_photos/"
+
+# TEAMS_FILE = "/home/ubuntu/studio-reports/create-team-repos"
+#
+# FILE_NAME = "report.yaml"
+# OUTPUT_PATH = "index.html"
+#
+# TEAM_PHOTO_DIR = "/home/ubuntu/www/mysite/team_photos/"
 
 TOP_LEVEL_KEYS = ['product_narrative', 'company', 'how_might_we',
                     'assets', 'team']
@@ -75,12 +83,16 @@ def get_teams():
     with open(TEAMS_FILE) as rd:
         team_repos = [repo.strip() for repo in rd.readlines()]
     for team in team_repos:
-        repo = g.get_repo(team)
-        yaml_file = repo.get_file_contents(FILE_NAME)
-        doc = yaml.load(yaml_file.decoded_content)
-        save_team_picture(repo, doc['team']['picture'])
-        # teams.append(doc)
-        teams.append(Team(doc, repo))
+        try:
+            team_name = ORG_NAME + "/" + team
+            repo = g.get_repo(team_name)
+            yaml_file = repo.get_file_contents(FILE_NAME)
+            doc = yaml.load(yaml_file.decoded_content)
+            save_team_picture(repo, doc['team']['picture'])
+            # teams.append(doc)
+            teams.append(Team(doc, repo))
+        except:
+            print 'repo', team, 'does not seem to contain report.yaml'
     return teams
 
 def save_team_picture(repo, img_name):
@@ -105,7 +117,6 @@ def create_index_page():
     )
     template = env.get_template('buildboard.html')
     return template.render(teams=teams)
-
 
 if __name__ == '__main__':
     print create_index_page()

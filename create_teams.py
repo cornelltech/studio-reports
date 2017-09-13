@@ -18,7 +18,7 @@ GITHUB_ACCESS_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', None)
 STUDENTS_TO_TEAMS = "teams2students.txt"
 
 
-TEAMS_FILE = "team-repos"
+TEAMS_FILE = "create-team-repos"
 ORG_NAME = "ct-product-challenge-2017"
 STUDIO_TEAM_ID = 2477099
 
@@ -29,11 +29,19 @@ def create_student_team(g, team_name, student_usernames):
     return team
     # try / catch for typos --> print to logs
 
+def create_empty_team_repo(g, repo_name):
+    repo = g.get_organization(ORG_NAME).create_repo(repo_name, private=True,
+            auto_init=True)
+    studio_team = g.get_organization(ORG_NAME).get_team(id=STUDIO_TEAM_ID)
+    studio_team.add_to_repos(g.get_organization(ORG_NAME).get_repo(repo_name))
+    return repo
+
+
 def create_team_repo(g, repo_name, student_team):
     repo = g.get_organization(ORG_NAME).create_repo(repo_name,
         team_id=student_team, private=True, auto_init=True)
     studio_team = g.get_organization(ORG_NAME).get_team(id=STUDIO_TEAM_ID)
-    studio_team.add_to_repos(g.get_organization(ORG_NAME).get_repo(repo_name))
+    studio_team.add_to_repos(g.get_organization(ORG_NAME).get_repo(repo_name), permission="admin")
     return repo
 
 def create_teams_map():
@@ -55,12 +63,39 @@ def create_teams_map():
             teams[team] = [student]
     return teams
 
+def create_all_teams(g):
+    with open(TEAMS_FILE) as rd:
+        team_repos = [repo.strip() for repo in rd.readlines()]
+    print 'Creating team repos...'
+    for team in team_repos:
+        create_empty_team_repo(g, team)
+        print team
+
+def populate_all_teams(g):
+    teams = create_teams_map()
+    for team in teams.keys():
+        repo_name = ORG_NAME + "/" + team
+        repo = g.get_repo(repo_name)
+        for member in teams[team]:
+            repo.add_to_collaborators(member)
+            print 'adding', member, 'to', repo.name
+
 if __name__ == '__main__':
+    g = github.Github(GITHUB_ACCESS_TOKEN)
+    populate_all_teams(g)
+    # ts = create_teams_map()
+    # for t in ts.keys():
+    #     repo_name = ORG_NAME + "/" + t
+    #     print repo_name
+    #     for member in ts[t]:
+    #         print member
+    #     print
     # g = github.Github(GITHUB_ACCESS_TOKEN)
+
     # students = ['elanid', 'sahuguet']
     # t = create_student_team(g, 'example-product-team', students)
     # repo = create_team_repo(g, 'example-product-team', t)
 
-    teams = create_teams_map()
-    for team in teams.keys():
-        print team
+    # teams = create_teams_map()
+    # for team in teams.keys():
+    #     print team

@@ -24,21 +24,22 @@
     <h1>Product Studio 2017 BuildBoard</h1>
     <ol>
     {% for team in teams %}
-
+      {{team['company']['name']}} {{team['how_might_we']}}
     <h3>
-    <li> <img src= {{ team.company_logo_file }} alt="Team Photo" style="width:200px;">
+    <li> <img src= {{ team['company']['logo'] }} alt={{ team['company']['name'] }} style="width:200px;">
       <br>
-      {{ team.company }} | {{ team.how_might_we }} </h3>
-    <p> {{ team.product_narrative }} </p>
+      {{ team['how_might_we'] }} </h3>
+    <p> {{ team['product_narrative'] }} </p>
     <ol>
-      {% for asset in team.assets %}
-      <li> <a href=" {{ asset.url }} "> {{ asset.title }} </a> </li>
+      {% for asset in team['assets'] %}
+      <li> <a href=" {{ asset.url }} "> {{ asset['title'] }} </a> </li>
       {% endfor %}
     </ol>
-    <img src= {{ team.team_photo_file }} alt="Team Photo" style="width:304px;height:228px;">
+    <img src= {{ team['team']['picture'] }} alt="Team Photo" style="width:304px;height:228px;">
+    <h4> {{ team.repo }}: </h4>
     <ul>
-      {% for person in team.roster %}
-      <li> {{ person.name }} ({{ person.email }})</li>
+      {% for person in team['team']['roster'] %}
+      <li> {{ person['name'] }} ({{ person['email'] }})</li>
       {% endfor %}
     </ul> </li>
     {% endfor %}

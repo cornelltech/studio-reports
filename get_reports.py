@@ -30,52 +30,6 @@ COMPANY_LOGO_DIR = "logos/"
 OUTPUT_DIR = "www/mysite/"
 OUTPUT_FILE = "index.html"
 
-TOP_LEVEL_KEYS = ['product_narrative', 'company', 'how_might_we',
-                    'assets', 'team']
-
-COMPANY_KEYS = ['logo', 'name']
-TEAM_KEYS = ['picture', 'roster']
-TEAM_MEMBER_KEYS = ['name', 'email']
-ASSETS_KEYS = ['url', 'title']
-
-class Team:
-    def __init__(self, repo, doc=None):
-        if doc:
-            self.roster = build_team(doc['team']['roster'])
-            self.how_might_we = doc['how_might_we']
-            self.product_narrative = doc['product_narrative']
-            self.company = doc['company']['name']
-            self.company_logo_file = COMPANY_LOGO_DIR + \
-                                get_photo_name(repo, doc['company']['logo'])
-            save_picture(repo, COMPANY_LOGO_DIR, doc['company']['logo'])
-            self.assets = build_assets(doc['assets'])
-            self.team_photo_file = TEAM_PHOTO_DIR + \
-                                get_photo_name(repo, doc['team']['picture'])
-            save_picture(repo, TEAM_PHOTO_DIR, doc['team']['picture'])
-        self.repo = repo.name
-
-    class Teammate:
-        def __init__(self, name, email):
-            self.name = name
-            self.email = email
-
-    class Asset:
-        def __init__(self, title, url):
-            self.title = title
-            self.url = url
-
-def build_team(roster):
-    team = []
-    for person in roster:
-        team.append(Team.Teammate(person['name'], person['email']))
-    return team
-
-def build_assets(assets):
-    list_of_assets = []
-    for asset in assets:
-        list_of_assets.append(Team.Asset(asset['title'], asset['url']))
-    return list_of_assets
-
 def get_photo_name(repo, img_name):
     team_img_file = repo.name + '-' + img_name
     return team_img_file
@@ -91,11 +45,18 @@ def get_teams():
             repo = g.get_repo(team_name)
             yaml_file = repo.get_file_contents(FILE_NAME)
             doc = yaml.safe_load(yaml_file.decoded_content)
-            teams.append(Team(repo, doc))
-        except KeyError:
-            teams.append(Team(repo))
-        except:
-            print 'repo', team, 'does not seem to contain report.yaml'
+            try:
+                doc['company']['logo'] = save_picture(repo, COMPANY_LOGO_DIR,
+                                                        doc['company']['logo'])
+                doc['team']['picture'] = save_picture(repo, TEAM_PHOTO_DIR,
+                                                        doc['team']['picture'])
+            except KeyError, e:
+                print 'repo', team, 'missing photo:', str(e)
+            teams.append(doc)
+        except yaml.parser.ParserError, e:
+            print 'repo', team, 'contains bad report.yaml file', str(e)
+        except Exception, e:
+            print 'repo', team, 'does not contain report.yaml', str(e)
     return teams
 
 def save_picture(repo, target_dir_name, img_name):
@@ -108,6 +69,7 @@ def save_picture(repo, target_dir_name, img_name):
     output_file_location = output_location + img_file_name
     with open(output_file_location, 'wb') as outfile:
         shutil.copyfileobj(response.raw, outfile)
+    return target_dir_name + img_file_name
 
 def create_index_page():
     teams = get_teams()

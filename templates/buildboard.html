@@ -24,7 +24,11 @@
     <h1>Product Studio 2017 BuildBoard</h1>
     <ol>
     {% for team in teams %}
-    <h3> <li> {{ team.company }} | {{ team.how_might_we }} </h3>
+
+    <h3>
+    <li> <img src= {{ team.company_logo_file }} alt="Team Photo" style="width:200px;">
+      <br>
+      {{ team.company }} | {{ team.how_might_we }} </h3>
     <p> {{ team.product_narrative }} </p>
     <ol>
       {% for asset in team.assets %}

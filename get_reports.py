@@ -22,16 +22,12 @@ TEAMS_FILE = "create-team-repos"
 
 ORG_NAME = "ct-product-challenge-2017"
 FILE_NAME = "report.yaml"
-OUTPUT_PATH = "index.html"
 
 TEAM_PHOTO_DIR = "team_photos/"
+COMPANY_LOGO_DIR = "logos/"
 
-# TEAMS_FILE = "/home/ubuntu/studio-reports/create-team-repos"
-#
-# FILE_NAME = "report.yaml"
-# OUTPUT_PATH = "index.html"
-#
-# TEAM_PHOTO_DIR = "/home/ubuntu/www/mysite/team_photos/"
+OUTPUT_DIR = "www/mysite/"
+OUTPUT_FILE = "index.html"
 
 TOP_LEVEL_KEYS = ['product_narrative', 'company', 'how_might_we',
                     'assets', 'team']
@@ -47,9 +43,11 @@ class Team:
         self.how_might_we = doc['how_might_we']
         self.product_narrative = doc['product_narrative']
         self.company = doc['company']['name']
-        self.company_logo = doc['company']['logo']
+        self.company_logo_file = COMPANY_LOGO_DIR + \
+                            get_photo_name(repo, doc['company']['logo'])
         self.assets = build_assets(doc['assets'])
-        self.team_photo_file = get_photo_name(repo, doc['team']['picture'])
+        self.team_photo_file = TEAM_PHOTO_DIR + \
+                            get_photo_name(repo, doc['team']['picture'])
 
     class Teammate:
         def __init__(self, name, email):
@@ -75,7 +73,7 @@ def build_assets(assets):
 
 def get_photo_name(repo, img_name):
     team_img_file = repo.name + '-' + img_name
-    return TEAM_PHOTO_DIR + team_img_file
+    return team_img_file
 
 def get_teams():
     teams = []
@@ -88,27 +86,23 @@ def get_teams():
             repo = g.get_repo(team_name)
             yaml_file = repo.get_file_contents(FILE_NAME)
             doc = yaml.load(yaml_file.decoded_content)
-            save_team_picture(repo, doc['team']['picture'])
-            # teams.append(doc)
+            save_picture(repo, TEAM_PHOTO_DIR, doc['team']['picture'])
+            save_picture(repo, COMPANY_LOGO_DIR, doc['company']['logo'])
             teams.append(Team(doc, repo))
         except:
             print 'repo', team, 'does not seem to contain report.yaml'
     return teams
 
-def save_team_picture(repo, img_name):
+def save_picture(repo, target_dir_name, img_name):
     url = 'https://raw.githubusercontent.com/' + repo.full_name + '/master/' + img_name
     response = requests.get(url, stream=True, auth=(GITHUB_USER, GITHUB_PASSWORD))
-    team_img_file = get_photo_name(repo, img_name)
-    if (not os.path.exists(TEAM_PHOTO_DIR)):
-        os.makedirs(TEAM_PHOTO_DIR)
-    with open(team_img_file, 'wb') as outfile:
+    output_location = OUTPUT_DIR + target_dir_name
+    if (not os.path.exists(output_location)):
+        os.makedirs(output_location)
+    img_file_name = get_photo_name(repo, img_name)
+    output_file_location = output_location + img_file_name
+    with open(output_file_location, 'wb') as outfile:
         shutil.copyfileobj(response.raw, outfile)
-
-# def save_company_picture(repo, img_url):
-#     response = requests.get(img_url, stream=True)
-#     company_img_file = repo.name + '-' +
-#     with open(team_img_file, 'wb') as outfile:
-#         shutil.copyfileobj(response.raw, outfile)
 
 def create_index_page():
     teams = get_teams()

@@ -18,7 +18,7 @@ except Exception as e:
 GITHUB_USER = os.environ.get('GITHUB_USER', None)
 GITHUB_PASSWORD = os.environ.get('GITHUB_PASSWORD', None)
 
-TEAMS_FILE = "create-team-repos"
+TEAMS_FILE = "/home/ubuntu/studio-reports/create-team-repos"
 
 ORG_NAME = "ct-product-challenge-2017"
 FILE_NAME = "report.yaml"

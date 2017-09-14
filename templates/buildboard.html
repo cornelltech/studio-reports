@@ -36,7 +36,7 @@
       {% endfor %}
     </ol>
     <img src= {{ team['team']['picture'] }} alt="Team Photo" style="width:304px;height:228px;">
-    <h4> {{ team.repo }}: </h4>
+    <h4> {{ team['repo'] }}: </h4>
     <ul>
       {% for person in team['team']['roster'] %}
       <li> {{ person['name'] }} ({{ person['email'] }})</li>

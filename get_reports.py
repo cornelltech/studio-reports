@@ -46,6 +46,7 @@ def get_teams():
             repo = g.get_repo(team_name)
             yaml_file = repo.get_file_contents(FILE_NAME)
             doc = yaml.safe_load(yaml_file.decoded_content)
+            doc['repo'] = repo.name
             try:
                 doc['company']['logo'] = save_picture(repo, COMPANY_LOGO_DIR,
                                                         doc['company']['logo'])

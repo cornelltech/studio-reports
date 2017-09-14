@@ -45,9 +45,11 @@ class Team:
         self.company = doc['company']['name']
         self.company_logo_file = COMPANY_LOGO_DIR + \
                             get_photo_name(repo, doc['company']['logo'])
+        save_picture(repo, COMPANY_LOGO_DIR, doc['company']['logo'])
         self.assets = build_assets(doc['assets'])
         self.team_photo_file = TEAM_PHOTO_DIR + \
                             get_photo_name(repo, doc['team']['picture'])
+        save_picture(repo, TEAM_PHOTO_DIR, doc['team']['picture'])
 
     class Teammate:
         def __init__(self, name, email):
@@ -85,9 +87,7 @@ def get_teams():
             team_name = ORG_NAME + "/" + team
             repo = g.get_repo(team_name)
             yaml_file = repo.get_file_contents(FILE_NAME)
-            doc = yaml.load(yaml_file.decoded_content)
-            save_picture(repo, TEAM_PHOTO_DIR, doc['team']['picture'])
-            save_picture(repo, COMPANY_LOGO_DIR, doc['company']['logo'])
+            doc = yaml.safe_load(yaml_file.decoded_content)
             teams.append(Team(doc, repo))
         except:
             print 'repo', team, 'does not seem to contain report.yaml'
@@ -104,11 +104,16 @@ def save_picture(repo, target_dir_name, img_name):
     with open(output_file_location, 'wb') as outfile:
         shutil.copyfileobj(response.raw, outfile)
 
+# def get_from_doc(doc, key):
+#     if doc.has_key(key):
+#         return doc[key]
+#     else:
+#         return None
+
 def create_index_page():
     teams = get_teams()
     env = Environment(loader=PackageLoader('get_reports', 'templates'),
-                        autoescape=select_autoescape(['html', 'xml'])
-    )
+                        autoescape=select_autoescape(['html', 'xml']))
     template = env.get_template('buildboard.html')
     return template.render(teams=teams)
 

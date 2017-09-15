@@ -18,7 +18,7 @@ except Exception as e:
 GITHUB_USER = os.environ.get('GITHUB_USER', None)
 GITHUB_PASSWORD = os.environ.get('GITHUB_PASSWORD', None)
 
-TEAMS_FILE = "/home/ubuntu/studio-reports/create-team-repos"
+TEAMS_FILE = "/home/ubuntu/studio-reports/teams"
 
 ORG_NAME = "ct-product-challenge-2017"
 # TEAMS_FILE = "testing-only-teams"
@@ -31,16 +31,28 @@ COMPANY_LOGO_DIR = "logos/"
 OUTPUT_DIR = "www/mysite/"
 OUTPUT_FILE = "index.html"
 
+SECTIONS = ['S1', 'S2', 'S3', 'S4']
+
 def get_photo_name(repo, img_name):
     team_img_file = repo.name + '-' + img_name
     return team_img_file
 
-def get_teams():
-    teams = []
-    g = github.Github(GITHUB_USER, GITHUB_PASSWORD)
+def get_sections():
+    sections = {}
+    for section in SECTIONS:
+        sections[section] = []
     with open(TEAMS_FILE) as rd:
         team_repos = [repo.strip() for repo in rd.readlines()]
-    for team in team_repos:
+        for repo in team_repos:
+            team = repo.split('\t')
+            section = team[0]
+            sections[section].append(team[3])
+    return sections
+
+def get_teams(section):
+    teams = []
+    g = github.Github(GITHUB_USER, GITHUB_PASSWORD)
+    for team in section:
         try:
             team_name = ORG_NAME + "/" + team
             repo = g.get_repo(team_name)
@@ -74,11 +86,14 @@ def save_picture(repo, target_dir_name, img_name):
     return target_dir_name + img_file_name
 
 def create_index_page():
-    teams = get_teams()
+    sections = get_sections()
+    for section in sections:
+        teams = get_teams(sections[section])
+        sections[section] = teams
     env = Environment(loader=PackageLoader('get_reports', 'templates'),
                         autoescape=select_autoescape(['html', 'xml']))
     template = env.get_template('buildboard.html')
-    return template.render(teams=teams)
+    return template.render(sections=sections)
 
 if __name__ == '__main__':
     print create_index_page()

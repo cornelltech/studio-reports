@@ -22,28 +22,58 @@
 
     <div class="starter-template">
     <h1>Product Studio 2017 BuildBoard</h1>
-    <ol>
-    {% for team in teams %}
-      {{team['company']['name']}} {{team['how_might_we']}}
-    <h3>
-    <li> <img src= {{ team['company']['logo'] }} alt={{ team['company']['name'] }} style="width:200px;">
-      <br>
-      {{ team['how_might_we'] }} </h3>
-    <p> {{ team['product_narrative'] }} </p>
-    <ol>
-      {% for asset in team['assets'] %}
-      <li> <a href=" {{ asset.url }} "> {{ asset['title'] }} </a> </li>
+    <div class="toc">
+      <p>Section 1</p>
+        <ol>
+        {% for team in sections['S1']%}
+          <li> <a href="#{{ team['repo'] }}"> {{ team['repo'] }} </a>
+        {% endfor %}
+        </ol>
+      <p>Section 2</p>
+      <ol>
+      {% for team in sections['S2']%}
+        <li> <a href="#{{ team['repo'] }}"> {{ team['repo'] }} </a>
+      {% endfor %}
+      </ol>
+      <p>Section 3</p>
+      <ol>
+      {% for team in sections['S3']%}
+        <li> <a href="#{{ team['repo'] }}"> {{ team['repo'] }} </a>
+      {% endfor %}
+      </ol>
+      <p>Section 4</p>
+      <ol>
+      {% for team in sections['S4']%}
+        <li> <a href="#{{ team['repo'] }}"> {{ team['repo'] }} </a>
+      {% endfor %}
+      </ol>
+    </div> <!-- ./toc -->
+    <div class="teams-display">
+      <ol>
+        {% for section in sections %}
+          {% set teams = sections[section] %}
+          {% for team in teams %}
+          <h3>
+          <li> <a name="{{ team['repo'] }}"><img src= {{ team['company']['logo'] }} alt={{ team['company']['name'] }} style="width:200px;"></a>
+            <br>
+            {{ team['how_might_we'] }} </h3>
+          <p> {{ team['product_narrative'] }} </p>
+          <ol>
+            {% for asset in team['assets'] %}
+            <li> <a href=" {{ asset.url }} "> {{ asset['title'] }} </a> </li>
+            {% endfor %}
+          </ol>
+          <img src= {{ team['team']['picture'] }} alt="Team Photo" style="width:304px;height:228px;">
+          <h4> {{ team['repo'] }}: </h4>
+          <ul>
+            {% for person in team['team']['roster'] %}
+            <li> {{ person['name'] }} ({{ person['email'] }})</li>
+            {% endfor %}
+          </ul> </li>
+          {% endfor %}
       {% endfor %}
     </ol>
-    <img src= {{ team['team']['picture'] }} alt="Team Photo" style="width:304px;height:228px;">
-    <h4> {{ team['repo'] }}: </h4>
-    <ul>
-      {% for person in team['team']['roster'] %}
-      <li> {{ person['name'] }} ({{ person['email'] }})</li>
-      {% endfor %}
-    </ul> </li>
-    {% endfor %}
-    </ol
+  </div><!-- /.teams-display -->
   </div>
 
 </div><!-- /.container -->

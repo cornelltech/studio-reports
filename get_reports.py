@@ -15,8 +15,7 @@ try:
 except Exception as e:
     print "\nMissing .env file\n"
 
-GITHUB_USER = os.environ.get('GITHUB_USER', None)
-GITHUB_PASSWORD = os.environ.get('GITHUB_PASSWORD', None)
+GITHUB_ACCESS_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', None)
 
 TEAMS_FILE = "/home/ubuntu/studio-reports/teams"
 
@@ -51,7 +50,7 @@ def get_sections():
 
 def get_teams(section):
     teams = []
-    g = github.Github(GITHUB_USER, GITHUB_PASSWORD)
+    g = github.Github(GITHUB_ACCESS_TOKEN)
     for team in section:
         try:
             team_name = ORG_NAME + "/" + team
@@ -75,7 +74,8 @@ def get_teams(section):
 
 def save_picture(repo, target_dir_name, img_name):
     url = 'https://raw.githubusercontent.com/' + repo.full_name + '/master/' + img_name
-    response = requests.get(url, stream=True, auth=(GITHUB_USER, GITHUB_PASSWORD))
+    access_token = 'access_token ' + GITHUB_ACCESS_TOKEN
+    response = requests.get(url, stream=True, headers={'Authorization': access_token})
     output_location = OUTPUT_DIR + target_dir_name
     if (not os.path.exists(output_location)):
         os.makedirs(output_location)

@@ -53,6 +53,7 @@ def get_teams(section):
     teams = []
     g = github.Github(GITHUB_USER, GITHUB_PASSWORD)
     for team in section:
+	print 'getting repo for', team, '......'
         try:
             team_name = ORG_NAME + "/" + team
             repo = g.get_repo(team_name)

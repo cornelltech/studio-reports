@@ -28,21 +28,52 @@ if GITHUB_USER is None or  GITHUB_PASSWORD is None:
 HEADERS = {'Accept': 'application/vnd.github.inertia-preview+json'}
 GITHUB_API = 'https://api.github.com'
 
+TEAM_BOARD = 'Team Product Challenge Studio Board'
+BOARD_BLURB = 'This is where you keep track of your Todo, Doing and Done tasks.'
+
 def add_project_to_repo(repo_name):
     repo = {'owner': 'ct-product-challenge-2017', 'repo': repo_name}
     url = GITHUB_API + '/repos/%(owner)s/%(repo)s/projects' % repo
     logging.info('Creating new board for %s' % url)
 
-    payload = json.dumps({ 'name': 'Team Project Board', 'body': 'This is where you keep track of your Todo, Doing and Done tasks.' })
+    payload = json.dumps({ 'name': TEAM_BOARD, 'body': BOARD_BLURB })
+    response = requests.request('POST', url, headers=HEADERS,
+                                data=payload, auth=(GITHUB_USER, GITHUB_PASSWORD))
+    return (response.status_code, response.json())
+
+
+def add_card_to_column(column_id):
+    url = GITHUB_API + '/projects/columns/%(column_id)d/cards' % {'column_id': column_id}
+    logging.info('Creating new card for %s' % url)
+    payload = json.dumps({ 'note': 'Update your report.yaml file.'})
     response = requests.request('POST', url, headers=HEADERS,
                                 data=payload, auth=(GITHUB_USER, GITHUB_PASSWORD))
     if response.status_code != 201:
-        logging.error('Creation not successful.')
+        logging.error('Card creation failed.')
     else:
-        logging.info('Creation successful.')
-    return response.json()
+        logging.info('Card created successfully.') 
+
+def add_columns_to_project(project_id):
+    url = GITHUB_API + '/projects/%(project_id)d/columns' % {'project_id': project_id}
+    logging.info('Creating new column for %s' % url)
+    for col in ['Todo', 'Doing', 'Done']:
+        payload = json.dumps({ 'name': col})
+        response = requests.request('POST', url, headers=HEADERS,
+                                data=payload, auth=(GITHUB_USER, GITHUB_PASSWORD))
+        if response.status_code != 201:
+            logging.error('Column creation not successful.')
+        else:
+            logging.info('Column creation successful.')
+            column_id = int(response.json()['id'])
+            if col == 'Todo':
+                add_card_to_column(column_id)
 
 if __name__ == '__main__':
-    repo_name = 'example-product-team'
-    response_as_json = add_project_to_repo(repo_name)
-    print(json.dumps(response_as_json, indent=2))
+    for repo_name in ['example-product-team']:
+        (code, response_as_json) = add_project_to_repo(repo_name)
+        if code != 201:
+            logging.error('Project creation not successful for %s.' % repo_name)
+            continue
+        logging.info('Project reation successful for %s.' % repo_name)
+        project_id = int(response_as_json['id'])
+        add_columns_to_project(project_id)

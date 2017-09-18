@@ -77,13 +77,15 @@ each team in [teams]:
             <li> <a href=" {{ asset.url }} "> {{ asset['title'] }} </a> </li>
             {% endfor %}
           </ol>
-          <img src= {{ team['team']['picture'] }} alt="Team Photo" style="width:304px;height:228px;">
           <h4> {{ team['repo'] }}: </h4>
-          <ul>
-            {% for person in team['team']['roster'] %}
-            <li> {{ person['name'] }} ({{ person['email'] }})</li>
-            {% endfor %}
-          </ul> </li>
+          {% if team['team'] is defined %}
+            <img src= {{ team['team']['picture'] }} alt="Team Photo" style="width:304px;height:228px;">
+            <ul>
+              {% for person in team['team']['roster'] %}
+              <li> {{ person['name'] }} ({{ person['email'] }})</li>
+              {% endfor %}
+            </ul> </li>
+          {% endif %}
           {% endfor %}
       {% endfor %}
     </ol>

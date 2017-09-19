@@ -16,25 +16,39 @@ except Exception as e:
     print "\nMissing .env file\n"
 
 GITHUB_ACCESS_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', None)
+TEAMS_FILE = "teams"
 
-TEAMS_FILE = "/home/ubuntu/studio-reports/teams"
+# output paths
+OUTPUT_DIR = "www/mysite"
+# OUTPUT_DIR = "output"
+OUTPUT_TEAM_PHOTOS = "team_photos"
+# % OUTPUT_DIR
+OUTPUT_COMPANY_LOGOS = "logos"
+ # % OUTPUT_DIR
+OUTPUT_INDEX = "%s/index.html" % OUTPUT_DIR
 
 ORG_NAME = "ct-product-challenge-2017"
 # TEAMS_FILE = "testing-only-teams"
 # ORG_NAME = "cornelltech"
 FILE_NAME = "report.yaml"
 
-TEAM_PHOTO_DIR = "team_photos/"
+TEAM_PHOTO_DIR = "team_photos"
 COMPANY_LOGO_DIR = "logos/"
 
-OUTPUT_DIR = "www/mysite/"
+# OUTPUT_DIR = "www/mysite/"
 OUTPUT_FILE = "index.html"
 
 SECTIONS = ['S1', 'S2', 'S3', 'S4']
 
-def get_photo_name(repo, img_name):
-    team_img_file = repo.name + '-' + img_name
-    return team_img_file
+
+def create_output_directories():
+    if (not os.path.exists(OUTPUT_DIR)):
+        os.makedirs(OUTPUT_DIR)
+    if (not os.path.exists(OUTPUT_TEAM_PHOTOS)):
+        os.makedirs("%s/%s" % (OUTPUT_DIR, OUTPUT_TEAM_PHOTOS))
+    if (not os.path.exists(OUTPUT_COMPANY_LOGOS)):
+        os.makedirs("%s/%s" % (OUTPUT_DIR, OUTPUT_COMPANY_LOGOS))
+
 
 def get_sections():
     sections = {}
@@ -60,10 +74,15 @@ def get_teams(section):
             doc = yaml.safe_load(yaml_file.decoded_content)
             doc['repo'] = repo.name
             try:
-                doc['company']['logo'] = save_picture(repo, COMPANY_LOGO_DIR,
-                                                        doc['company']['logo'])
-                doc['team']['picture'] = save_picture(repo, TEAM_PHOTO_DIR,
-                                                        doc['team']['picture'])
+                team_photo_url = get_photo_url(repo.name, doc['team']['picture'])
+                team_photo_path = save_photo_path(OUTPUT_TEAM_PHOTOS, repo.name, doc['team']['picture'])
+                doc['team']['picture'] = save_photo(team_photo_url, team_photo_path)
+                print doc['team']['picture']
+
+                logo_url = get_photo_url(repo.name, doc['company']['logo'])
+                logo_path = save_photo_path(OUTPUT_COMPANY_LOGOS, repo.name, doc['company']['logo'])
+                doc['company']['logo'] = save_photo(logo_url, logo_path)
+
             except KeyError, e:
                 print 'repo', team, 'missing photo:', str(e)
             teams.append(doc)
@@ -72,6 +91,20 @@ def get_teams(section):
         except Exception, e:
             print 'repo', team, 'does not contain report.yaml', str(e)
     return teams
+
+def get_photo_url(repo_name, img_name):
+    return 'https://raw.githubusercontent.com/%s/%s/master/%s' % (ORG_NAME, repo_name, img_name)
+
+def save_photo_path(output_dir, repo_name, img_name):
+    return '%s/%s-%s' % (output_dir, repo_name, img_name)
+
+def save_photo(url, output_path):
+    access_token = 'token %s' % GITHUB_ACCESS_TOKEN
+    response = requests.get(url, stream=True, headers={'Authorization': access_token})
+    full_output_path = "%s/%s" % (OUTPUT_DIR, output_path)
+    with open(full_output_path, 'wb') as outfile:
+        shutil.copyfileobj(response.raw, outfile)
+    return output_path
 
 def save_picture(repo, target_dir_name, img_name):
     url = 'https://raw.githubusercontent.com/' + repo.full_name + '/master/' + img_name

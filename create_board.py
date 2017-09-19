@@ -1,6 +1,8 @@
 import requests
 import logging
 import json
+import csv
+import time
 
 """
     Python script to add Trello-like projects to student repositories.
@@ -12,6 +14,7 @@ import os
 import sys
 from dotenv import load_dotenv
 from os.path import join, dirname
+import emoji
 
 try:
     dotenv_path = join(dirname(__file__), '.env')
@@ -28,8 +31,9 @@ if GITHUB_USER is None or  GITHUB_PASSWORD is None:
 HEADERS = {'Accept': 'application/vnd.github.inertia-preview+json'}
 GITHUB_API = 'https://api.github.com'
 
-TEAM_BOARD = 'Team Product Challenge Studio Board'
+TEAM_BOARD = 'Product Challenge Studio Board'
 BOARD_BLURB = 'This is where you keep track of your Todo, Doing and Done tasks.'
+CARD_MSG = emoji.emojize("Update your report.yaml file\r\n:construction:") #.encode('ascii',errors='ignore')
 
 def add_project_to_repo(repo_name):
     repo = {'owner': 'ct-product-challenge-2017', 'repo': repo_name}
@@ -45,10 +49,11 @@ def add_project_to_repo(repo_name):
 def add_card_to_column(column_id):
     url = GITHUB_API + '/projects/columns/%(column_id)d/cards' % {'column_id': column_id}
     logging.info('Creating new card for %s' % url)
-    payload = json.dumps({ 'note': 'Update your report.yaml file.'})
+    payload = json.dumps({ 'note': CARD_MSG})
     response = requests.request('POST', url, headers=HEADERS,
                                 data=payload, auth=(GITHUB_USER, GITHUB_PASSWORD))
-    if response.status_code != 201:
+    print response.status_code 
+    if response.status_code not in [200, 201]:
         logging.error('Card creation failed.')
     else:
         logging.info('Card created successfully.') 
@@ -69,11 +74,16 @@ def add_columns_to_project(project_id):
                 add_card_to_column(column_id)
 
 if __name__ == '__main__':
-    for repo_name in ['example-product-team']:
-        (code, response_as_json) = add_project_to_repo(repo_name)
-        if code != 201:
-            logging.error('Project creation not successful for %s.' % repo_name)
-            continue
-        logging.info('Project reation successful for %s.' % repo_name)
-        project_id = int(response_as_json['id'])
-        add_columns_to_project(project_id)
+    with open('teams', 'r') as team_file:
+        reader = csv.reader(team_file, delimiter='\t')
+        for row in reader:
+            time.sleep(0.5)
+            (section, company, challenge, repo_name) = row
+            logging.info('Processing %s ...' % repo_name)
+            (code, response_as_json) = add_project_to_repo(repo_name)
+            if code != 201:
+                logging.error('Project creation FAILED for %s.' % repo_name)
+                continue
+            logging.info('Project creation successful for %s.' % repo_name)
+            project_id = int(response_as_json['id'])
+            add_columns_to_project(project_id) 

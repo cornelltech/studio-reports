@@ -221,18 +221,4 @@ def build_pages_from_existing():
     print outfile
 
 if __name__ == '__main__':
-    print 'hello'
-    # pwd = os.path.dirname(os.path.realpath(__file__))
-    # (output_dir, yaml_dir, team_photos_dir, company_logos_dir) = create_output_directories(pwd)
-    # teams_file = os.path.join(pwd, TEAMS_FILE_NAME)
-    # (team_names, team_metadata) = get_teams(teams_file)
-    # sections = get_sections(team_metadata)
-    # print create_index_page(sections, yaml_dir)
-    # g = github.Github(GITHUB_ACCESS_TOKEN)
-    # for team in team_names:
-    #     save_team_file(team, yaml_dir, g)
-    # yaml_files = os.listdir(yaml_dir)
-    # for yaml_file in yaml_files:
-    #     yaml_file = os.path.join(yaml_dir, yaml_file)
-    #     process_yaml_file(yaml_file)
-    # save_team_files(['example-product-team'], yaml_dir)
+    build_pages_from_scratch()

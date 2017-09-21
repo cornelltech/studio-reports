@@ -195,12 +195,13 @@ def build_pages_from_scratch():
 # yaml files assumed to live in OUTPUT_DIR_NAME/YAML_DIR_NAME
 def build_pages_from_existing():
     pwd = os.path.dirname(os.path.realpath(__file__))
-    # (output_dir, yaml_dir, team_photos_dir, company_logos_dir) = \
-    #     create_output_directories(pwd)
 
     # extract teams data
     teams_file = os.path.join(pwd, TEAMS_FILE_NAME)
     (team_names, team_metadata) = get_teams(teams_file)
+
+    # This is where it will look for yaml data files.
+    # TODO: control with parameter instead?
     yaml_dir = os.path.join(pwd, OUTPUT_DIR_NAME, YAML_DIR_NAME)
 
     # create index page

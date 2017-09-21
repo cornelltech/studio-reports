@@ -162,7 +162,7 @@ def create_index_page(sections):
     template = env.get_template('buildboard.html')
     return template.render(sections=sections)
 
-def build_page_from_scratch():
+def build_pages_from_scratch():
     # setup output directories
     pwd = os.path.dirname(os.path.realpath(__file__))
     (output_dir, yaml_dir, team_photos_dir, company_logos_dir) = \
@@ -183,6 +183,34 @@ def build_page_from_scratch():
         for team in teams:
             team_doc = process_yaml_file(os.path.join(yaml_dir, "%s.yaml" % team),
                                         download_imgs=True)
+            team_docs.append(team_doc)
+        sections[section] = team_docs
+    index = create_index_page(sections)
+
+    output_index = os.path.join(pwd, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
+    with open(output_index, 'w') as outfile:
+        outfile.write(unicodedata.normalize('NFKD', index).encode('ascii','ignore'))
+    print outfile
+
+# yaml files assumed to live in OUTPUT_DIR_NAME/YAML_DIR_NAME
+def build_pages_from_existing():
+    pwd = os.path.dirname(os.path.realpath(__file__))
+    # (output_dir, yaml_dir, team_photos_dir, company_logos_dir) = \
+    #     create_output_directories(pwd)
+
+    # extract teams data
+    teams_file = os.path.join(pwd, TEAMS_FILE_NAME)
+    (team_names, team_metadata) = get_teams(teams_file)
+    yaml_dir = os.path.join(pwd, OUTPUT_DIR_NAME, YAML_DIR_NAME)
+
+    # create index page
+    sections = get_sections(team_metadata)
+    for section in sections:
+        teams = sections[section]
+        team_docs = []
+        for team in teams:
+            team_doc = process_yaml_file(os.path.join(yaml_dir, "%s.yaml" % team),
+                                        download_imgs=False)
             team_docs.append(team_doc)
         sections[section] = team_docs
     index = create_index_page(sections)

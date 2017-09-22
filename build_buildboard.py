@@ -48,7 +48,9 @@ def save_photo_path(output_dir_name, repo_name, img_name):
                         "%s-%s" % (repo_name, img_name))
 
 def get_photo_path_for_web(photo_path):
-    return os.path.relpath(photo_path, OUTPUT_DIR_NAME)
+    web_path = os.path.relpath(photo_path, os.path.join(PWD, OUTPUT_DIR_NAME))
+    print web_path
+    return web_path
 
 def save_photo(url, output_path):
     print 'saving %s' % os.path.basename(output_path)
@@ -225,6 +227,8 @@ def output_crit_groups_xlsx(group, rooms, teams):
 def build_pages_from_scratch():
     # setup output directories
     pwd = os.path.dirname(os.path.realpath(__file__))
+    print 'PWD=', PWD
+    print 'pwd=', pwd
     (output_dir, yaml_dir, team_photos_dir, company_logos_dir) = \
         create_output_directories(pwd)
 

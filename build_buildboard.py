@@ -24,6 +24,7 @@ YAML_FILE_NAME = "report.yaml"
 TEAMS_FILE_NAME = "teams"
 SECTIONS = ['S1', 'S2', 'S3', 'S4']
 
+PWD = os.path.dirname(os.path.realpath(__file__))
 OUTPUT_DIR_NAME = "output"
 YAML_DIR_NAME = "yaml"
 TEAM_PHOTOS_DIR_NAME = "team_photos"
@@ -39,11 +40,13 @@ def get_photo_url(repo_name, img_name):
     return 'https://raw.githubusercontent.com/%s/%s/master/%s' % (ORG_NAME, repo_name, img_name)
 
 def save_photo_path(output_dir_name, repo_name, img_name):
-    return os.path.join(OUTPUT_DIR_NAME, output_dir_name,
+    return os.path.join(PWD, OUTPUT_DIR_NAME, output_dir_name,
                         "%s-%s" % (repo_name, img_name))
 
 def get_photo_path_for_web(photo_path):
-    return os.path.relpath(photo_path, OUTPUT_DIR_NAME)
+    web_path = os.path.relpath(photo_path, os.path.join(PWD, OUTPUT_DIR_NAME))
+    print web_path
+    return web_path
 
 def save_photo(url, output_path):
     print 'saving %s' % os.path.basename(output_path)
@@ -165,6 +168,8 @@ def create_index_page(sections):
 def build_pages_from_scratch():
     # setup output directories
     pwd = os.path.dirname(os.path.realpath(__file__))
+    print 'PWD=', PWD
+    print 'pwd=', pwd
     (output_dir, yaml_dir, team_photos_dir, company_logos_dir) = \
         create_output_directories(pwd)
 

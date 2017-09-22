@@ -4,6 +4,7 @@ import os
 import requests
 import shutil
 import unicodedata
+import xlsxwriter
 import yaml
 
 import pdb
@@ -32,6 +33,7 @@ COMPANY_LOGOS_DIR_NAME = "logos"
 INDEX_FILE_NAME = "index.html"
 CRIT_A_FILE_NAME = "crit-A.html"
 CRIT_B_FILE_NAME = "crit-B.html"
+XLSX_FILE_NAME = "narratives-%s.xlsx"
 
 # process teams file into list of teams
 # download all the yaml files
@@ -203,15 +205,22 @@ def create_crit_pages(crit_groups, teams):
 
     return (crit_A, crit_B)
 
-# TODO: do this with xlsxwriter instead
-def output_tab_separated_groups_by_room(crit_groups, teams):
-    print 'Team Name\tNarrative\tCrit Room\tCritters\tCritter Picker Up'
-    for crit_group in crit_groups:
-        rooms = crit_groups[crit_group]
-        for room in rooms:
-            for team in rooms[room]:
-                team_data = teams[team]
-                print '%s\t%s\t%s\t' % (team, team_data['product_narrative'].strip(), room)
+def output_crit_groups_xlsx(group, rooms, teams):
+    workbook = xlsxwriter.Workbook(os.path.join(OUTPUT_DIR_NAME, XLSX_FILE_NAME % group))
+    worksheet = workbook.add_worksheet()
+    columns = {'Team Name': 'A%d', 'Narrative': 'B%d', 'Room': 'C%d'}
+    row = 1
+    for col in columns:
+        worksheet.write(columns[col] % row, col)
+    row += 1
+    for room in rooms:
+        for team in rooms[room]:
+            team_data = teams[team]
+            worksheet.write(columns['Team Name'] % row, team)
+            worksheet.write(columns['Narrative'] % row, team_data['product_narrative'])
+            worksheet.write(columns['Room'] % row, room)
+            row += 1
+    workbook.close()
 
 def build_pages_from_scratch():
     # setup output directories
@@ -293,7 +302,13 @@ def build_crit_pages():
         outfile.write(unicodedata.normalize('NFKD', crit_B).encode('ascii','ignore'))
     print outfile
 
+    # excel formatted files
+    output_crit_groups_xlsx('A', crit_groups['A'], teams)
+    output_crit_groups_xlsx('B', crit_groups['B'], teams)
+
+
+
 if __name__ == '__main__':
-    # build_pages_from_existing()
+    build_pages_from_existing()
     build_pages_from_scratch()
     build_crit_pages()

@@ -15,9 +15,9 @@ S4	XO Group	#PC101	xogroup-wedding	A	3rd Bowtie East
 S2	Amazon	#PC005	amazon-commuters	A	3rd Bowtie West
 S4	My Little Health Bot	#PC057	littlehealthboth-robot-retailer	A	3rd Bowtie West
 S3	Mastercard	#PC050	mastercard-transaction-data	A	3rd Bowtie West
-S3	Bloomberg LP	#PC012	bloomberg-college	A	3rd Middle
-S4	CampusWire	#PC017	campuswire-student-qa	A	3rd Middle
-S1	Lilly	#PC048	lilly-alzheimer	A	3rd Middle
+S3	Bloomberg LP	#PC012	bloomberg-college	A	Master Loft's Prow
+S4	CampusWire	#PC017	campuswire-student-qa	A	Master Loft's Prow
+S1	Lilly	#PC048	lilly-alzheimer	A	Master Loft's Prow
 S3	Blue Ridge Labs	#PC014	blueridgelabs-immigrants	A	L23
 S4	Data & Society	#PC024	datasociety-tolerance	A	L23
 S4	NYTimes	#PC059	nytimes-bundles	A	L23
@@ -41,9 +41,9 @@ S1	WATTx	#PC094	wattx-data-sharing	B	3rd Bowtie East
 S4	Bloomberg LP	#PC010	bloomberg-volunteering	B	3rd Bowtie West
 S2	Qualcomm	#PC071	qualcomm-credibility	B	3rd Bowtie West
 S3	Verizon	#PC091	verizon-civic	B	3rd Bowtie West
-S3	Citi	#PC021	citi-transportation	B	3rd Middle
-S2	JCrew	#PC044	jcrew-brick-mortar	B	3rd Middle
-S4	Two Sigma	#PC086	twosigma-game-halite	B	3rd Middle
+S3	Citi	#PC021	citi-transportation	B	Master Loft's Prow
+S2	JCrew	#PC044	jcrew-brick-mortar	B	Master Loft's Prow
+S4	Two Sigma	#PC086	twosigma-game-halite	B	Master Loft's Prow
 S1	HALE Health	#PC037	hale-health-chronic-diseases	B	L23
 S1	Nielsen	#PC060	nielsen-pos	B	L23
 S2	Two Sigma	#PC087	twosigma-airports	B	L23

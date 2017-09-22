@@ -276,20 +276,17 @@ def build_pages_from_existing():
         outfile.write(unicodedata.normalize('NFKD', index).encode('ascii','ignore'))
     print outfile
 
-if __name__ == '__main__':
-    # build_pages_from_existing()
-    # build_pages_from_scratch()
-    pwd = os.path.dirname(os.path.realpath(__file__))
-
-    # extract teams data
-    teams_file = os.path.join(pwd, TEAMS_FILE_NAME)
+# TODO: atm only works if you've built the index pages
+def build_crit_pages():
+    # extract teams data from files
+    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, team_metadata) = get_teams(teams_file)
+
     crit_groups = get_crit_groups_ordered_by_room(team_metadata)
     teams = load_teams_data(team_names, from_github=False)
 
     (crit_A, crit_B) = create_crit_pages(crit_groups, teams)
-    # output_tab_separated_groups_by_room(crit_groups, teams)
-    #
+
     crit_a_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_A_FILE_NAME)
     with open(crit_a_file, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', crit_A).encode('ascii','ignore'))
@@ -300,6 +297,7 @@ if __name__ == '__main__':
         outfile.write(unicodedata.normalize('NFKD', crit_B).encode('ascii','ignore'))
     print outfile
 
-
-    # yaml_dir = os.path.join(pwd, OUTPUT_DIR_NAME, YAML_DIR_NAME)
-    # print load_teams_data(team_names, from_github=False)
+if __name__ == '__main__':
+    # build_pages_from_existing()
+    build_pages_from_scratch()
+    build_crit_pages()

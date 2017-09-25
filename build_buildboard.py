@@ -222,4 +222,5 @@ def build_pages_from_existing():
     print outfile
 
 if __name__ == '__main__':
+    #build_pages_from_existing()
     build_pages_from_scratch()

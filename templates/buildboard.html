@@ -84,7 +84,9 @@ each team in [teams]:
               {% for person in team['team']['roster'] %}
               <li> {{ person['name'] }} ({{ person['email'] }})</li>
               {% endfor %}
-            </ul> </li>
+            </ul>
+            <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}">Email the team</a>
+          </li>
           {% endif %}
           {% endfor %}
       {% endfor %}

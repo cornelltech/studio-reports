@@ -313,6 +313,6 @@ def build_crit_pages():
 
 
 if __name__ == '__main__':
-    #build_pages_from_existing()
-    build_pages_from_scratch()
-    build_crit_pages()
+    build_pages_from_existing()
+    #build_pages_from_scratch()
+    #build_crit_pages()

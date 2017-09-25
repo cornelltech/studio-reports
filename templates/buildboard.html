@@ -9,6 +9,7 @@
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/669e4f4906.js"></script>
 
 <!-- this template requires a map named 'sections' to be passed in
 The structure of 'sections' as follows:
@@ -37,31 +38,22 @@ each team in [teams]:
     <div class="starter-template">
     <h1>Product Studio 2017 BuildBoard</h1>
     <div class="toc">
-      <h3>Section 1</h3>
+    {% set SECTIONS = [('Section 1', 'S1'),
+                       ('Section 2', 'S2'),
+                       ('Section 3', 'S3'),
+                       ('Section 4', 'S4')] %}
+    {% for s in SECTIONS %}
+      <h3>{{s[0]}}</h3>
         <ol>
-        {% for team in sections['S1']%}
-          <li> <a href="#{{ team['repo'] }}"> {{ team['repo'] }} </a>
+        {% for team in sections[s[1]] %}
+          <li> <a href="#{{ team['repo'] }}"> {{ team['repo'] }}</a> <a href="https://github.com/ct-product-challenge-2017/{{team['repo']}}"><i class="fa fa-github" aria-hidden="true"></i></a></li>
         {% endfor %}
         </ol>
-      <h3>Section 2</h3>
-      <ol>
-      {% for team in sections['S2']%}
-        <li> <a href="#{{ team['repo'] }}"> {{ team['repo'] }} </a>
-      {% endfor %}
-      </ol>
-      <h3>Section 3</h3>
-      <ol>
-      {% for team in sections['S3']%}
-        <li> <a href="#{{ team['repo'] }}"> {{ team['repo'] }} </a>
-      {% endfor %}
-      </ol>
-      <h3>Section 4</h3>
-      <ol>
-      {% for team in sections['S4']%}
-        <li> <a href="#{{ team['repo'] }}"> {{ team['repo'] }} </a>
-      {% endfor %}
-      </ol>
+    {% endfor %}
     </div> <!-- ./toc -->
+
+<hr/>
+
     <div class="teams-display">
       <ol>
         {% for section in sections %}

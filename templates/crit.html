@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Product Studio 2017 BuildBoard</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- this template requires a map named 'sections' to be passed in
+The structure of 'sections' as follows:
+{section : [teams]} - section as 'S1', 'S2', etc.
+each team in [teams]:
+  - repo
+  - product_narrative
+  - how_might_we
+  - [assets]
+    each asset in [assets] contains:
+      - url
+      - title
+  - company: data about the challenge company
+    - logo (relative url)
+    - name
+  - team (yes, redundant naming...)
+    - roster: a list of people
+      each person contains:
+        - name
+        - email
+    - picture (relative url)-->
+  </head>
+  <body>
+    <div class="container">
+
+    <div class="starter-template">
+    <h1>Product Studio 2017 Crit Groups</h1>
+    <div class="toc">
+      <h2>{{ group }}</h2>
+      {% for room in rooms %}
+      <h3> {{ room }} </h3>
+      <ol>
+          {% set teams_in_room = rooms[room] %}
+          {% for team_name in teams_in_room %}
+            <li> <a href="#{{ team_name }}"> {{ team_name }} </a> </li>
+          {% endfor %}
+      </ol>
+      {% endfor %}
+    </div> <!-- toc -->
+
+      <div class="teams-display">
+        <ol>
+          {% for room in rooms %}
+            {% set teams_in_room = rooms[room] %}
+            {% for team_name in teams_in_room %}
+              {% set team = teams[team_name] %}
+              <h3>
+              <li> <a name="{{ team['repo'] }}"><img src= {{ team['company']['logo'] }} alt={{ team['company']['name'] }} style="width:200px;"></a> </li>
+                <br>
+                {{ team['how_might_we'] }} </h3>
+              <p> {{ team['product_narrative'] }} </p>
+              <ol>
+                {% for asset in team['assets'] %}
+                <li> <a href=" {{ asset.url }} "> {{ asset['title'] }} </a> </li>
+                {% endfor %}
+              </ol>
+              <h4> {{ team['repo'] }}: </h4>
+              {% if team['team'] is defined %}
+                <img src= {{ team['team']['picture'] }} alt="Team Photo" style="width:304px;height:228px;">
+                <ul>
+                  {% for person in team['team']['roster'] %}
+                  <li> {{ person['name'] }} ({{ person['email'] }})</li>
+                  {% endfor %}
+                </ul> </li>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </ol>
+      </div><!-- /.teams-display -->
+    </div>
+  </div><!-- /.container -->
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>

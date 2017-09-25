@@ -72,12 +72,20 @@ each team in [teams]:
           <h4> {{ team['repo'] }}: </h4>
           {% if team['team'] is defined %}
             <img src= {{ team['team']['picture'] }} alt="Team Photo" style="width:304px;height:228px;">
+            <br/><br/><br/>
+            <div class="team">
+                <i class="fa fa-users fa-2x" aria-hidden="true"></i>: {{ team['team']['roster']|map(attribute='name')|join(' | ')}}
+                <br/>
+                <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+                <a href="https://github.com/ct-product-challenge-2017/{{team['repo']}}"><i class="fa fa-github fa-2x" aria-hidden="true"></i></a>              
+          </div>
+<!--  
             <ul>
               {% for person in team['team']['roster'] %}
               <li> {{ person['name'] }} ({{ person['email'] }})</li>
               {% endfor %}
             </ul>
-            <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}">Email the team</a>
+          -->
           </li>
           {% endif %}
           {% endfor %}

@@ -226,14 +226,11 @@ def output_crit_groups_xlsx(group, rooms, teams):
 
 def build_pages_from_scratch():
     # setup output directories
-    pwd = os.path.dirname(os.path.realpath(__file__))
-    print 'PWD=', PWD
-    print 'pwd=', pwd
     (output_dir, yaml_dir, team_photos_dir, company_logos_dir) = \
-        create_output_directories(pwd)
+        create_output_directories(PWD)
 
     # extract teams data
-    teams_file = os.path.join(pwd, TEAMS_FILE_NAME)
+    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, team_metadata) = get_teams(teams_file)
 
     # save teams yaml
@@ -251,22 +248,20 @@ def build_pages_from_scratch():
         sections[section] = team_docs
     index = create_index_page(sections)
 
-    output_index = os.path.join(pwd, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
+    output_index = os.path.join(PWD, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
     with open(output_index, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', index).encode('ascii','ignore'))
     print outfile
 
 # yaml files assumed to live in OUTPUT_DIR_NAME/YAML_DIR_NAME
 def build_pages_from_existing():
-    pwd = os.path.dirname(os.path.realpath(__file__))
-
     # extract teams data
-    teams_file = os.path.join(pwd, TEAMS_FILE_NAME)
+    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, team_metadata) = get_teams(teams_file)
 
     # This is where it will look for yaml data files.
     # TODO: control with parameter instead?
-    yaml_dir = os.path.join(pwd, OUTPUT_DIR_NAME, YAML_DIR_NAME)
+    yaml_dir = os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME)
 
     # create index page
     sections = get_sections(team_metadata)
@@ -280,7 +275,7 @@ def build_pages_from_existing():
         sections[section] = team_docs
 
     index = create_index_page(sections)
-    output_index = os.path.join(pwd, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
+    output_index = os.path.join(PWD, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
     with open(output_index, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', index).encode('ascii','ignore'))
     print outfile

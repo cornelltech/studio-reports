@@ -31,8 +31,7 @@ YAML_DIR_NAME = "yaml"
 TEAM_PHOTOS_DIR_NAME = "team_photos"
 COMPANY_LOGOS_DIR_NAME = "logos"
 INDEX_FILE_NAME = "index.html"
-CRIT_A_FILE_NAME = "crit-A.html"
-CRIT_B_FILE_NAME = "crit-B.html"
+CRIT_FILE_NAME = "crit-%s.html"
 XLSX_FILE_NAME = "narratives-%s.xlsx"
 
 # process teams file into list of teams
@@ -291,12 +290,12 @@ def build_crit_pages():
 
     (crit_A, crit_B) = create_crit_pages(crit_groups, teams)
 
-    crit_a_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_A_FILE_NAME)
+    crit_a_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % 'A')
     with open(crit_a_file, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', crit_A).encode('ascii','ignore'))
     print outfile
 
-    crit_b_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_B_FILE_NAME)
+    crit_b_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % 'B')
     with open(crit_b_file, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', crit_B).encode('ascii','ignore'))
     print outfile

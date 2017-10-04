@@ -28,8 +28,8 @@ if __name__ == '__main__':
 	build_buildboard.build_crit_pages()
 
 	copy_to_site_directory(build_buildboard.INDEX_FILE_NAME)
-	copy_to_site_directory(build_buildboard.CRIT_A_FILE_NAME)
-	copy_to_site_directory(build_buildboard.CRIT_B_FILE_NAME)
+	copy_to_site_directory(build_buildboard.CRIT_FILE_NAME % 'A')
+	copy_to_site_directory(build_buildboard.CRIT_FILE_NAME % 'B')
 	copy_to_site_directory(build_buildboard.XLSX_FILE_NAME % 'A')
 	copy_to_site_directory(build_buildboard.XLSX_FILE_NAME % 'B')
 

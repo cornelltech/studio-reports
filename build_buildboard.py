@@ -207,7 +207,7 @@ def create_crit_pages(crit_groups, teams):
     return (crit_A, crit_B)
 
 def output_crit_groups_xlsx(group, rooms, teams):
-    workbook = xlsxwriter.Workbook(os.path.join(OUTPUT_DIR_NAME, XLSX_FILE_NAME % group))
+    workbook = xlsxwriter.Workbook(os.path.join(PWD, OUTPUT_DIR_NAME, XLSX_FILE_NAME % group))
     worksheet = workbook.add_worksheet()
     columns = {'Team Name': 'A%d', 'Narrative': 'B%d', 'Room': 'C%d'}
     row = 1

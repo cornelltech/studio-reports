@@ -37,8 +37,6 @@ XLSX_FILE_NAME = "narratives-%s.xlsx"
 # new site design names
 DIRECTORY_PAGE_NAME = "directory.html"
 TEAM_PAGES_DIR_NAME = "team"
-SITE_CSS = "site.css"
-TEAM_CARD_CSS = "card.css"
 
 # process teams file into list of teams
 # download all the yaml files

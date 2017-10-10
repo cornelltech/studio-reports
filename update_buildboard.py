@@ -36,8 +36,6 @@ if __name__ == '__main__':
 
 	# new site edition
 	copy_to_site_directory(build_buildboard.DIRECTORY_PAGE_NAME)
-	copy_to_site_directory(build_buildboard.SITE_CSS)
-	copy_to_site_directory(build_buildboard.TEAM_CARD_CSS)
 
 	# individual team pages (new site edition)
 	copy_dir_to_site_directory(build_buildboard.TEAM_PAGES_DIR_NAME)

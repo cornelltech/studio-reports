@@ -1,0 +1,14 @@
+{% block team_info %}
+<div class="team-info">
+  <div class="team-info-header">
+    <span class="team-info-header-company">{{ team['company']['name']}}</span> asks how might we...
+  </div> <!-- team-info-header -->
+  <div class="team-info-body">
+    {{ team['how_might_we'] }}
+  </div> <!-- team-info-body -->
+  <!-- <div class="team-info-spacer"></div> -->
+  <div class="team-info-footer">
+    Artifacts: {% for asset in team['assets'] %} <span class="asset"> <a href="{{ asset.url }}"> {{ asset['title'] }} </a> </span> {% endfor %}
+  </div> <!-- team-info-footer -->
+</div> <!-- team-info -->
+{% endblock %}

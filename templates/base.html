@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Product Studio 2017 BuildBoard</title>
+
+    <link href="site.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
+
+    {% endblock %}
+  </head>
+  <body>
+    <div class="top-container">
+      <div class="side-bar">
+        <div class="studio-logo">
+          <img src="cornell/logo-placeholder.png" alt="product studio logo">
+          <div class="buildboard-title"> BuildBoard </div>
+        </div>
+        <div class="sidebar-spacer"> </div>
+        <div class="cornell-logo">
+          <img src="cornell/cornell-tech-vertical.png" alt="cornell logo">
+        </div>
+      </div>
+      <div class="side-bar-buffer"> </div>
+      <div class="main-bar"> {% block content %} {% endblock %}
+      </div> <!-- main-bar -->
+    </div> <!-- container -->
+  </body>
+</html>

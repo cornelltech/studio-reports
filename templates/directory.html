@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="page-header">
+    <div class="page-header-subheading"> Internal </div>
+    <div class="page-header-title"> Product Studio Teams </div>
+    <span class="page-header-spacing"> </span>
+    <div class="page-header-footer"> Topics: </div>
+  </div> <!-- page-header -->
+  {% for team_name in teams %}
+    {% set team = teams[team_name] %}
+    <div class="big-row-outer">
+      <div class="big-row">
+        <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
+        <div class="team-info">
+          <div class="team-info-header">
+            <span class="team-info-header-company">{{ team['company']['name']}}</span> asks how might we...
+          </div> <!-- team-info-header -->
+          <div class="team-info-body">
+            {{ team['how_might_we'] }}
+          </div> <!-- team-info-body -->
+          <!-- <div class="team-info-spacer"></div> -->
+          <div class="team-info-footer">
+            Artifacts: {% for asset in team['assets'] %} <span class="asset"> <a href="{{ asset.url }}"> {{ asset['title'] }} </a> </span> {% endfor %}
+          </div> <!-- team-info-footer -->
+        </div> <!-- team-info -->
+        <div class="team-roster">
+          <div class="team-roster-row">
+            <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"> {{ team['repo'] }} </a>
+          </div>
+          {% for person in team['team']['roster']%}
+          <div class="team-roster-row" class="team-member">
+            <img src="cornell/member.png" alt="team member icon"> {{ person['name'] }}
+          </div>
+          {% endfor %}
+          <div class="team-roster-footer">
+            <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><img src="cornell/repository.png" alt="github icon"></a>
+            <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><img src="cornell/email.png" alt="email icon"> <i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+          </div>
+        </div> <!-- team-roster -->
+      </div> <!-- big-row -->
+    </div> <!-- big-row-outer -->
+  {% endfor %}
+  <div class="bottom-spacer"> </div>
+{% endblock %}

@@ -40,5 +40,8 @@ if __name__ == '__main__':
 	# individual team pages (new site edition)
 	copy_dir_to_site_directory(build_buildboard.TEAM_PAGES_DIR_NAME)
 
+	# static files
+	copy_dir_to_site_directory(build_buildboard.STATIC_DIR_NAME)
+
 	copy_dir_to_site_directory(build_buildboard.COMPANY_LOGOS_DIR_NAME)
 	copy_dir_to_site_directory(build_buildboard.TEAM_PHOTOS_DIR_NAME)

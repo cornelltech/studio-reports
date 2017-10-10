@@ -12,18 +12,7 @@
     <div class="big-row-outer">
       <div class="big-row">
         <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
-        <div class="team-info">
-          <div class="team-info-header">
-            <span class="team-info-header-company">{{ team['company']['name']}}</span> asks how might we...
-          </div> <!-- team-info-header -->
-          <div class="team-info-body">
-            {{ team['how_might_we'] }}
-          </div> <!-- team-info-body -->
-          <!-- <div class="team-info-spacer"></div> -->
-          <div class="team-info-footer">
-            Artifacts: {% for asset in team['assets'] %} <span class="asset"> <a href="{{ asset.url }}"> {{ asset['title'] }} </a> </span> {% endfor %}
-          </div> <!-- team-info-footer -->
-        </div> <!-- team-info -->
+        {% include "team_info.html" %}
         {% include "roster.html" %}
       </div> <!-- big-row -->
     </div> <!-- big-row-outer -->

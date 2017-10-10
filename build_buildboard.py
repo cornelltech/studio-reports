@@ -37,7 +37,7 @@ XLSX_FILE_NAME = "narratives-%s.xlsx"
 # new site design names
 DIRECTORY_PAGE_NAME = "directory.html"
 TEAM_PAGES_DIR_NAME = "team"
-
+STATIC_DIR_NAME = "static"
 # process teams file into list of teams
 # download all the yaml files
 # process yaml files
@@ -332,7 +332,7 @@ def build_new_site_design():
 
     directory_file = os.path.join(PWD, OUTPUT_DIR_NAME, DIRECTORY_PAGE_NAME)
     with open(directory_file, 'w') as outfile:
-        outfile.write(unicodedata.normalize('NFKD', child).encode('ascii','ignore'))
+        outfile.write(unicodedata.normalize('NFKD', directory).encode('ascii','ignore'))
     print outfile
 
     for team in teams:
@@ -345,7 +345,7 @@ def build_new_site_design():
         print outfile
 
 if __name__ == '__main__':
-    #build_pages_from_existing()
-    build_pages_from_scratch()
-    build_crit_pages()
+    build_pages_from_existing()
+    # build_pages_from_scratch()
+    # build_crit_pages()
     build_new_site_design()

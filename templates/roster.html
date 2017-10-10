@@ -5,12 +5,12 @@
   </div>
   {% for person in team['team']['roster']%}
   <div class="team-roster-row" class="team-member">
-    <img src="cornell/member.png" alt="team member icon"> {{ person['name'] }}
+    <img src="static/member.png" alt="team member icon"> {{ person['name'] }}
   </div>
   {% endfor %}
   <div class="team-roster-footer">
-    <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><img src="cornell/repository.png" alt="github icon"></a>
-    <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><img src="cornell/email.png" alt="email icon"> <i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+    <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><img src="static/repository.png" alt="github icon"></a>
+    <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><img src="static/email.png" alt="email icon"> <i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
   </div>
 </div> <!-- team-roster -->
 {% endblock %}

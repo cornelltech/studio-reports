@@ -73,35 +73,45 @@ def process_yaml_file(yaml_file, download_imgs=False):
 
     try:
         team_photo = doc['team']['picture']
+        if download_imgs:
+            # save team photo and update yaml to hold relative path
+            team_photo_url = get_photo_url(repo_name, team_photo)
+            team_photo_path = save_photo_path(TEAM_PHOTOS_DIR_NAME, repo_name, team_photo)
+            doc['team']['picture'] = save_photo(team_photo_url, team_photo_path)
+
+        else:  # update paths anyway
+            doc['team']['picture'] = \
+                get_photo_path_for_web(save_photo_path(TEAM_PHOTOS_DIR_NAME,
+                                                        repo_name, team_photo))
     except KeyError, e:
-        print 'repo', team, 'missing team photo:', str(e)
+        print 'repo', repo_name, 'missing team photo:', str(e)
+
+    except TypeError, e:
+        print 'repo', repo_name, 'missing some kind of info:', str(e)
 
     try:
         company_logo = doc['company']['logo']
+        if download_imgs:
+            # save company logo and update yaml to hold relative path
+            logo_url = get_photo_url(repo_name, doc['company']['logo'])
+            logo_path = save_photo_path(COMPANY_LOGOS_DIR_NAME, repo_name, company_logo)
+            doc['company']['logo'] = save_photo(logo_url, logo_path)
+
+        else:  # update paths anyway
+            doc['company']['logo'] = \
+                get_photo_path_for_web(save_photo_path(COMPANY_LOGOS_DIR_NAME,
+                                                        repo_name, company_logo))
     except KeyError, e:
-        print 'repo', team, 'missing company logo:', str(e)
-
-    if download_imgs:
-        # save team photo and update yaml to hold relative path
-        team_photo_url = get_photo_url(repo_name, team_photo)
-        team_photo_path = save_photo_path(TEAM_PHOTOS_DIR_NAME, repo_name, team_photo)
-        doc['team']['picture'] = save_photo(team_photo_url, team_photo_path)
-
-        # save company logo and update yaml to hold relative path
-        logo_url = get_photo_url(repo_name, doc['company']['logo'])
-        logo_path = save_photo_path(COMPANY_LOGOS_DIR_NAME, repo_name, company_logo)
-        doc['company']['logo'] = save_photo(logo_url, logo_path)
-
-    else:  # update paths anyway
-        doc['team']['picture'] = \
-            get_photo_path_for_web(save_photo_path(TEAM_PHOTOS_DIR_NAME,
-                                                    repo_name, team_photo))
-        doc['company']['logo'] = \
-            get_photo_path_for_web(save_photo_path(COMPANY_LOGOS_DIR_NAME,
-                                                    repo_name, company_logo))
+        print 'repo', repo_name, 'missing company logo:', str(e)
+    except TypeError, e:
+        print 'repo', repo_name, 'missing some kind of info:', str(e)
 
     # add team name to yaml
-    doc['repo'] = repo_name
+    try:
+        doc['repo'] = repo_name
+    except TypeError, e:
+        print 'repo', repo_name, 'is missing:', str(e)
+        return
     return doc
 
 def save_team_files(teams, yaml_dir):
@@ -262,7 +272,8 @@ def build_pages_from_scratch():
         for team in teams:
             team_doc = process_yaml_file(os.path.join(yaml_dir, "%s.yaml" % team),
                                         download_imgs=True)
-            team_docs.append(team_doc)
+            if team_doc:
+                team_docs.append(team_doc)
         sections[section] = team_docs
     index = create_index_page(sections)
 
@@ -289,7 +300,8 @@ def build_pages_from_existing():
         for team in teams:
             team_doc = process_yaml_file(os.path.join(yaml_dir, "%s.yaml" % team),
                                         download_imgs=False)
-            team_docs.append(team_doc)
+            if team_doc:
+                team_docs.append(team_doc)
         sections[section] = team_docs
 
     index = create_index_page(sections)

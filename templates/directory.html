@@ -9,15 +9,17 @@
   </div> <!-- page-header -->
   {% for team_name in teams %}
     {% set team = teams[team_name] %}
-    <div class="big-row-outer">
-      <div class="big-row">
-        {% if team['company'] is defined %}
-          <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
-        {% endif %}
-        {% include "team_info.html" %}
-        {% include "roster.html" %}
-      </div> <!-- big-row -->
-    </div> <!-- big-row-outer -->
+      {% if team is defined %}
+        <div class="big-row-outer">
+          <div class="big-row">
+            {% if team['company'] is defined %}
+              <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
+            {% endif %}
+            {% include "team_info.html" %}
+            {% include "roster.html" %}
+          </div> <!-- big-row -->
+        </div> <!-- big-row-outer -->
+     {% endif %}
   {% endfor %}
   <div class="bottom-spacer"> </div>
 {% endblock %}

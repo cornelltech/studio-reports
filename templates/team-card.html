@@ -8,18 +8,20 @@
 {% block content %}
   <div class="return-link"> <a href="directory.html"> Return to list </a> </div>
   <div class="team-card">
-    {% if team['team'] is defined %}
-      <div class="team-photo cover" style="background-image:url({{ team['team']['picture'] }})"> </div> <!-- team-photo -->
+    {% if team is defined %}
+      {% if team['team'] is defined %}
+        <div class="team-photo cover" style="background-image:url({{ team['team']['picture'] }})"> </div> <!-- team-photo -->
+      {% endif %}
+      <div class="team-card-info">
+        <div class="team-row">
+          {% include "team_info.html" %}
+          {% include "roster.html" %}
+        </div> <!-- team-row -->
+        <div class="team-row">
+          <div class="product-narrative"> {{ team['product_narrative'] }} </div>
+          <span class="lower-row-spacer"> </span>
+        </div> <!-- team-row -->
+      </div> <!-- team-card-info -->
     {% endif %}
-    <div class="team-card-info">
-      <div class="team-row">
-        {% include "team_info.html" %}
-        {% include "roster.html" %}
-      </div> <!-- team-row -->
-      <div class="team-row">
-        <div class="product-narrative"> {{ team['product_narrative'] }} </div>
-        <span class="lower-row-spacer"> </span>
-      </div> <!-- team-row -->
-    </div> <!-- team-card-info -->
   </div> <!-- team-card -->
 {% endblock %}

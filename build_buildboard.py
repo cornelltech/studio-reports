@@ -33,7 +33,12 @@ COMPANY_LOGOS_DIR_NAME = "logos"
 INDEX_FILE_NAME = "index.html"
 CRIT_FILE_NAME = "crit-%s.html"
 XLSX_FILE_NAME = "narratives-%s.xlsx"
+
+# new site design names
 DIRECTORY_PAGE_NAME = "directory.html"
+TEAM_PAGES_DIR_NAME = "team"
+SITE_CSS = "site.css"
+TEAM_CARD_CSS = "card.css"
 
 # process teams file into list of teams
 # download all the yaml files
@@ -185,6 +190,9 @@ def create_output_directories(target_directory):
     if not os.path.exists(company_logos_dir):
         print 'creating new directory:', company_logos_dir
         os.makedirs(company_logos_dir)
+    team_pages_dir = os.path.join(output_dir, TEAM_PAGES_DIR_NAME)
+    if not os.path.exists(team_pages_dir):
+        print 'creating new directory:', team_pages_dir
     return (output_dir, yaml_dir, team_photos_dir, company_logos_dir)
 
 def create_index_page(sections):
@@ -325,14 +333,15 @@ def build_new_site_design():
     directory = create_directory_page(teams)
 
     directory_file = os.path.join(PWD, OUTPUT_DIR_NAME, DIRECTORY_PAGE_NAME)
-    with open('output/directory.html', 'w') as outfile:
+    with open(directory_file, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', child).encode('ascii','ignore'))
     print outfile
 
     for team in teams:
         team_content = teams[team]
         team_page = create_team_page(team_content)
-        team_page_file = os.path.join(PWD, OUTPUT_DIR_NAME, "%s.html" % team)
+        team_page_file = os.path.join(PWD, OUTPUT_DIR_NAME, TEAM_PAGES_DIR_NAME,
+                                        "%s.html" % team)
         with open(team_page_file, 'w') as outfile:
             outfile.write(unicodedata.normalize('NFKD', team_page).encode('ascii','ignore'))
         print outfile

@@ -26,12 +26,21 @@ def copy_dir_to_site_directory(dirname):
 if __name__ == '__main__':
 	build_buildboard.build_pages_from_scratch()
 	build_buildboard.build_crit_pages()
+	build_buildboard.build_new_site_design()
 
 	copy_to_site_directory(build_buildboard.INDEX_FILE_NAME)
 	copy_to_site_directory(build_buildboard.CRIT_FILE_NAME % 'A')
 	copy_to_site_directory(build_buildboard.CRIT_FILE_NAME % 'B')
 	copy_to_site_directory(build_buildboard.XLSX_FILE_NAME % 'A')
 	copy_to_site_directory(build_buildboard.XLSX_FILE_NAME % 'B')
+
+	# new site edition
+	copy_to_site_directory(build_buildboard.DIRECTORY_PAGE_NAME)
+	copy_to_site_directory(build_buildboard.SITE_CSS)
+	copy_to_site_directory(build_buildboard.TEAM_CARD_CSS)
+
+	# individual team pages (new site edition)
+	copy_dir_to_site_directory(build_buildboard.TEAM_PAGES_DIR_NAME)
 
 	copy_dir_to_site_directory(build_buildboard.COMPANY_LOGOS_DIR_NAME)
 	copy_dir_to_site_directory(build_buildboard.TEAM_PHOTOS_DIR_NAME)

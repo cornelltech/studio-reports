@@ -11,7 +11,9 @@
     {% set team = teams[team_name] %}
     <div class="big-row-outer">
       <div class="big-row">
-        <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
+        {% if team['company'] is defined %}
+          <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
+        {% endif %}
         {% include "team_info.html" %}
         {% include "roster.html" %}
       </div> <!-- big-row -->

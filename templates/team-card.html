@@ -8,7 +8,9 @@
 {% block content %}
   <div class="return-link"> <a href="directory.html"> Return to list </a> </div>
   <div class="team-card">
-    <div class="team-photo cover" style="background-image:url({{ team['team']['picture'] }})"> </div> <!-- team-photo -->
+    {% if team['team'] is defined %}
+      <div class="team-photo cover" style="background-image:url({{ team['team']['picture'] }})"> </div> <!-- team-photo -->
+    {% endif %}
     <div class="team-card-info">
       <div class="team-row">
         {% include "team_info.html" %}

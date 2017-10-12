@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block head %}
+  {{ super() }}
+  <link href="static/site.css" rel="site stylesheet">
+{% endblock %}
+
 {% block content %}
   <div class="page-header">
     <div class="page-header-subheading"> Internal </div>
@@ -16,7 +21,10 @@
               <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
             {% endif %}
             {% include "team_info.html" %}
-            {% include "roster.html" %}
+
+            {% with prefix="" %}
+              {% include "roster.html" %}
+            {% endwith %}
           </div> <!-- big-row -->
         </div> <!-- big-row-outer -->
      {% endif %}

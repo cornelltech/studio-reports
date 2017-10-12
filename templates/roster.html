@@ -2,19 +2,19 @@
 <div class="team-roster">
   {% if team is defined %}
     <div class="team-roster-row">
-      <a href="{{ team['repo'] }}.html"> {{ team['repo'] }} </a>
+      <a href="{{ prefix }}team/{{ team['repo'] }}.html"> {{ team['repo'] }} </a>
     </div>
     {% if team['team'] is defined %}
       {% for person in team['team']['roster']%}
       <div class="team-roster-row" class="team-member">
-        <img src="static/member.png" alt="team member icon"> {{ person['name'] }}
+        <img src="{{ prefix }}static/member.png" alt="team member icon"> {{ person['name'] }}
       </div>
       {% endfor %}
     {% endif %}
     <div class="team-roster-footer">
-      <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><img src="static/repository.png" alt="github icon"></a>
+      <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><img src="{{ prefix }}static/repository.png" alt="github icon"></a>
       {% if team['team'] is defined %}
-        <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><img src="static/email.png" alt="email icon"> <i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+        <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><img src="{{ prefix}}static/email.png" alt="email icon"> <i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
       {% endif %}
     </div> <!-- team-roster-row -->
   {% endif %}

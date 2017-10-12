@@ -8,7 +8,6 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Product Studio 2017 BuildBoard</title>
 
-    <link href="static/site.css" rel="stylesheet">
     <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
 
     {% endblock %}
@@ -17,12 +16,12 @@
     <div class="top-container">
       <div class="side-bar">
         <div class="studio-logo">
-          <img src="static/logo-placeholder.png" alt="product studio logo">
+          {% block product_studio_logo %}<img src="static/logo-placeholder.png" alt="product studio logo">{% endblock %}
           <div class="buildboard-title"> BuildBoard </div>
         </div>
         <div class="sidebar-spacer"> </div>
         <div class="cornell-logo">
-          <img src="static/cornell-tech-vertical.png" alt="cornell logo">
+          {% block cornell_logo %}<img src="static/cornell-tech-vertical.png" alt="cornell logo"> {% endblock %}
         </div>
       </div>
       <div class="side-bar-buffer"> </div>

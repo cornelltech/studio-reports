@@ -357,8 +357,19 @@ def build_new_site_design():
             outfile.write(unicodedata.normalize('NFKD', team_page).encode('ascii','ignore'))
         print outfile
 
+def copy_static_dir_to_output():
+    src = os.path.join(PWD, 'static')
+    dst = os.path.join(PWD, OUTPUT_DIR_NAME, 'static')
+
+    if os.path.exists(dst):
+		shutil.rmtree(dst)
+
+	# copy over new ones
+    shutil.copytree(src, dst)
+
 if __name__ == '__main__':
     build_pages_from_existing()
     # build_pages_from_scratch()
     # build_crit_pages()
+    copy_static_dir_to_output()
     build_new_site_design()

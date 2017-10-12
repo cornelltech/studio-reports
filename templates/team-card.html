@@ -2,20 +2,28 @@
 
 {% block head %}
   {{ super() }}
-  <link href="static/card.css" rel="card stylesheet">
+  <link href="../static/site.css" rel="site stylesheet">
+  <link href="../static/card.css" rel="card stylesheet">
 {% endblock %}
 
+{% block product_studio_logo %}<img src="../static/logo-placeholder.png" alt="product studio logo">{% endblock %}
+{% block cornell_logo %}<img src="static/cornell-tech-vertical.png" alt="cornell logo"> {% endblock %}
+
+
 {% block content %}
-  <div class="return-link"> <a href="directory.html"> Return to list </a> </div>
+  <div class="return-link"> <a href="../directory.html"> Return to list </a> </div>
   <div class="team-card">
     {% if team is defined %}
       {% if team['team'] is defined %}
-        <div class="team-photo cover" style="background-image:url({{ team['team']['picture'] }})"> </div> <!-- team-photo -->
+        <div class="team-photo cover" style="background-image:url(../{{ team['team']['picture'] }})"> </div> <!-- team-photo -->
       {% endif %}
       <div class="team-card-info">
         <div class="team-row">
           {% include "team_info.html" %}
-          {% include "roster.html" %}
+
+          {% with prefix="../" %}
+            {% include "roster.html" %}
+          {% endwith %}
         </div> <!-- team-row -->
         <div class="team-row">
           <div class="product-narrative"> {{ team['product_narrative'] }} </div>

@@ -245,11 +245,12 @@ def output_crit_groups_xlsx(group, rooms, teams):
     row += 1
     for room in rooms:
         for team in rooms[room]:
-            team_data = teams[team]
             worksheet.write(columns['Team Name'] % row, team)
-            worksheet.write(columns['Narrative'] % row, team_data['product_narrative'])
-            worksheet.write(columns['Room'] % row, room)
-            row += 1
+            team_data = teams[team]
+            if team_data:
+                worksheet.write(columns['Narrative'] % row, team_data['product_narrative'])
+                worksheet.write(columns['Room'] % row, room)
+                row += 1
     workbook.close()
 
 def build_pages_from_scratch():

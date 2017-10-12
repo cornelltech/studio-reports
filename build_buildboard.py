@@ -31,10 +31,13 @@ YAML_DIR_NAME = "yaml"
 TEAM_PHOTOS_DIR_NAME = "team_photos"
 COMPANY_LOGOS_DIR_NAME = "logos"
 INDEX_FILE_NAME = "index.html"
-CRIT_A_FILE_NAME = "crit-A.html"
-CRIT_B_FILE_NAME = "crit-B.html"
+CRIT_FILE_NAME = "crit-%s.html"
 XLSX_FILE_NAME = "narratives-%s.xlsx"
 
+# new site design names
+DIRECTORY_PAGE_NAME = "directory.html"
+TEAM_PAGES_DIR_NAME = "team"
+STATIC_DIR_NAME = "static"
 # process teams file into list of teams
 # download all the yaml files
 # process yaml files
@@ -70,35 +73,45 @@ def process_yaml_file(yaml_file, download_imgs=False):
 
     try:
         team_photo = doc['team']['picture']
+        if download_imgs:
+            # save team photo and update yaml to hold relative path
+            team_photo_url = get_photo_url(repo_name, team_photo)
+            team_photo_path = save_photo_path(TEAM_PHOTOS_DIR_NAME, repo_name, team_photo)
+            doc['team']['picture'] = save_photo(team_photo_url, team_photo_path)
+
+        else:  # update paths anyway
+            doc['team']['picture'] = \
+                get_photo_path_for_web(save_photo_path(TEAM_PHOTOS_DIR_NAME,
+                                                        repo_name, team_photo))
     except KeyError, e:
-        print 'repo', team, 'missing team photo:', str(e)
+        print 'repo', repo_name, 'missing team photo:', str(e)
+
+    except TypeError, e:
+        print 'repo', repo_name, 'missing some kind of info:', str(e)
 
     try:
         company_logo = doc['company']['logo']
+        if download_imgs:
+            # save company logo and update yaml to hold relative path
+            logo_url = get_photo_url(repo_name, doc['company']['logo'])
+            logo_path = save_photo_path(COMPANY_LOGOS_DIR_NAME, repo_name, company_logo)
+            doc['company']['logo'] = save_photo(logo_url, logo_path)
+
+        else:  # update paths anyway
+            doc['company']['logo'] = \
+                get_photo_path_for_web(save_photo_path(COMPANY_LOGOS_DIR_NAME,
+                                                        repo_name, company_logo))
     except KeyError, e:
-        print 'repo', team, 'missing company logo:', str(e)
-
-    if download_imgs:
-        # save team photo and update yaml to hold relative path
-        team_photo_url = get_photo_url(repo_name, team_photo)
-        team_photo_path = save_photo_path(TEAM_PHOTOS_DIR_NAME, repo_name, team_photo)
-        doc['team']['picture'] = save_photo(team_photo_url, team_photo_path)
-
-        # save company logo and update yaml to hold relative path
-        logo_url = get_photo_url(repo_name, doc['company']['logo'])
-        logo_path = save_photo_path(COMPANY_LOGOS_DIR_NAME, repo_name, company_logo)
-        doc['company']['logo'] = save_photo(logo_url, logo_path)
-
-    else:  # update paths anyway
-        doc['team']['picture'] = \
-            get_photo_path_for_web(save_photo_path(TEAM_PHOTOS_DIR_NAME,
-                                                    repo_name, team_photo))
-        doc['company']['logo'] = \
-            get_photo_path_for_web(save_photo_path(COMPANY_LOGOS_DIR_NAME,
-                                                    repo_name, company_logo))
+        print 'repo', repo_name, 'missing company logo:', str(e)
+    except TypeError, e:
+        print 'repo', repo_name, 'missing some kind of info:', str(e)
 
     # add team name to yaml
-    doc['repo'] = repo_name
+    try:
+        doc['repo'] = repo_name
+    except TypeError, e:
+        print 'repo', repo_name, 'is missing:', str(e)
+        return
     return doc
 
 def save_team_files(teams, yaml_dir):
@@ -185,6 +198,9 @@ def create_output_directories(target_directory):
     if not os.path.exists(company_logos_dir):
         print 'creating new directory:', company_logos_dir
         os.makedirs(company_logos_dir)
+    team_pages_dir = os.path.join(output_dir, TEAM_PAGES_DIR_NAME)
+    if not os.path.exists(team_pages_dir):
+        print 'creating new directory:', team_pages_dir
     return (output_dir, yaml_dir, team_photos_dir, company_logos_dir)
 
 def create_index_page(sections):
@@ -207,6 +223,18 @@ def create_crit_pages(crit_groups, teams):
 
     return (crit_A, crit_B)
 
+def create_directory_page(teams):
+    env = Environment(loader=PackageLoader('get_reports', 'templates'),
+                        autoescape=select_autoescape(['html', 'xml']))
+    template = env.get_template('directory.html')
+    return template.render(teams=teams)
+
+def create_team_page(team):
+    env = Environment(loader=PackageLoader('get_reports', 'templates'),
+                        autoescape=select_autoescape(['html', 'xml']))
+    template = env.get_template('team-card.html')
+    return template.render(team=team)
+
 def output_crit_groups_xlsx(group, rooms, teams):
     workbook = xlsxwriter.Workbook(os.path.join(PWD, OUTPUT_DIR_NAME, XLSX_FILE_NAME % group))
     worksheet = workbook.add_worksheet()
@@ -226,14 +254,11 @@ def output_crit_groups_xlsx(group, rooms, teams):
 
 def build_pages_from_scratch():
     # setup output directories
-    pwd = os.path.dirname(os.path.realpath(__file__))
-    print 'PWD=', PWD
-    print 'pwd=', pwd
     (output_dir, yaml_dir, team_photos_dir, company_logos_dir) = \
-        create_output_directories(pwd)
+        create_output_directories(PWD)
 
     # extract teams data
-    teams_file = os.path.join(pwd, TEAMS_FILE_NAME)
+    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, team_metadata) = get_teams(teams_file)
 
     # save teams yaml
@@ -247,26 +272,25 @@ def build_pages_from_scratch():
         for team in teams:
             team_doc = process_yaml_file(os.path.join(yaml_dir, "%s.yaml" % team),
                                         download_imgs=True)
-            team_docs.append(team_doc)
+            if team_doc:
+                team_docs.append(team_doc)
         sections[section] = team_docs
     index = create_index_page(sections)
 
-    output_index = os.path.join(pwd, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
+    output_index = os.path.join(PWD, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
     with open(output_index, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', index).encode('ascii','ignore'))
     print outfile
 
 # yaml files assumed to live in OUTPUT_DIR_NAME/YAML_DIR_NAME
 def build_pages_from_existing():
-    pwd = os.path.dirname(os.path.realpath(__file__))
-
     # extract teams data
-    teams_file = os.path.join(pwd, TEAMS_FILE_NAME)
+    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, team_metadata) = get_teams(teams_file)
 
     # This is where it will look for yaml data files.
     # TODO: control with parameter instead?
-    yaml_dir = os.path.join(pwd, OUTPUT_DIR_NAME, YAML_DIR_NAME)
+    yaml_dir = os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME)
 
     # create index page
     sections = get_sections(team_metadata)
@@ -276,11 +300,12 @@ def build_pages_from_existing():
         for team in teams:
             team_doc = process_yaml_file(os.path.join(yaml_dir, "%s.yaml" % team),
                                         download_imgs=False)
-            team_docs.append(team_doc)
+            if team_doc:
+                team_docs.append(team_doc)
         sections[section] = team_docs
 
     index = create_index_page(sections)
-    output_index = os.path.join(pwd, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
+    output_index = os.path.join(PWD, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
     with open(output_index, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', index).encode('ascii','ignore'))
     print outfile
@@ -296,12 +321,12 @@ def build_crit_pages():
 
     (crit_A, crit_B) = create_crit_pages(crit_groups, teams)
 
-    crit_a_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_A_FILE_NAME)
+    crit_a_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % 'A')
     with open(crit_a_file, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', crit_A).encode('ascii','ignore'))
     print outfile
 
-    crit_b_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_B_FILE_NAME)
+    crit_b_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % 'B')
     with open(crit_b_file, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', crit_B).encode('ascii','ignore'))
     print outfile
@@ -310,9 +335,29 @@ def build_crit_pages():
     output_crit_groups_xlsx('A', crit_groups['A'], teams)
     output_crit_groups_xlsx('B', crit_groups['B'], teams)
 
+# TODO: currently relies on base site being built
+def build_new_site_design():
+    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
+    (team_names, team_metadata) = get_teams(teams_file)
+    teams = load_teams_data(team_names, from_github=False)
+    directory = create_directory_page(teams)
 
+    directory_file = os.path.join(PWD, OUTPUT_DIR_NAME, DIRECTORY_PAGE_NAME)
+    with open(directory_file, 'w') as outfile:
+        outfile.write(unicodedata.normalize('NFKD', directory).encode('ascii','ignore'))
+    print outfile
+
+    for team in teams:
+        team_content = teams[team]
+        team_page = create_team_page(team_content)
+        team_page_file = os.path.join(PWD, OUTPUT_DIR_NAME, TEAM_PAGES_DIR_NAME,
+                                        "%s.html" % team)
+        with open(team_page_file, 'w') as outfile:
+            outfile.write(unicodedata.normalize('NFKD', team_page).encode('ascii','ignore'))
+        print outfile
 
 if __name__ == '__main__':
-    #build_pages_from_existing()
-    build_pages_from_scratch()
-    build_crit_pages()
+    build_pages_from_existing()
+    # build_pages_from_scratch()
+    # build_crit_pages()
+    build_new_site_design()

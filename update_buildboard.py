@@ -2,42 +2,46 @@ import os.path
 import build_buildboard
 import shutil
 
+SITE_HOME = "/home/ubuntu/www/mysite"
+PWD = os.path.dirname(os.path.realpath(__file__))
+
+def copy_to_site_directory(filename):
+	src = os.path.join(PWD, build_buildboard.OUTPUT_DIR_NAME, filename)
+	dst = os.path.join(SITE_HOME, filename)
+	shutil.copyfile(src, dst)
+	return dst
+
+# NB this strategy will not work if you start using conditional requests!
+def copy_dir_to_site_directory(dirname):
+	src = os.path.join(PWD, build_buildboard.OUTPUT_DIR_NAME, dirname)
+	dst = os.path.join(SITE_HOME, dirname)
+
+	# remove old photos
+	if os.path.exists(dst):
+		shutil.rmtree(dst)
+
+	# copy over new ones
+	shutil.copytree(src, dst)
+
 if __name__ == '__main__':
 	build_buildboard.build_pages_from_scratch()
 	build_buildboard.build_crit_pages()
-	pwd = os.path.dirname(os.path.realpath(__file__))
+	build_buildboard.build_new_site_design()
 
-	# copy index file
-	src_index = os.path.join(pwd, build_buildboard.OUTPUT_DIR_NAME, build_buildboard.INDEX_FILE_NAME)
-	shutil.copyfile(src_index, "/home/ubuntu/www/mysite/index.html")
+	copy_to_site_directory(build_buildboard.INDEX_FILE_NAME)
+	copy_to_site_directory(build_buildboard.CRIT_FILE_NAME % 'A')
+	copy_to_site_directory(build_buildboard.CRIT_FILE_NAME % 'B')
+	copy_to_site_directory(build_buildboard.XLSX_FILE_NAME % 'A')
+	copy_to_site_directory(build_buildboard.XLSX_FILE_NAME % 'B')
 
-	src_crit_A = os.path.join(pwd, build_buildboard.OUTPUT_DIR_NAME, build_buildboard.CRIT_A_FILE_NAME)
-	shutil.copyfile(src_crit_A, "/home/ubuntu/www/mysite/crit-A.html")
+	# new site edition
+	copy_to_site_directory(build_buildboard.DIRECTORY_PAGE_NAME)
 
-	src_crit_B = os.path.join(pwd, build_buildboard.OUTPUT_DIR_NAME, build_buildboard.CRIT_B_FILE_NAME)
-	shutil.copyfile(src_crit_B, "/home/ubuntu/www/mysite/crit-B.html")
+	# individual team pages (new site edition)
+	copy_dir_to_site_directory(build_buildboard.TEAM_PAGES_DIR_NAME)
 
-	src_xlx_A = os.path.join(pwd, build_buildboard.OUTPUT_DIR_NAME, build_buildboard.XLSX_FILE_NAME % 'A')
-	shutil.copyfile(src_xlx_A, "/home/ubuntu/www/mysite/narratives-A.xlsx")
+	# static files
+	copy_dir_to_site_directory(build_buildboard.STATIC_DIR_NAME)
 
-	src_xlx_B = os.path.join(pwd, build_buildboard.OUTPUT_DIR_NAME, build_buildboard.XLSX_FILE_NAME % 'B')
-	shutil.copyfile(src_xlx_B, "/home/ubuntu/www/mysite/narratives-B.xlsx")
-
-	# remove old team photos
-	teams_dst = os.path.join("/home/ubuntu/www/mysite",build_buildboard.TEAM_PHOTOS_DIR_NAME)
-	if os.path.exists(teams_dst):
-		shutil.rmtree(teams_dst)
-
-	# copy over new ones
-	team_photos = os.path.join(pwd, build_buildboard.OUTPUT_DIR_NAME, build_buildboard.TEAM_PHOTOS_DIR_NAME)
-	shutil.copytree(team_photos, teams_dst)
-
-
-	# remove old logos
-	logos_dst = os.path.join("/home/ubuntu/www/mysite", build_buildboard.COMPANY_LOGOS_DIR_NAME)
-	if os.path.exists(logos_dst):
-		shutil.rmtree(logos_dst)
-
-	# copy over new ones
-	logos = os.path.join(pwd, build_buildboard.OUTPUT_DIR_NAME, build_buildboard.COMPANY_LOGOS_DIR_NAME)
-	shutil.copytree(logos, logos_dst)
+	copy_dir_to_site_directory(build_buildboard.COMPANY_LOGOS_DIR_NAME)
+	copy_dir_to_site_directory(build_buildboard.TEAM_PHOTOS_DIR_NAME)

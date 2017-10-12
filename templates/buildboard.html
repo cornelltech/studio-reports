@@ -58,36 +58,39 @@ each team in [teams]:
       <ol>
         {% for section in sections %}
           {% set teams = sections[section] %}
-          {% for team in teams %}
-          <h3>
-          <li> <a name="{{ team['repo'] }}"><img src= {{ team['company']['logo'] }} alt={{ team['company']['name'] }} style="width:200px;"></a>
-            <br>
-            {{ team['how_might_we'] }} </h3>
-          <p> {{ team['product_narrative'] }} </p>
-          <ol>
-            {% for asset in team['assets'] %}
-            <li> <a href=" {{ asset.url }} "> {{ asset['title'] }} </a> </li>
-            {% endfor %}
-          </ol>
-          <h4> {{ team['repo'] }}: </h4>
-          {% if team['team'] is defined %}
-            <img src= {{ team['team']['picture'] }} alt="Team Photo" style="width:304px;height:228px;">
-            <br/><br/><br/>
-            <div class="team">
-                <i class="fa fa-users fa-2x" aria-hidden="true"></i>: {{ team['team']['roster']|map(attribute='name')|join(' | ')}}
-                <br/>
-                <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
-                <a href="https://github.com/ct-product-challenge-2017/{{team['repo']}}"><i class="fa fa-github fa-2x" aria-hidden="true"></i></a>              
-          </div>
-<!--  
-            <ul>
-              {% for person in team['team']['roster'] %}
-              <li> {{ person['name'] }} ({{ person['email'] }})</li>
-              {% endfor %}
-            </ul>
-          -->
-          </li>
-          {% endif %}
+            {% for team in teams %}
+              {% if team is defined %}
+
+              <h3>
+              <li> <a name="{{ team['repo'] }}"><img src= {{ team['company']['logo'] }} alt={{ team['company']['name'] }} style="width:200px;"></a>
+                <br>
+                {{ team['how_might_we'] }} </h3>
+              <p> {{ team['product_narrative'] }} </p>
+              <ol>
+                {% for asset in team['assets'] %}
+                <li> <a href=" {{ asset.url }} "> {{ asset['title'] }} </a> </li>
+                {% endfor %}
+              </ol>
+              <h4> {{ team['repo'] }}: </h4>
+              {% if team['team'] is defined %}
+                <img src= {{ team['team']['picture'] }} alt="Team Photo" style="width:304px;height:228px;">
+                <br/><br/><br/>
+                <div class="team">
+                    <i class="fa fa-users fa-2x" aria-hidden="true"></i>: {{ team['team']['roster']|map(attribute='name')|join(' | ')}}
+                    <br/>
+                    <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+                    <a href="https://github.com/ct-product-challenge-2017/{{team['repo']}}"><i class="fa fa-github fa-2x" aria-hidden="true"></i></a>
+              </div>
+    <!--
+                <ul>
+                  {% for person in team['team']['roster'] %}
+                  <li> {{ person['name'] }} ({{ person['email'] }})</li>
+                  {% endfor %}
+                </ul>
+              -->
+              </li>
+              {% endif %}
+            {% endif %}
           {% endfor %}
       {% endfor %}
     </ol>

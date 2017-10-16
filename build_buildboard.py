@@ -229,9 +229,7 @@ def build_pages_from_scratch():
     index = create_index_page(sections)
 
     output_index = os.path.join(PWD, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
-    with open(output_index, 'w') as outfile:
-        outfile.write(unicodedata.normalize('NFKD', index).encode('ascii','ignore'))
-    print outfile
+    write_template_output_to_file(index, output_index)
 
 # yaml files assumed to live in OUTPUT_DIR_NAME/YAML_DIR_NAME
 def build_pages_from_existing():
@@ -257,9 +255,7 @@ def build_pages_from_existing():
 
     index = create_index_page(sections)
     output_index = os.path.join(PWD, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
-    with open(output_index, 'w') as outfile:
-        outfile.write(unicodedata.normalize('NFKD', index).encode('ascii','ignore'))
-    print outfile
+    write_template_output_to_file(index, output_index)
 
 # TODO: atm only works if you've built the index pages
 def build_crit_pages():
@@ -273,14 +269,10 @@ def build_crit_pages():
     (crit_A, crit_B) = create_crit_pages(crit_groups, teams)
 
     crit_a_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % 'A')
-    with open(crit_a_file, 'w') as outfile:
-        outfile.write(unicodedata.normalize('NFKD', crit_A).encode('ascii','ignore'))
-    print outfile
+    write_template_output_to_file(crit_A, crit_a_file)
 
     crit_b_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % 'B')
-    with open(crit_b_file, 'w') as outfile:
-        outfile.write(unicodedata.normalize('NFKD', crit_B).encode('ascii','ignore'))
-    print outfile
+    write_template_output_to_file(crit_B, crit_b_file)
 
     # excel formatted files
     output_crit_groups_xlsx('A', crit_groups['A'], teams)
@@ -291,21 +283,22 @@ def build_new_site_design():
     teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, team_metadata) = get_teams(teams_file)
     teams = load_teams_data(team_names, from_github=False)
-    directory = create_directory_page(teams)
 
+    directory = create_directory_page(teams)
     directory_file = os.path.join(PWD, OUTPUT_DIR_NAME, DIRECTORY_PAGE_NAME)
-    with open(directory_file, 'w') as outfile:
-        outfile.write(unicodedata.normalize('NFKD', directory).encode('ascii','ignore'))
-    print outfile
+    write_template_output_to_file(directory, directory_file)
 
     for team in teams:
         team_content = teams[team]
         team_page = create_team_page(team_content)
         team_page_file = os.path.join(PWD, OUTPUT_DIR_NAME, TEAM_PAGES_DIR_NAME,
                                         "%s.html" % team)
-        with open(team_page_file, 'w') as outfile:
-            outfile.write(unicodedata.normalize('NFKD', team_page).encode('ascii','ignore'))
-        print outfile
+        write_template_output_to_file(team_page, team_page_file)
+
+def write_template_output_to_file(output, dst):
+    with open(dst, 'w') as outfile:
+        outfile.write(unicodedata.normalize('NFKD', output).encode('ascii','ignore'))
+    print outfile
 
 def copy_static_dir_to_output():
     src = os.path.join(PWD, 'static')

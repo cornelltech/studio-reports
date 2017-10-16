@@ -154,13 +154,13 @@ def create_output_directories(target_directory):
     return (output_dir, yaml_dir, team_photos_dir, company_logos_dir)
 
 def create_index_page(sections):
-    env = Environment(loader=PackageLoader('get_reports', 'templates'),
+    env = Environment(loader=PackageLoader('buildboard', 'templates'),
                         autoescape=select_autoescape(['html', 'xml']))
     template = env.get_template('buildboard.html')
     return template.render(sections=sections)
 
 def create_crit_pages(crit_groups, teams):
-    env = Environment(loader=PackageLoader('get_reports', 'templates'),
+    env = Environment(loader=PackageLoader('buildboard', 'templates'),
                         autoescape=select_autoescape(['html', 'xml']))
     template = env.get_template('crit.html')
     crit_A = template.render(group='Crit Group A',
@@ -174,13 +174,13 @@ def create_crit_pages(crit_groups, teams):
     return (crit_A, crit_B)
 
 def create_directory_page(teams):
-    env = Environment(loader=PackageLoader('get_reports', 'templates'),
+    env = Environment(loader=PackageLoader('buildboard', 'templates'),
                         autoescape=select_autoescape(['html', 'xml']))
     template = env.get_template('directory.html')
     return template.render(teams=teams)
 
 def create_team_page(team):
-    env = Environment(loader=PackageLoader('get_reports', 'templates'),
+    env = Environment(loader=PackageLoader('buildboard', 'templates'),
                         autoescape=select_autoescape(['html', 'xml']))
     template = env.get_template('team-card.html')
     return template.render(team=team)

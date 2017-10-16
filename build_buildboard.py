@@ -52,7 +52,6 @@ def save_photo_path(output_dir_name, repo_name, img_name):
 
 def get_photo_path_for_web(photo_path):
     web_path = os.path.relpath(photo_path, os.path.join(PWD, OUTPUT_DIR_NAME))
-    print web_path
     return web_path
 
 def save_photo(url, output_path):

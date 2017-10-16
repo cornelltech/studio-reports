@@ -1,4 +1,5 @@
 import github
+import handle_photos
 import jinja2
 import os
 import requests
@@ -9,58 +10,8 @@ import yaml
 
 import pdb
 
-from dotenv import load_dotenv
 from jinja2 import Environment, PackageLoader, select_autoescape
-from os.path import join, dirname
-
-try:
-    dotenv_path = join(dirname(__file__), '.env')
-    load_dotenv(dotenv_path)
-except Exception as e:
-    print "\nMissing .env file\n"
-
-GITHUB_ACCESS_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', None)
-ORG_NAME = "ct-product-challenge-2017"
-YAML_FILE_NAME = "report.yaml"
-TEAMS_FILE_NAME = "teams"
-SECTIONS = ['S1', 'S2', 'S3', 'S4']
-
-PWD = os.path.dirname(os.path.realpath(__file__))
-OUTPUT_DIR_NAME = "output"
-YAML_DIR_NAME = "yaml"
-TEAM_PHOTOS_DIR_NAME = "team_photos"
-COMPANY_LOGOS_DIR_NAME = "logos"
-INDEX_FILE_NAME = "index.html"
-CRIT_FILE_NAME = "crit-%s.html"
-XLSX_FILE_NAME = "narratives-%s.xlsx"
-
-# new site design names
-DIRECTORY_PAGE_NAME = "directory.html"
-TEAM_PAGES_DIR_NAME = "team"
-STATIC_DIR_NAME = "static"
-# process teams file into list of teams
-# download all the yaml files
-# process yaml files
-# create outputs
-
-def get_photo_url(repo_name, img_name):
-    return 'https://raw.githubusercontent.com/%s/%s/master/%s' % (ORG_NAME, repo_name, img_name)
-
-def save_photo_path(output_dir_name, repo_name, img_name):
-    return os.path.join(PWD, OUTPUT_DIR_NAME, output_dir_name,
-                        "%s-%s" % (repo_name, img_name))
-
-def get_photo_path_for_web(photo_path):
-    web_path = os.path.relpath(photo_path, os.path.join(PWD, OUTPUT_DIR_NAME))
-    return web_path
-
-def save_photo(url, output_path):
-    print 'saving %s' % os.path.basename(output_path)
-    access_token = 'token %s' % GITHUB_ACCESS_TOKEN
-    response = requests.get(url, stream=True, headers={'Authorization': access_token})
-    with open(output_path, 'wb') as outfile:
-        shutil.copyfileobj(response.raw, outfile)
-    return get_photo_path_for_web(output_path)
+from names import *
 
 def process_yaml_file(yaml_file, download_imgs=False):
     repo_name = os.path.splitext(os.path.basename(yaml_file))[0]
@@ -74,13 +25,13 @@ def process_yaml_file(yaml_file, download_imgs=False):
         team_photo = doc['team']['picture']
         if download_imgs:
             # save team photo and update yaml to hold relative path
-            team_photo_url = get_photo_url(repo_name, team_photo)
-            team_photo_path = save_photo_path(TEAM_PHOTOS_DIR_NAME, repo_name, team_photo)
-            doc['team']['picture'] = save_photo(team_photo_url, team_photo_path)
+            team_photo_url = handle_photos.get_photo_url(repo_name, team_photo)
+            team_photo_path = handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME, repo_name, team_photo)
+            doc['team']['picture'] = handle_photos.save_photo(team_photo_url, team_photo_path)
 
         else:  # update paths anyway
             doc['team']['picture'] = \
-                get_photo_path_for_web(save_photo_path(TEAM_PHOTOS_DIR_NAME,
+                handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME,
                                                         repo_name, team_photo))
     except KeyError, e:
         print 'repo', repo_name, 'missing team photo:', str(e)
@@ -92,13 +43,13 @@ def process_yaml_file(yaml_file, download_imgs=False):
         company_logo = doc['company']['logo']
         if download_imgs:
             # save company logo and update yaml to hold relative path
-            logo_url = get_photo_url(repo_name, doc['company']['logo'])
-            logo_path = save_photo_path(COMPANY_LOGOS_DIR_NAME, repo_name, company_logo)
-            doc['company']['logo'] = save_photo(logo_url, logo_path)
+            logo_url = handle_photos.get_photo_url(repo_name, doc['company']['logo'])
+            logo_path = handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME, repo_name, company_logo)
+            doc['company']['logo'] = handle_photos.save_photo(logo_url, logo_path)
 
         else:  # update paths anyway
             doc['company']['logo'] = \
-                get_photo_path_for_web(save_photo_path(COMPANY_LOGOS_DIR_NAME,
+                handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME,
                                                         repo_name, company_logo))
     except KeyError, e:
         print 'repo', repo_name, 'missing company logo:', str(e)

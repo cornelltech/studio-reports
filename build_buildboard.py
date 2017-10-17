@@ -1,3 +1,4 @@
+import argparse
 import github
 import handle_photos
 import jinja2
@@ -12,6 +13,10 @@ import pdb
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from names import *
+
+parser = argparse.ArgumentParser(description="Top-level controls.")
+parser.add_argument('--local', action='store_true')
+args = parser.parse_args()
 
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
                     autoescape=select_autoescape(['html', 'xml']))

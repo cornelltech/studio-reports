@@ -205,12 +205,13 @@ def output_crit_groups_xlsx(group, rooms, teams):
 
 def build_pages_from_scratch():
     # setup output directories
-    (output_dir, yaml_dir, team_photos_dir, company_logos_dir) = \
-        create_output_directories(PWD)
+    create_output_directories(PWD)
 
     # extract teams data
     teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, team_metadata) = get_teams(teams_file)
+
+    yaml_dir = os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME)
 
     # save teams yaml
     save_team_files(team_names, yaml_dir)

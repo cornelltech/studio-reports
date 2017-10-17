@@ -245,14 +245,15 @@ def build_pages_from_scratch():
     output_index = os.path.join(PWD, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
     write_template_output_to_file(index, output_index)
 
-def build_pages_from_existing(teams_metadata):
+def build_index_page(teams_metadata):
     sections = get_sections(teams_metadata)
     for section in sections:
         teams = sections[section]
         team_docs = []
         for team in teams:
+            download_imgs = not args.local
             team_doc = process_yaml_file(os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME, "%s.yaml" % team),
-                                        download_imgs=False)
+                                        download_imgs=download_imgs)
             if team_doc:
                 team_docs.append(team_doc)
         sections[section] = team_docs
@@ -301,7 +302,7 @@ def create_all_pages():
 
     build_new_site_design(teams)
     build_crit_pages(teams, teams_metadata)
-    build_pages_from_existing(teams_metadata)
+    build_index_page(teams_metadata)
 
 def write_template_output_to_file(output, dst):
     with open(dst, 'w') as outfile:

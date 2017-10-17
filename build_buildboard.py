@@ -28,6 +28,11 @@ def process_yaml_file(yaml_file, download_imgs=False):
             doc = yaml.safe_load(report_contents)
     except yaml.parser.ParserError, e:
         print 'repo', repo_name, 'contains bad report.yaml file', str(e)
+        return
+
+    except yaml.scanner.ScannerError, e:
+        print 'repo', repo_name, 'contains bad report.yaml file', str(e)
+        return
 
     try:
         team_photo = doc['team']['picture']
@@ -72,9 +77,9 @@ def process_yaml_file(yaml_file, download_imgs=False):
         return
     return doc
 
-def save_team_files(teams, yaml_dir):
+def save_team_files(team_names, yaml_dir):
     g = github.Github(GITHUB_ACCESS_TOKEN)
-    for team in teams:
+    for team in team_names:
         print 'getting yaml file for %s...' % team
         try:
             repo_name = "%s/%s" % (ORG_NAME, team)
@@ -240,23 +245,13 @@ def build_pages_from_scratch():
     output_index = os.path.join(PWD, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
     write_template_output_to_file(index, output_index)
 
-# yaml files assumed to live in OUTPUT_DIR_NAME/YAML_DIR_NAME
-def build_pages_from_existing():
-    # extract teams data
-    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
-    (team_names, team_metadata) = get_teams(teams_file)
-
-    # This is where it will look for yaml data files.
-    # TODO: control with parameter instead?
-    yaml_dir = os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME)
-
-    # create index page
-    sections = get_sections(team_metadata)
+def build_pages_from_existing(teams_metadata):
+    sections = get_sections(teams_metadata)
     for section in sections:
         teams = sections[section]
         team_docs = []
         for team in teams:
-            team_doc = process_yaml_file(os.path.join(yaml_dir, "%s.yaml" % team),
+            team_doc = process_yaml_file(os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME, "%s.yaml" % team),
                                         download_imgs=False)
             if team_doc:
                 team_docs.append(team_doc)
@@ -267,14 +262,8 @@ def build_pages_from_existing():
     write_template_output_to_file(index, output_index)
 
 # TODO: atm only works if you've built the index pages
-def build_crit_pages():
-    # extract teams data from files
-    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
-    (team_names, team_metadata) = get_teams(teams_file)
-
-    crit_groups = get_crit_groups_ordered_by_room(team_metadata)
-    teams = load_teams_data(team_names, from_github=False)
-
+def build_crit_pages(teams, teams_metadata):
+    crit_groups = get_crit_groups_ordered_by_room(teams_metadata)
     (crit_A, crit_B) = create_crit_pages(crit_groups, teams)
 
     crit_a_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % 'A')
@@ -288,11 +277,7 @@ def build_crit_pages():
     output_crit_groups_xlsx('B', crit_groups['B'], teams)
 
 # TODO: currently relies on base site being built
-def build_new_site_design():
-    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
-    (team_names, team_metadata) = get_teams(teams_file)
-    teams = load_teams_data(team_names, from_github=False)
-
+def build_new_site_design(teams):
     directory = create_directory_page(teams)
     directory_file = os.path.join(PWD, OUTPUT_DIR_NAME, DIRECTORY_PAGE_NAME)
     write_template_output_to_file(directory, directory_file)
@@ -304,13 +289,24 @@ def build_new_site_design():
                                         "%s.html" % team)
         write_template_output_to_file(team_page, team_page_file)
 
+def create_all_pages():
+    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
+    (team_names, teams_metadata) = get_teams(teams_file)
+
+    if not args.local:
+        save_team_files(team_names, os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME))
+
+    from_github = not args.local
+    teams = load_teams_data(team_names, from_github=from_github)
+
+    build_new_site_design(teams)
+    build_crit_pages(teams, teams_metadata)
+    build_pages_from_existing(teams_metadata)
+
 def write_template_output_to_file(output, dst):
     with open(dst, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', output).encode('ascii','ignore'))
     print outfile
 
 if __name__ == '__main__':
-    build_pages_from_existing()
-    # build_pages_from_scratch()
-    # build_crit_pages()
-    build_new_site_design()
+    create_all_pages()

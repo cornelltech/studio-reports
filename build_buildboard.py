@@ -139,11 +139,19 @@ def load_teams_data(team_names, from_github=False):
         team_data[team_name] = team_doc
     return team_data
 
-def create_output_directories(target_directory):
+def setup_output_directories(target_directory):
     output_dir = os.path.join(target_directory, OUTPUT_DIR_NAME)
     if not os.path.exists(output_dir):
         print 'creating new directory:', output_dir
         os.makedirs(output_dir)
+
+    # copy over static directory so that you can view files locally
+    src = os.path.join(PWD, 'static')
+    dst = os.path.join(PWD, OUTPUT_DIR_NAME, 'static')
+    if os.path.exists(dst):
+		shutil.rmtree(dst)
+    shutil.copytree(src, dst)
+
     yaml_dir = os.path.join(output_dir, YAML_DIR_NAME)
     if not os.path.exists(yaml_dir):
         print 'creating new directory:', yaml_dir
@@ -205,7 +213,7 @@ def output_crit_groups_xlsx(group, rooms, teams):
 
 def build_pages_from_scratch():
     # setup output directories
-    create_output_directories(PWD)
+    setup_output_directories(PWD)
 
     # extract teams data
     teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
@@ -301,19 +309,8 @@ def write_template_output_to_file(output, dst):
         outfile.write(unicodedata.normalize('NFKD', output).encode('ascii','ignore'))
     print outfile
 
-def copy_static_dir_to_output():
-    src = os.path.join(PWD, 'static')
-    dst = os.path.join(PWD, OUTPUT_DIR_NAME, 'static')
-
-    if os.path.exists(dst):
-		shutil.rmtree(dst)
-
-	# copy over new ones
-    shutil.copytree(src, dst)
-
 if __name__ == '__main__':
     build_pages_from_existing()
     # build_pages_from_scratch()
     # build_crit_pages()
-    copy_static_dir_to_output()
     build_new_site_design()

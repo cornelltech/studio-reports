@@ -81,12 +81,14 @@ def save_team_photos(team_names):
                 team_photo = doc['team']['picture']
                 team_photo_url = handle_photos.get_photo_url(team, team_photo)
                 team_photo_path = handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME, team, team_photo)
+                handle_photos.save_photo(team_photo_url, team_photo_path)
             except (KeyError, TypeError), e:
                 print 'repo', team, 'missing team photo:', str(e)
             try:
                 company_logo = doc['company']['logo']
                 logo_url = handle_photos.get_photo_url(team, doc['company']['logo'])
                 logo_path = handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME, team, company_logo)
+                handle_photos.save_photo(logo_url, logo_path)
             except (KeyError, TypeError), e:
                 print 'repo', team, 'missing company logo:', str(e)
 
@@ -130,10 +132,13 @@ def load_teams_data(team_names):
     return team_data
 
 def setup_output_directories(target_directory):
+    def create_dir(dirname):
+        if not os.path.exists(dirname):
+            print 'creating new directory:', dirname
+            os.makedirs(dirname)
+
     output_dir = os.path.join(target_directory, OUTPUT_DIR_NAME)
-    if not os.path.exists(output_dir):
-        print 'creating new directory:', output_dir
-        os.makedirs(output_dir)
+    create_dir(output_dir)
 
     # copy over static directory so that you can view files locally
     src = os.path.join(PWD, 'static')
@@ -143,21 +148,18 @@ def setup_output_directories(target_directory):
     shutil.copytree(src, dst)
 
     yaml_dir = os.path.join(output_dir, YAML_DIR_NAME)
-    if not os.path.exists(yaml_dir):
-        print 'creating new directory:', yaml_dir
-        os.makedirs(yaml_dir)
+    create_dir(yaml_dir)
+
     team_photos_dir = os.path.join(output_dir, TEAM_PHOTOS_DIR_NAME)
-    if not os.path.exists(team_photos_dir):
-        print 'creating new directory:', team_photos_dir
-        os.makedirs(team_photos_dir)
+    create_dir(team_photos_dir)
+
     company_logos_dir = os.path.join(output_dir, COMPANY_LOGOS_DIR_NAME)
-    if not os.path.exists(company_logos_dir):
-        print 'creating new directory:', company_logos_dir
-        os.makedirs(company_logos_dir)
+    create_dir(company_logos_dir)
+
     team_pages_dir = os.path.join(output_dir, TEAM_PAGES_DIR_NAME)
-    if not os.path.exists(team_pages_dir):
-        print 'creating new directory:', team_pages_dir
-    return (output_dir, yaml_dir, team_photos_dir, company_logos_dir)
+    create_dir(team_pages_dir)
+
+    return (output_dir, yaml_dir, team_photos_dir, company_logos_dir, team_pages_dir)
 
 def create_index_page(sections):
     template = env.get_template('buildboard.html')
@@ -273,6 +275,8 @@ def build_new_site_design(teams):
         write_template_output_to_file(team_page, team_page_file)
 
 def create_all_pages():
+    setup_output_directories(PWD)
+
     teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, teams_metadata) = get_teams(teams_file)
 

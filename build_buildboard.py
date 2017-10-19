@@ -77,14 +77,14 @@ def process_yaml_file(yaml_file, download_imgs=False):
         return
     return doc
 
-def save_team_files(team_names, yaml_dir):
+def save_team_files(team_names):
     g = github.Github(GITHUB_ACCESS_TOKEN)
     for team in team_names:
         print 'getting yaml file for %s...' % team
         try:
             repo_name = "%s/%s" % (ORG_NAME, team)
             repo = g.get_repo(repo_name)
-            team_yaml_file = os.path.join(yaml_dir, "%s.yaml" % team)
+            team_yaml_file = os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME, "%s.yaml" % team)
             with open(team_yaml_file, 'w') as outfile:
                 yaml_file = repo.get_file_contents(YAML_FILE_NAME)
                 outfile.write(yaml_file.decoded_content)
@@ -227,7 +227,7 @@ def build_pages_from_scratch():
     yaml_dir = os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME)
 
     # save teams yaml
-    save_team_files(team_names, yaml_dir)
+    save_team_files(team_names)
 
     # create index page
     sections = get_sections(team_metadata)

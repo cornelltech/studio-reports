@@ -211,8 +211,6 @@ def build_pages_from_scratch():
     teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, team_metadata) = get_teams(teams_file)
 
-    yaml_dir = os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME)
-
     # save teams yaml
     save_team_files(team_names)
     save_team_photos(team_names)

@@ -295,7 +295,7 @@ def create_all_pages():
     (team_names, teams_metadata) = get_teams(teams_file)
 
     if not args.local:
-        save_team_files(team_names, os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME))
+        save_team_files(team_names)
 
     from_github = not args.local
     teams = load_teams_data(team_names, from_github=from_github)

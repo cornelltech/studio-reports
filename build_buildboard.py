@@ -21,60 +21,41 @@ args = parser.parse_args()
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
                     autoescape=select_autoescape(['html', 'xml']))
 
-def process_yaml_file(yaml_file, download_imgs=False):
-    repo_name = os.path.splitext(os.path.basename(yaml_file))[0]
+def get_yaml_path(team_name):
+    return os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME, "%s.yaml" % team_name)
+
+def get_yaml_doc(team_name):
+    yaml_file = get_yaml_path(team_name)
     try:
         with open(yaml_file, 'r') as report_contents:
             doc = yaml.safe_load(report_contents)
-    except yaml.parser.ParserError, e:
-        print 'repo', repo_name, 'contains bad report.yaml file', str(e)
+            return doc
+    except (yaml.parser.ParserError, yaml.scanner.ScannerError), e:
+        print 'repo', team_name, 'contains bad report.yaml file', str(e)
         return
 
-    except yaml.scanner.ScannerError, e:
-        print 'repo', repo_name, 'contains bad report.yaml file', str(e)
-        return
-
-    try:
-        team_photo = doc['team']['picture']
-        if download_imgs:
-            # save team photo and update yaml to hold relative path
-            team_photo_url = handle_photos.get_photo_url(repo_name, team_photo)
-            team_photo_path = handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME, repo_name, team_photo)
-            doc['team']['picture'] = handle_photos.save_photo(team_photo_url, team_photo_path)
-
-        else:  # update paths anyway
+def process_yaml_file(yaml_file):
+    repo_name = os.path.splitext(os.path.basename(yaml_file))[0]
+    doc = get_yaml_doc(yaml_file)
+    if doc:
+        try:
+            team_photo = doc['team']['picture']
             doc['team']['picture'] = \
                 handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME,
-                                                        repo_name, team_photo))
-    except KeyError, e:
-        print 'repo', repo_name, 'missing team photo:', str(e)
+                                                    repo_name, team_photo))
+        except (KeyError, TypeError), e:
+            print 'can\'t store team photo for', repo_name, str(e)
 
-    except TypeError, e:
-        print 'repo', repo_name, 'missing some kind of info:', str(e)
-
-    try:
-        company_logo = doc['company']['logo']
-        if download_imgs:
-            # save company logo and update yaml to hold relative path
-            logo_url = handle_photos.get_photo_url(repo_name, doc['company']['logo'])
-            logo_path = handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME, repo_name, company_logo)
-            doc['company']['logo'] = handle_photos.save_photo(logo_url, logo_path)
-
-        else:  # update paths anyway
+        try:
+            company_logo = doc['company']['logo']
             doc['company']['logo'] = \
                 handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME,
-                                                        repo_name, company_logo))
-    except KeyError, e:
-        print 'repo', repo_name, 'missing company logo:', str(e)
-    except TypeError, e:
-        print 'repo', repo_name, 'missing some kind of info:', str(e)
+                                                    repo_name, company_logo))
+        except (KeyError, TypeError), e:
+            print 'can\'t store company logo for', repo_name, str(e)
 
-    # add team name to yaml
-    try:
+        # add in repo name
         doc['repo'] = repo_name
-    except TypeError, e:
-        print 'repo', repo_name, 'is missing:', str(e)
-        return
     return doc
 
 def save_team_files(team_names):
@@ -84,12 +65,30 @@ def save_team_files(team_names):
         try:
             repo_name = "%s/%s" % (ORG_NAME, team)
             repo = g.get_repo(repo_name)
-            team_yaml_file = os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME, "%s.yaml" % team)
+            team_yaml_file = get_yaml_path(team)
             with open(team_yaml_file, 'w') as outfile:
                 yaml_file = repo.get_file_contents(YAML_FILE_NAME)
                 outfile.write(yaml_file.decoded_content)
         except github.GithubException, e:
             print "There's a problem with that repository's yaml file:", str(e)
+
+def save_team_photos(team_names):
+    for team in team_names:
+        print 'downloading photos for %s...' % team
+        doc = get_yaml_doc(team)
+        if doc:
+            try:
+                team_photo = doc['team']['picture']
+                team_photo_url = handle_photos.get_photo_url(team, team_photo)
+                team_photo_path = handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME, team, team_photo)
+            except (KeyError, TypeError), e:
+                print 'repo', team, 'missing team photo:', str(e)
+            try:
+                company_logo = doc['company']['logo']
+                logo_url = handle_photos.get_photo_url(team, doc['company']['logo'])
+                logo_path = handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME, team, company_logo)
+            except (KeyError, TypeError), e:
+                print 'repo', team, 'missing company logo:', str(e)
 
 # def save_team_file(team, yaml_dir, g):
 #     print 'getting yaml file for %s...' % team
@@ -135,12 +134,10 @@ def get_crit_groups_ordered_by_room(teams_metadata):
             crit_group[team_room].append(team_name)
     return crit_rooms
 
-def load_teams_data(team_names, from_github=False):
+def load_teams_data(team_names):
     team_data = {}
     for team_name in team_names:
-        team_doc = process_yaml_file(os.path.join(PWD, OUTPUT_DIR_NAME,
-                                    YAML_DIR_NAME, "%s.yaml" % team_name),
-                                    download_imgs=from_github)
+        team_doc = process_yaml_file(team_name)
         team_data[team_name] = team_doc
     return team_data
 
@@ -228,6 +225,7 @@ def build_pages_from_scratch():
 
     # save teams yaml
     save_team_files(team_names)
+    save_team_photos(team_names)
 
     # create index page
     sections = get_sections(team_metadata)
@@ -235,8 +233,7 @@ def build_pages_from_scratch():
         teams = sections[section]
         team_docs = []
         for team in teams:
-            team_doc = process_yaml_file(os.path.join(yaml_dir, "%s.yaml" % team),
-                                        download_imgs=True)
+            team_doc = process_yaml_file(team)
             if team_doc:
                 team_docs.append(team_doc)
         sections[section] = team_docs
@@ -251,9 +248,7 @@ def build_index_page(teams_metadata):
         teams = sections[section]
         team_docs = []
         for team in teams:
-            download_imgs = not args.local
-            team_doc = process_yaml_file(os.path.join(PWD, OUTPUT_DIR_NAME, YAML_DIR_NAME, "%s.yaml" % team),
-                                        download_imgs=download_imgs)
+            team_doc = process_yaml_file(team)
             if team_doc:
                 team_docs.append(team_doc)
         sections[section] = team_docs
@@ -277,7 +272,6 @@ def build_crit_pages(teams, teams_metadata):
     output_crit_groups_xlsx('A', crit_groups['A'], teams)
     output_crit_groups_xlsx('B', crit_groups['B'], teams)
 
-# TODO: currently relies on base site being built
 def build_new_site_design(teams):
     directory = create_directory_page(teams)
     directory_file = os.path.join(PWD, OUTPUT_DIR_NAME, DIRECTORY_PAGE_NAME)
@@ -296,10 +290,9 @@ def create_all_pages():
 
     if not args.local:
         save_team_files(team_names)
+        save_team_photos(team_names)
 
-    from_github = not args.local
-    teams = load_teams_data(team_names, from_github=from_github)
-
+    teams = load_teams_data(team_names)
     build_new_site_design(teams)
     build_crit_pages(teams, teams_metadata)
     build_index_page(teams_metadata)

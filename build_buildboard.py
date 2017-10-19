@@ -90,18 +90,6 @@ def save_team_photos(team_names):
             except (KeyError, TypeError), e:
                 print 'repo', team, 'missing company logo:', str(e)
 
-# def save_team_file(team, yaml_dir, g):
-#     print 'getting yaml file for %s...' % team
-#     try:
-#         repo_name = "%s/%s" % (ORG_NAME, team)
-#         repo = g.get_repo(repo_name)
-#         team_yaml_file = os.path.join(yaml_dir, "%s.yaml" % team)
-#         with open(team_yaml_file, 'w') as outfile:
-#             yaml_file = repo.get_file_contents(YAML_FILE_NAME)
-#             outfile.write(yaml_file.decoded_content)
-#     except github.GithubException, e:
-#         print "There's a problem with that repository's yaml file:", str(e)
-
 def get_teams(teams_file):
     with open(teams_file) as tf:
         team_metadata = [team.strip() for team in tf.readlines()]

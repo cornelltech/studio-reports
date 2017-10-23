@@ -1,3 +1,4 @@
+import logging
 import os
 import requests
 import shutil
@@ -16,7 +17,7 @@ def get_photo_path_for_web(photo_path):
     return web_path
 
 def save_photo(url, output_path):
-    print 'saving %s' % os.path.basename(output_path)
+    logging.info('saving %s' % os.path.basename(output_path))
     access_token = 'token %s' % GITHUB_ACCESS_TOKEN
     response = requests.get(url, stream=True, headers={'Authorization': access_token})
     with open(output_path, 'wb') as outfile:

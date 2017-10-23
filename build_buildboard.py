@@ -2,6 +2,7 @@ import argparse
 import github
 import handle_photos
 import jinja2
+import logging
 import os
 import requests
 import shutil
@@ -13,6 +14,8 @@ import pdb
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from names import *
+
+logging.basicConfig(filename='output.log',level=logging.INFO)
 
 parser = argparse.ArgumentParser(description="Top-level flags.")
 parser.add_argument('--local', action='store_true')
@@ -30,7 +33,7 @@ def get_yaml_doc(team_name):
             doc = yaml.safe_load(report_contents)
             return doc
     except (yaml.parser.ParserError, yaml.scanner.ScannerError), e:
-        print 'repo', team_name, 'contains bad report.yaml file', str(e)
+        logging.error('repo', team_name, 'contains bad report.yaml file', str(e))
         return
 
 def process_yaml_file(yaml_file):
@@ -43,7 +46,7 @@ def process_yaml_file(yaml_file):
                 handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME,
                                                     repo_name, team_photo))
         except (KeyError, TypeError), e:
-            print 'can\'t store team photo for', repo_name, str(e)
+            logging.error('can\'t store team photo for', repo_name, str(e))
 
         try:
             company_logo = doc['company']['logo']
@@ -51,7 +54,7 @@ def process_yaml_file(yaml_file):
                 handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME,
                                                     repo_name, company_logo))
         except (KeyError, TypeError), e:
-            print 'can\'t store company logo for', repo_name, str(e)
+            logging.error('can\'t store company logo for', repo_name, str(e))
 
         # add in repo name
         doc['repo'] = repo_name
@@ -60,7 +63,7 @@ def process_yaml_file(yaml_file):
 def save_team_files(team_names):
     g = github.Github(GITHUB_ACCESS_TOKEN)
     for team in team_names:
-        print 'getting yaml file for %s...' % team
+        logging.info('getting yaml file for %s...' % team)
         try:
             repo_name = "%s/%s" % (ORG_NAME, team)
             repo = g.get_repo(repo_name)
@@ -69,11 +72,11 @@ def save_team_files(team_names):
                 yaml_file = repo.get_file_contents(YAML_FILE_NAME)
                 outfile.write(yaml_file.decoded_content)
         except github.GithubException, e:
-            print "There's a problem with that repository's yaml file:", str(e)
+            logging.error("There's a problem with that repository's yaml file:", str(e))
 
 def save_team_photos(team_names):
     for team in team_names:
-        print 'downloading photos for %s...' % team
+        logging.info('downloading photos for %s...' % team)
         doc = get_yaml_doc(team)
         if doc:
             try:
@@ -82,14 +85,14 @@ def save_team_photos(team_names):
                 team_photo_path = handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME, team, team_photo)
                 handle_photos.save_photo(team_photo_url, team_photo_path)
             except (KeyError, TypeError), e:
-                print 'repo', team, 'missing team photo:', str(e)
+                logging.error('repo', team, 'missing team photo:', str(e))
             try:
                 company_logo = doc['company']['logo']
                 logo_url = handle_photos.get_photo_url(team, doc['company']['logo'])
                 logo_path = handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME, team, company_logo)
                 handle_photos.save_photo(logo_url, logo_path)
             except (KeyError, TypeError), e:
-                print 'repo', team, 'missing company logo:', str(e)
+                logging.error('repo', team, 'missing company logo:', str(e))
 
 def get_teams(teams_file):
     with open(teams_file) as tf:
@@ -132,7 +135,7 @@ def load_teams_data(team_names):
 
 def create_dir(dirname):
     if not os.path.exists(dirname):
-        print 'creating new directory:', dirname
+        logging.info('creating new directory:', dirname)
         os.makedirs(dirname)
 
 def setup_output_directories(target_directory):
@@ -289,7 +292,7 @@ def create_all_pages(local):
 def write_template_output_to_file(output, dst):
     with open(dst, 'w') as outfile:
         outfile.write(unicodedata.normalize('NFKD', output).encode('ascii','ignore'))
-    print outfile
+    logging.info(outfile)
 
 if __name__ == '__main__':
     args = parser.parse_args()

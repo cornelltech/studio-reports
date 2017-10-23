@@ -204,33 +204,6 @@ def output_crit_groups_xlsx(group, rooms, teams):
                 row += 1
     workbook.close()
 
-def build_pages_from_scratch():
-    # setup output directories
-    setup_output_directories(PWD)
-
-    # extract teams data
-    teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
-    (team_names, team_metadata) = get_teams(teams_file)
-
-    # save teams yaml
-    save_team_files(team_names)
-    save_team_photos(team_names)
-
-    # create index page
-    sections = get_sections(team_metadata)
-    for section in sections:
-        teams = sections[section]
-        team_docs = []
-        for team in teams:
-            team_doc = process_yaml_file(team)
-            if team_doc:
-                team_docs.append(team_doc)
-        sections[section] = team_docs
-    index = create_index_page(sections)
-
-    output_index = os.path.join(PWD, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
-    write_template_output_to_file(index, output_index)
-
 def build_index_page(teams_metadata):
     sections = get_sections(teams_metadata)
     for section in sections:

@@ -4,7 +4,6 @@ import handle_photos
 import jinja2
 import logging
 import os
-import requests
 import shutil
 import unicodedata
 import xlsxwriter

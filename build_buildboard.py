@@ -14,9 +14,8 @@ import pdb
 from jinja2 import Environment, PackageLoader, select_autoescape
 from names import *
 
-parser = argparse.ArgumentParser(description="Top-level controls.")
+parser = argparse.ArgumentParser(description="Top-level flags.")
 parser.add_argument('--local', action='store_true')
-args = parser.parse_args()
 
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
                     autoescape=select_autoescape(['html', 'xml']))
@@ -131,12 +130,12 @@ def load_teams_data(team_names):
         team_data[team_name] = team_doc
     return team_data
 
-def setup_output_directories(target_directory):
-    def create_dir(dirname):
-        if not os.path.exists(dirname):
-            print 'creating new directory:', dirname
-            os.makedirs(dirname)
+def create_dir(dirname):
+    if not os.path.exists(dirname):
+        print 'creating new directory:', dirname
+        os.makedirs(dirname)
 
+def setup_output_directories(target_directory):
     output_dir = os.path.join(target_directory, OUTPUT_DIR_NAME)
     create_dir(output_dir)
 
@@ -272,13 +271,13 @@ def build_new_site_design(teams):
                                         "%s.html" % team)
         write_template_output_to_file(team_page, team_page_file)
 
-def create_all_pages():
+def create_all_pages(local):
     setup_output_directories(PWD)
 
     teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, teams_metadata) = get_teams(teams_file)
 
-    if not args.local:
+    if not local:
         save_team_files(team_names)
         save_team_photos(team_names)
 
@@ -293,4 +292,5 @@ def write_template_output_to_file(output, dst):
     print outfile
 
 if __name__ == '__main__':
-    create_all_pages()
+    args = parser.parse_args()
+    create_all_pages(args.local)

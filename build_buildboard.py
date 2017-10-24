@@ -219,20 +219,17 @@ def build_index_page(teams_metadata):
     output_index = os.path.join(PWD, OUTPUT_DIR_NAME, INDEX_FILE_NAME)
     write_template_output_to_file(index, output_index)
 
-# TODO: atm only works if you've built the index pages
 def build_crit_pages(teams, teams_metadata):
     crit_groups = get_crit_groups_ordered_by_room(teams_metadata)
     (crit_A, crit_B) = create_crit_pages(crit_groups, teams)
 
-    crit_a_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % 'A')
-    write_template_output_to_file(crit_A, crit_a_file)
+    def create_crit_group_pages(which, data):
+        crit_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % which)
+        write_template_output_to_file(data, crit_file)
+        output_crit_groups_xlsx(which, crit_groups[which], teams)
 
-    crit_b_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % 'B')
-    write_template_output_to_file(crit_B, crit_b_file)
-
-    # excel formatted files
-    output_crit_groups_xlsx('A', crit_groups['A'], teams)
-    output_crit_groups_xlsx('B', crit_groups['B'], teams)
+    create_crit_group_pages('A', crit_A)
+    create_crit_group_pages('B', crit_B)
 
 def build_new_site_design(teams):
     directory = create_directory_page(teams)

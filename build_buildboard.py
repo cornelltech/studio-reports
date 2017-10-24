@@ -44,7 +44,7 @@ def process_yaml_file(team_name):
                 handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME,
                                                     team_name, team_photo))
         except (KeyError, TypeError), e:
-            logging.error('can\'t store team photo for', team_name, str(e))
+            logging.error("can't store team photo for", team_name, str(e))
 
         try:
             company_logo = doc['company']['logo']
@@ -52,7 +52,7 @@ def process_yaml_file(team_name):
                 handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME,
                                                     team_name, company_logo))
         except (KeyError, TypeError), e:
-            logging.error('can\'t store company logo for', team_name, str(e))
+            logging.error("can't store company logo for", team_name, str(e))
 
         # add in repo name
         doc['repo'] = team_name

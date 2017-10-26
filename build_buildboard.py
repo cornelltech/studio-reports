@@ -144,8 +144,8 @@ def setup_output_directories(target_directory):
     create_dir(output_dir)
 
     # copy over static directory so that you can view files locally
-    src = os.path.join(PWD, 'static')
-    dst = os.path.join(PWD, OUTPUT_DIR_NAME, 'static')
+    src = os.path.join(target_directory, 'static')
+    dst = os.path.join(target_directory, OUTPUT_DIR_NAME, 'static')
     if os.path.exists(dst):
 		shutil.rmtree(dst)
     shutil.copytree(src, dst)

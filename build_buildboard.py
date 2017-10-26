@@ -20,6 +20,7 @@ parser.add_argument('--local-data', action='store_true')
 parser.add_argument('--log-to-stdout', action='store_true')
 parser.add_argument('--log-file', action='store')
 
+g = github.Github(GITHUB_ACCESS_TOKEN)
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
                     autoescape=select_autoescape(['html', 'xml']))
 
@@ -61,7 +62,6 @@ def process_yaml_file(team_name):
     return doc
 
 def save_team_files(team_names):
-    g = github.Github(GITHUB_ACCESS_TOKEN)
     for team_name in team_names:
         logging.info('getting yaml file for %s...' % team_name)
         try:

@@ -3,7 +3,7 @@ import github
 import handle_photos
 import jinja2
 import logging
-import names
+import constants
 import os
 import shutil
 import sys
@@ -20,12 +20,12 @@ parser.add_argument('--local-data', action='store_true')
 parser.add_argument('--log-to-stdout', action='store_true')
 parser.add_argument('--log-file', action='store')
 
-g = github.Github(names.GITHUB_ACCESS_TOKEN)
+g = github.Github(constants.GITHUB_ACCESS_TOKEN)
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
                     autoescape=select_autoescape(['html', 'xml']))
 
 def get_yaml_path(team_name):
-    return os.path.join(names.PWD, names.OUTPUT_DIR_NAME, names.YAML_DIR_NAME, "%s.yaml" % team_name)
+    return os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.YAML_DIR_NAME, "%s.yaml" % team_name)
 
 def get_yaml_doc(team_name):
     yaml_file = get_yaml_path(team_name)
@@ -45,7 +45,7 @@ def process_yaml_file(team_name):
         try:
             team_photo = doc['team']['picture']
             doc['team']['picture'] = \
-                handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(names.TEAM_PHOTOS_DIR_NAME,
+                handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.TEAM_PHOTOS_DIR_NAME,
                                                     team_name, team_photo))
         except (KeyError, TypeError), e:
             logging.error("can't store team photo for %s: %s" % (team_name, str(e)))
@@ -53,7 +53,7 @@ def process_yaml_file(team_name):
         try:
             company_logo = doc['company']['logo']
             doc['company']['logo'] = \
-                handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(names.COMPANY_LOGOS_DIR_NAME,
+                handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.COMPANY_LOGOS_DIR_NAME,
                                                     team_name, company_logo))
         except (KeyError, TypeError), e:
             logging.error("can't store company logo for %s: %s" % (team_name, str(e)))
@@ -63,28 +63,28 @@ def process_yaml_file(team_name):
         logging.error("missing yaml: %s" % team_name)
     return doc
 
-def save_team_files(team_names):
-    for team_name in team_names:
+def save_team_files(team_constants):
+    for team_name in team_constants:
         logging.info('getting yaml file for %s...' % team_name)
         try:
-            repo_name = "%s/%s" % (names.ORG_NAME, team_name)
+            repo_name = "%s/%s" % (constants.ORG_NAME, team_name)
             repo = g.get_repo(repo_name)
             team_yaml_file = get_yaml_path(team_name)
             with open(team_yaml_file, 'w') as outfile:
-                yaml_file = repo.get_file_contents(names.YAML_FILE_NAME)
+                yaml_file = repo.get_file_contents(constants.YAML_FILE_NAME)
                 outfile.write(yaml_file.decoded_content)
         except github.GithubException, e:
             logging.error("There's a problem with the yaml file for %s: %s" % (team_name, str(e)))
 
-def save_team_photos(team_names):
-    for team_name in team_names:
+def save_team_photos(team_constants):
+    for team_name in team_constants:
         logging.info('downloading photos for %s...' % team_name)
         doc = get_yaml_doc(team_name)
         if doc:
             try:
                 team_photo = doc['team']['picture']
                 team_photo_url = handle_photos.get_photo_url(team_name, team_photo)
-                team_photo_path = handle_photos.save_photo_path(names.TEAM_PHOTOS_DIR_NAME, team_name, team_photo)
+                team_photo_path = handle_photos.save_photo_path(constants.TEAM_PHOTOS_DIR_NAME, team_name, team_photo)
                 handle_photos.save_photo(team_photo_url, team_photo_path)
             except (KeyError, TypeError), e:
                 logging.error('repo %s missing team photo: %s' % (team_name, str(e)))
@@ -92,7 +92,7 @@ def save_team_photos(team_names):
             try:
                 company_logo = doc['company']['logo']
                 logo_url = handle_photos.get_photo_url(team_name, doc['company']['logo'])
-                logo_path = handle_photos.save_photo_path(names.COMPANY_LOGOS_DIR_NAME, team_name, company_logo)
+                logo_path = handle_photos.save_photo_path(constants.COMPANY_LOGOS_DIR_NAME, team_name, company_logo)
                 handle_photos.save_photo(logo_url, logo_path)
             except (KeyError, TypeError), e:
                 logging.error('repo %s missing company logo: %s' % (team_name, str(e)))
@@ -102,12 +102,12 @@ def save_team_photos(team_names):
 def get_teams(teams_file):
     with open(teams_file) as tf:
         team_metadata = [team.strip() for team in tf.readlines()]
-    team_names = [team.split("\t")[3] for team in team_metadata]
-    return (team_names, team_metadata)
+    team_constants = [team.split("\t")[3] for team in team_metadata]
+    return (team_constants, team_metadata)
 
 def get_sections(teams_metadata):
     sections = {}
-    for section in names.SECTIONS:
+    for section in constants.SECTIONS:
         sections[section] = []
     for line in teams_metadata:
         team = line.split('\t')
@@ -131,9 +131,9 @@ def get_crit_groups_ordered_by_room(teams_metadata):
             crit_group[team_room].append(team_name)
     return crit_rooms
 
-def load_teams_data(team_names):
+def load_teams_data(team_constants):
     team_data = {}
-    for team_name in team_names:
+    for team_name in team_constants:
         team_doc = process_yaml_file(team_name)
         team_data[team_name] = team_doc
     return team_data
@@ -144,18 +144,18 @@ def create_dir(dirname):
         os.makedirs(dirname)
 
 def setup_output_directories(target_directory):
-    output_dir = os.path.join(target_directory, names.OUTPUT_DIR_NAME)
+    output_dir = os.path.join(target_directory, constants.OUTPUT_DIR_NAME)
     create_dir(output_dir)
 
     # copy over static directory so that you can view files locally
-    src = os.path.join(target_directory, names.STATIC_DIR_NAME)
-    dst = os.path.join(target_directory, names.OUTPUT_DIR_NAME, names.STATIC_DIR_NAME)
+    src = os.path.join(target_directory, constants.STATIC_DIR_NAME)
+    dst = os.path.join(target_directory, constants.OUTPUT_DIR_NAME, constants.STATIC_DIR_NAME)
     if os.path.exists(dst):
 		shutil.rmtree(dst)
     shutil.copytree(src, dst)
 
-    output_dirs = [names.YAML_DIR_NAME, names.TEAM_PAGES_DIR_NAME,
-                    names.TEAM_PHOTOS_DIR_NAME, names.COMPANY_LOGOS_DIR_NAME]
+    output_dirs = [constants.YAML_DIR_NAME, constants.TEAM_PAGES_DIR_NAME,
+                    constants.TEAM_PHOTOS_DIR_NAME, constants.COMPANY_LOGOS_DIR_NAME]
 
     for directory in output_dirs:
         dir_path = os.path.join(output_dir, directory)
@@ -186,7 +186,7 @@ def create_team_page(team):
     return template.render(team=team)
 
 def output_crit_groups_xlsx(group, rooms, teams):
-    workbook = xlsxwriter.Workbook(os.path.join(names.PWD, names.OUTPUT_DIR_NAME, names.XLSX_FILE_NAME % group))
+    workbook = xlsxwriter.Workbook(os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.XLSX_FILE_NAME % group))
     worksheet = workbook.add_worksheet()
     columns = {'Team Name': 'A%d', 'Narrative': 'B%d', 'Room': 'C%d'}
     row = 1
@@ -215,12 +215,12 @@ def build_index_page(teams_metadata):
         sections[section] = team_docs
 
     index = create_index_page(sections)
-    output_index = os.path.join(names.PWD, names.OUTPUT_DIR_NAME, names.INDEX_FILE_NAME)
+    output_index = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.INDEX_FILE_NAME)
     write_template_output_to_file(index, output_index)
 
 def build_crit_pages(teams, teams_metadata):
     def create_crit_group_pages(group, data):
-        crit_file = os.path.join(names.PWD, names.OUTPUT_DIR_NAME, names.CRIT_FILE_NAME % group)
+        crit_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.CRIT_FILE_NAME % group)
         write_template_output_to_file(data, crit_file)
         output_crit_groups_xlsx(group, crit_groups[group], teams)
 
@@ -232,27 +232,27 @@ def build_crit_pages(teams, teams_metadata):
 
 def build_new_site_design(teams):
     directory = create_directory_page(teams)
-    directory_file = os.path.join(names.PWD, names.OUTPUT_DIR_NAME, names.DIRECTORY_PAGE_NAME)
+    directory_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.DIRECTORY_PAGE_NAME)
     write_template_output_to_file(directory, directory_file)
 
     for team in teams:
         team_content = teams[team]
         team_page = create_team_page(team_content)
-        team_page_file = os.path.join(names.PWD, names.OUTPUT_DIR_NAME, names.TEAM_PAGES_DIR_NAME,
+        team_page_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.TEAM_PAGES_DIR_NAME,
                                         "%s.html" % team)
         write_template_output_to_file(team_page, team_page_file)
 
 def create_all_pages(local_data):
-    setup_output_directories(names.PWD)
+    setup_output_directories(constants.PWD)
 
-    teams_file = os.path.join(names.PWD, names.TEAMS_FILE_NAME)
-    (team_names, teams_metadata) = get_teams(teams_file)
+    teams_file = os.path.join(constants.PWD, constants.TEAMS_FILE_NAME)
+    (team_constants, teams_metadata) = get_teams(teams_file)
 
     if not local_data:
-        save_team_files(team_names)
-        save_team_photos(team_names)
+        save_team_files(team_constants)
+        save_team_photos(team_constants)
 
-    teams = load_teams_data(team_names)
+    teams = load_teams_data(team_constants)
     build_new_site_design(teams)
     build_crit_pages(teams, teams_metadata)
     build_index_page(teams_metadata)

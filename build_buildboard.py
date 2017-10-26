@@ -5,6 +5,7 @@ import jinja2
 import logging
 import os
 import shutil
+import sys
 import unicodedata
 import xlsxwriter
 import yaml
@@ -14,10 +15,10 @@ import pdb
 from jinja2 import Environment, PackageLoader, select_autoescape
 from names import *
 
-logging.basicConfig(filename='output.log',level=logging.INFO)
-
 parser = argparse.ArgumentParser(description="Top-level flags.")
 parser.add_argument('--local', action='store_true')
+parser.add_argument('--log-to-stdout', action='store_true')
+parser.add_argument('--log-file', action='store')
 
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
                     autoescape=select_autoescape(['html', 'xml']))
@@ -133,7 +134,7 @@ def load_teams_data(team_names):
 
 def create_dir(dirname):
     if not os.path.exists(dirname):
-        logging.info('creating new directory:', dirname)
+        logging.info('creating new directory: %s' % dirname)
         os.makedirs(dirname)
 
 def setup_output_directories(target_directory):
@@ -262,6 +263,24 @@ def write_template_output_to_file(output, dst):
         outfile.write(unicodedata.normalize('NFKD', output).encode('ascii','ignore'))
     logging.info(outfile)
 
+def config_logging(args):
+    # config basics
+    format_style = '%(asctime)s - %(levelname)s - %(message)s'
+    if args.log_file:
+        logging.basicConfig(filename=args.log_file, format=format_style)
+    else:
+        logging.basicConfig(filename='output.log', format=format_style)
+
+    # if you're also logging to stdout, set up additional handler
+    if args.log_to_stdout:
+        logger = logging.getLogger()
+        logger.setLevel(logging.INFO)
+        handler = logging.StreamHandler(sys.stdout)
+        formatter = logging.Formatter(format_style)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
 if __name__ == '__main__':
     args = parser.parse_args()
+    config_logging(args)
     create_all_pages(args.local)

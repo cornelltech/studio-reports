@@ -29,6 +29,7 @@ def copy_dir_to_site_directory(dirname):
 	shutil.copytree(src, dst)
 
 if __name__ == '__main__':
+	build_buildboard.config_logging(args)
 	build_buildboard.create_dir(args.dir)
 	build_buildboard.create_all_pages(args.local)
 

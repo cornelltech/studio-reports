@@ -154,19 +154,12 @@ def setup_output_directories(target_directory):
 		shutil.rmtree(dst)
     shutil.copytree(src, dst)
 
-    yaml_dir = os.path.join(output_dir, names.YAML_DIR_NAME)
-    create_dir(yaml_dir)
+    output_dirs = [names.YAML_DIR_NAME, names.TEAM_PAGES_DIR_NAME,
+                    names.TEAM_PHOTOS_DIR_NAME, names.COMPANY_LOGOS_DIR_NAME]
 
-    team_photos_dir = os.path.join(output_dir, names.TEAM_PHOTOS_DIR_NAME)
-    create_dir(team_photos_dir)
-
-    company_logos_dir = os.path.join(output_dir, names.COMPANY_LOGOS_DIR_NAME)
-    create_dir(company_logos_dir)
-
-    team_pages_dir = os.path.join(output_dir, names.TEAM_PAGES_DIR_NAME)
-    create_dir(team_pages_dir)
-
-    return (output_dir, yaml_dir, team_photos_dir, company_logos_dir, team_pages_dir)
+    for directory in output_dirs:
+        dir_path = os.path.join(output_dir, directory)
+        create_dir(dir_path)
 
 def create_index_page(sections):
     template = env.get_template('buildboard.html')

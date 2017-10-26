@@ -60,37 +60,37 @@ def process_yaml_file(team_name):
 
 def save_team_files(team_names):
     g = github.Github(GITHUB_ACCESS_TOKEN)
-    for team in team_names:
-        logging.info('getting yaml file for %s...' % team)
+    for team_name in team_names:
+        logging.info('getting yaml file for %s...' % team_name)
         try:
-            repo_name = "%s/%s" % (ORG_NAME, team)
+            repo_name = "%s/%s" % (ORG_NAME, team_name)
             repo = g.get_repo(repo_name)
-            team_yaml_file = get_yaml_path(team)
+            team_yaml_file = get_yaml_path(team_name)
             with open(team_yaml_file, 'w') as outfile:
                 yaml_file = repo.get_file_contents(YAML_FILE_NAME)
                 outfile.write(yaml_file.decoded_content)
         except github.GithubException, e:
-            logging.error("There's a problem with that repository's yaml file:", str(e))
+            logging.error("There's a problem with the yaml file for %s:" % team_name, str(e))
 
 def save_team_photos(team_names):
-    for team in team_names:
-        logging.info('downloading photos for %s...' % team)
-        doc = get_yaml_doc(team)
+    for team_name in team_names:
+        logging.info('downloading photos for %s...' % team_name)
+        doc = get_yaml_doc(team_name)
         if doc:
             try:
                 team_photo = doc['team']['picture']
-                team_photo_url = handle_photos.get_photo_url(team, team_photo)
-                team_photo_path = handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME, team, team_photo)
+                team_photo_url = handle_photos.get_photo_url(team_name, team_photo)
+                team_photo_path = handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME, team_name, team_photo)
                 handle_photos.save_photo(team_photo_url, team_photo_path)
             except (KeyError, TypeError), e:
-                logging.error('repo', team, 'missing team photo:', str(e))
+                logging.error('repo', team_name, 'missing team photo:', str(e))
             try:
                 company_logo = doc['company']['logo']
-                logo_url = handle_photos.get_photo_url(team, doc['company']['logo'])
-                logo_path = handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME, team, company_logo)
+                logo_url = handle_photos.get_photo_url(team_name, doc['company']['logo'])
+                logo_path = handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME, team_name, company_logo)
                 handle_photos.save_photo(logo_url, logo_path)
             except (KeyError, TypeError), e:
-                logging.error('repo', team, 'missing company logo:', str(e))
+                logging.error('repo', team_name, 'missing company logo:', str(e))
 
 def get_teams(teams_file):
     with open(teams_file) as tf:

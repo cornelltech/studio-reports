@@ -33,7 +33,7 @@ def get_yaml_doc(team_name):
             doc = yaml.safe_load(report_contents)
             return doc
     except (yaml.parser.ParserError, yaml.scanner.ScannerError), e:
-        logging.error('repo', team_name, 'contains bad report.yaml file', str(e))
+        logging.error('repo %s contains bad report.yaml file: %s' % (team_name, str(e)))
         return
 
 def process_yaml_file(team_name):
@@ -45,7 +45,7 @@ def process_yaml_file(team_name):
                 handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME,
                                                     team_name, team_photo))
         except (KeyError, TypeError), e:
-            logging.error("can't store team photo for", team_name, str(e))
+            logging.error("can't store team photo for %s: %s" % (team_name, str(e)))
 
         try:
             company_logo = doc['company']['logo']
@@ -53,7 +53,8 @@ def process_yaml_file(team_name):
                 handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME,
                                                     team_name, company_logo))
         except (KeyError, TypeError), e:
-            logging.error("can't store company logo for", team_name, str(e))
+            logging.error("can't store company logo for %s: %s" % (team_name, str(e)))
+
 
         # add in repo name
         doc['repo'] = team_name
@@ -71,7 +72,7 @@ def save_team_files(team_names):
                 yaml_file = repo.get_file_contents(YAML_FILE_NAME)
                 outfile.write(yaml_file.decoded_content)
         except github.GithubException, e:
-            logging.error("There's a problem with the yaml file for %s:" % team_name, str(e))
+            logging.error("There's a problem with the yaml file for %s: %s" % (team_name, str(e)))
 
 def save_team_photos(team_names):
     for team_name in team_names:
@@ -84,14 +85,15 @@ def save_team_photos(team_names):
                 team_photo_path = handle_photos.save_photo_path(TEAM_PHOTOS_DIR_NAME, team_name, team_photo)
                 handle_photos.save_photo(team_photo_url, team_photo_path)
             except (KeyError, TypeError), e:
-                logging.error('repo', team_name, 'missing team photo:', str(e))
+                logging.error('repo %s missing team photo: %s' % (team_name, str(e)))
+
             try:
                 company_logo = doc['company']['logo']
                 logo_url = handle_photos.get_photo_url(team_name, doc['company']['logo'])
                 logo_path = handle_photos.save_photo_path(COMPANY_LOGOS_DIR_NAME, team_name, company_logo)
                 handle_photos.save_photo(logo_url, logo_path)
             except (KeyError, TypeError), e:
-                logging.error('repo', team_name, 'missing company logo:', str(e))
+                logging.error('repo %s missing company logo: %s' % (team_name, str(e)))
 
 def get_teams(teams_file):
     with open(teams_file) as tf:

@@ -16,7 +16,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from names import *
 
 parser = argparse.ArgumentParser(description="Top-level flags.")
-parser.add_argument('--local', action='store_true')
+parser.add_argument('--local-data', action='store_true')
 parser.add_argument('--log-to-stdout', action='store_true')
 parser.add_argument('--log-file', action='store')
 
@@ -245,13 +245,13 @@ def build_new_site_design(teams):
                                         "%s.html" % team)
         write_template_output_to_file(team_page, team_page_file)
 
-def create_all_pages(local):
+def create_all_pages(local_data):
     setup_output_directories(PWD)
 
     teams_file = os.path.join(PWD, TEAMS_FILE_NAME)
     (team_names, teams_metadata) = get_teams(teams_file)
 
-    if not local:
+    if not local_data:
         save_team_files(team_names)
         save_team_photos(team_names)
 
@@ -285,4 +285,4 @@ def config_logging(args):
 if __name__ == '__main__':
     args = parser.parse_args()
     config_logging(args)
-    create_all_pages(args.local)
+    create_all_pages(args.local_data)

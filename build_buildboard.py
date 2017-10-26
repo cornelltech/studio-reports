@@ -36,6 +36,8 @@ def get_yaml_doc(team_name):
     except (yaml.parser.ParserError, yaml.scanner.ScannerError), e:
         logging.error('repo %s contains bad report.yaml file: %s' % (team_name, str(e)))
         return
+    except IOError, e:
+        logging.error('no file for repo %s' % team_name)
 
 def process_yaml_file(team_name):
     doc = get_yaml_doc(team_name)
@@ -55,10 +57,10 @@ def process_yaml_file(team_name):
                                                     team_name, company_logo))
         except (KeyError, TypeError), e:
             logging.error("can't store company logo for %s: %s" % (team_name, str(e)))
-
-
         # add in repo name
         doc['repo'] = team_name
+    else:
+        logging.error("missing yaml: %s" % team_name)
     return doc
 
 def save_team_files(team_names):
@@ -94,6 +96,8 @@ def save_team_photos(team_names):
                 handle_photos.save_photo(logo_url, logo_path)
             except (KeyError, TypeError), e:
                 logging.error('repo %s missing company logo: %s' % (team_name, str(e)))
+        else:
+            logging.error("missing yaml: %s" % team_name)
 
 def get_teams(teams_file):
     with open(teams_file) as tf:

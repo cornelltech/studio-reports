@@ -226,10 +226,10 @@ def build_index_page(teams_metadata):
     write_template_output_to_file(index, output_index)
 
 def build_crit_pages(teams, teams_metadata):
-    def create_crit_group_pages(which, data):
-        crit_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % which)
+    def create_crit_group_pages(group, data):
+        crit_file = os.path.join(PWD, OUTPUT_DIR_NAME, CRIT_FILE_NAME % group)
         write_template_output_to_file(data, crit_file)
-        output_crit_groups_xlsx(which, crit_groups[which], teams)
+        output_crit_groups_xlsx(group, crit_groups[group], teams)
 
     crit_groups = get_crit_groups_ordered_by_room(teams_metadata)
     (crit_A, crit_B) = create_crit_pages(crit_groups, teams)

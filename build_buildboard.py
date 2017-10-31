@@ -23,6 +23,14 @@ parser.add_argument('--log-file', action='store')
 g = github.Github(constants.GITHUB_ACCESS_TOKEN)
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
                     autoescape=select_autoescape(['html', 'xml']))
+# # # # # # #
+BUILDBOARD_T = 'buildboard.html'
+CRIT_T = 'crit.html'
+DIRECTORY_T = 'directory.html'
+TEAM_CARD_T = 'team-card.html'
+TEMPLATE_NAMES = [BUILDBOARD_T, CRIT_T, DIRECTORY_T, TEAM_CARD_T]
+TEMPLATES = {}
+# # # # # # #
 
 def get_yaml_path(team_name):
     return os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.YAML_DIR_NAME, "%s.yaml" % team_name)
@@ -162,28 +170,32 @@ def setup_output_directories(target_directory):
         create_dir(dir_path)
 
 def create_index_page(sections):
-    template = env.get_template('buildboard.html')
-    return template.render(sections=sections)
+    template = TEMPLATES[BUILDBOARD_T]
+    if template:
+        return template.render(sections=sections)
 
 def create_crit_pages(crit_groups, teams):
-    template = env.get_template('crit.html')
-    crit_A = template.render(group='Crit Group A',
-                            rooms=crit_groups['A'],
-                            teams=teams)
+    template = TEMPLATES[CRIT_T]
+    if template:
+        crit_A = template.render(group='Crit Group A',
+                                rooms=crit_groups['A'],
+                                teams=teams)
 
-    crit_B = template.render(group='Crit Group B',
-                            rooms=crit_groups['B'],
-                            teams=teams)
+        crit_B = template.render(group='Crit Group B',
+                                rooms=crit_groups['B'],
+                                teams=teams)
 
-    return (crit_A, crit_B)
+        return (crit_A, crit_B)
 
 def create_directory_page(teams):
-    template = env.get_template('directory.html')
-    return template.render(teams=teams)
+    template = TEMPLATES[DIRECTORY_T]
+    if template:
+        return template.render(teams=teams)
 
 def create_team_page(team):
-    template = env.get_template('team-card.html')
-    return template.render(team=team)
+    template = TEMPLATES[TEAM_CARD_T]
+    if template:
+        return template.render(team=team)
 
 def output_crit_groups_xlsx(group, rooms, teams):
     workbook = xlsxwriter.Workbook(os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.XLSX_FILE_NAME % group))
@@ -225,10 +237,10 @@ def build_crit_pages(teams, teams_metadata):
         output_crit_groups_xlsx(group, crit_groups[group], teams)
 
     crit_groups = get_crit_groups_ordered_by_room(teams_metadata)
-    (crit_A, crit_B) = create_crit_pages(crit_groups, teams)
-
-    create_crit_group_pages('A', crit_A)
-    create_crit_group_pages('B', crit_B)
+    crit_groups_data = create_crit_pages(crit_groups, teams)
+    if crit_groups:
+        create_crit_group_pages('A', crit_groups_data[0])
+        create_crit_group_pages('B', crit_groups_data[1])
 
 def build_new_site_design(teams):
     directory = create_directory_page(teams)
@@ -258,9 +270,12 @@ def create_all_pages(local_data):
     build_index_page(teams_metadata)
 
 def write_template_output_to_file(output, dst):
-    with open(dst, 'w') as outfile:
-        outfile.write(unicodedata.normalize('NFKD', output).encode('ascii','ignore'))
-    logging.info(outfile)
+    if output:
+        with open(dst, 'w') as outfile:
+            outfile.write(unicodedata.normalize('NFKD', output).encode('ascii','ignore'))
+        logging.info(outfile)
+    else:
+        logging.error('there is no content for file %s' % dst)
 
 def config_logging(args):
     # config basics
@@ -279,7 +294,18 @@ def config_logging(args):
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
+def verify_templates():
+    existing_templates = env.list_templates()
+    for template_name in TEMPLATE_NAMES:
+        if template_name not in existing_templates:
+            logging.error('%s template is missing' % template_name)
+            TEMPLATES[template_name] = None
+        else:
+            template = env.get_template(template_name)
+            TEMPLATES[template_name] = template
+
 if __name__ == '__main__':
     args = parser.parse_args()
     config_logging(args)
+    verify_templates()
     create_all_pages(args.local_data)

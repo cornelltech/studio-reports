@@ -33,6 +33,7 @@ def copy_dir_to_site_directory(dirname):
 
 if __name__ == '__main__':
 	build_buildboard.config_logging(args)
+	build_buildboard.verify_templates()
 	build_buildboard.create_dir(args.dir)
 	build_buildboard.create_all_pages(args.local_data)
 

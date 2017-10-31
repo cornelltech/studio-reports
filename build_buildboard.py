@@ -281,9 +281,11 @@ def config_logging(args):
     # config basics
     format_style = '%(asctime)s - %(levelname)s - %(message)s'
     if args.log_file:
-        logging.basicConfig(filename=args.log_file, format=format_style)
+        filename = args.log_file
     else:
-        logging.basicConfig(filename='output.log', format=format_style)
+        # use default name
+        filename = 'output.log'
+    logging.basicConfig(filename=filename, format=format_style, level=logging.INFO)
 
     # if you're also logging to stdout, set up additional handler
     if args.log_to_stdout:

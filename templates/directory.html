@@ -20,7 +20,7 @@
             {% if team['company'] is defined %}
               <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
             {% endif %}
-            {% include "team_info.html" %}
+            {% include "main_page_team_info.html" %}
 
             {% with prefix="" %}
               {% include "roster.html" %}

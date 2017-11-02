@@ -34,14 +34,6 @@
   flex: 1 auto;
 }
 
-.team-photo.cover {
-  background-repeat: no-repeat;
-  background-size: cover;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-}
-
 .team-card-info {
   flex: 1;
   width: 100%;

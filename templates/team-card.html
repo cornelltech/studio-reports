@@ -15,7 +15,7 @@
   <div class="team-card">
     {% if team is defined %}
       {% if team['team'] is defined %}
-        <div class="team-photo cover" style="background-image:url(../{{ team['team']['picture'] }})"> </div> <!-- team-photo -->
+        <img class="team-photo" src="../{{ team['team']['picture'] }}"> <!-- team-photo -->
       {% endif %}
       <div class="team-card-info">
         <div class="team-row">

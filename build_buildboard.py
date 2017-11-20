@@ -24,11 +24,10 @@ g = github.Github(constants.GITHUB_ACCESS_TOKEN)
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
                     autoescape=select_autoescape(['html', 'xml']))
 # # # # # # #
-BUILDBOARD_T = 'buildboard.html'
 CRIT_T = 'crit.html'
 DIRECTORY_T = 'directory.html'
 TEAM_CARD_T = 'team-card.html'
-TEMPLATE_NAMES = [BUILDBOARD_T, CRIT_T, DIRECTORY_T, TEAM_CARD_T]
+TEMPLATE_NAMES = [CRIT_T, DIRECTORY_T, TEAM_CARD_T]
 TEMPLATES = {}
 # # # # # # #
 
@@ -113,16 +112,6 @@ def get_teams(teams_file):
     team_constants = [team.split("\t")[3] for team in team_metadata]
     return (team_constants, team_metadata)
 
-def get_sections(teams_metadata):
-    sections = {}
-    for section in constants.SECTIONS:
-        sections[section] = []
-    for line in teams_metadata:
-        team = line.split('\t')
-        section = team[0]
-        sections[section].append(team[3])
-    return sections
-
 def get_crit_groups_ordered_by_room(teams_metadata):
     crit_rooms = {'A': {}, 'B' : {}}
     for team_line in teams_metadata:
@@ -169,11 +158,6 @@ def setup_output_directories(target_directory):
         dir_path = os.path.join(output_dir, directory)
         create_dir(dir_path)
 
-def create_index_page(sections):
-    template = TEMPLATES[BUILDBOARD_T]
-    if template:
-        return template.render(sections=sections)
-
 def create_crit_pages(crit_groups, teams):
     template = TEMPLATES[CRIT_T]
     if template:
@@ -215,21 +199,6 @@ def output_crit_groups_xlsx(group, rooms, teams):
                 row += 1
     workbook.close()
 
-def build_index_page(teams_metadata):
-    sections = get_sections(teams_metadata)
-    for section in sections:
-        teams = sections[section]
-        team_docs = []
-        for team in teams:
-            team_doc = process_yaml_file(team)
-            if team_doc:
-                team_docs.append(team_doc)
-        sections[section] = team_docs
-
-    index = create_index_page(sections)
-    output_index = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.INDEX_FILE_NAME)
-    write_template_output_to_file(index, output_index)
-
 def build_crit_pages(teams, teams_metadata):
     def create_crit_group_pages(group, data):
         crit_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.CRIT_FILE_NAME % group)
@@ -267,7 +236,6 @@ def create_all_pages(local_data):
     teams = load_teams_data(team_constants)
     build_new_site_design(teams)
     build_crit_pages(teams, teams_metadata)
-    build_index_page(teams_metadata)
 
 def write_template_output_to_file(output, dst):
     if output:

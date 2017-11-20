@@ -20,11 +20,10 @@ OUTPUT_DIR_NAME = "output"
 YAML_DIR_NAME = "yaml"
 TEAM_PHOTOS_DIR_NAME = "team_photos"
 COMPANY_LOGOS_DIR_NAME = "logos"
-INDEX_FILE_NAME = "index.html"
 CRIT_FILE_NAME = "crit-%s.html"
 XLSX_FILE_NAME = "narratives-%s.xlsx"
 
 # new site design names
-DIRECTORY_PAGE_NAME = "directory.html"
+DIRECTORY_PAGE_NAME = "index.html"
 TEAM_PAGES_DIR_NAME = "team"
 STATIC_DIR_NAME = "static"

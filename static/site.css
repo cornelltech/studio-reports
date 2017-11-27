@@ -98,7 +98,7 @@ a {
 .team-logo {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 2;
   justify-content: center;
   align-items: center;
 }
@@ -115,7 +115,8 @@ a {
 .team-info {
   display: flex;
   flex-direction: column;
-  flex: 2;
+  flex: 4;
+  padding-left: 15px;
 }
 
 .team-info-header {
@@ -169,9 +170,9 @@ a {
   flex: 1;
   justify-content: flex-start;
   align-items: flex-start;
-  padding-left: 40px;
+  padding-left: 30px;
   padding-top: 10px;
-  border-left: solid 2px rgba(0, 0, 0, 0.1);
+  border-right: solid 2px rgba(0, 0, 0, 0.1);
 }
 
 .team-roster-row {

@@ -38,6 +38,11 @@
             </div> <!-- team-info-footer -->
           </div> <!-- lefthand column -->
           <div class="righthand-column">
+            <div class="team-info-header">
+              {% if team['company'] is defined %}
+                <div class="team-info-header-company">{{ team['company']['name']}} asked</div>
+                <div class="h-m-w"> {{ team['how_might_we']}}</div>
+              {% endif %}
             {% include "team_info.html" %}
           </div> <!-- righthand-column -->
         </div> <!-- team-row -->

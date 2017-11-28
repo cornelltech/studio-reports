@@ -50,6 +50,27 @@
   height: 100%;
 }
 
+.lefthand-column {
+  border-right: solid 2px rgba(0, 0, 0, 0.1);
+  padding-right: 10px;
+  flex: 1;
+}
+
+.righthand-column {
+  flex: 4;
+}
+
+.team-roster {
+  padding-left: 0px;
+  border-right: 0px;
+}
+
+.asset a {
+  font-size: 10px;
+  font-weight: 500;
+  padding-top: 20px;
+}
+
 .product-narrative {
   /*font-family: SanFranciscoText;*/
   font-size: 16px;

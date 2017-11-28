@@ -19,15 +19,27 @@
       {% endif %}
       <div class="team-card-info">
         <div class="team-row">
-          {% include "team_info.html" %}
-
-          {% with prefix="../" %}
-            {% include "roster.html" %}
-          {% endwith %}
-        </div> <!-- team-row -->
-        <div class="team-row">
-          <div class="product-narrative"> {{ team['product_narrative'] }} </div>
-          <span class="lower-row-spacer"> </span>
+          <div class="lefthand-column">
+            {% with prefix="../" %}
+              {% include "roster.html" %}
+            {% endwith %}
+            <div class="team-roster-footer">
+              <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><img src="../static/repository.png" alt="github icon"></a>
+              {% if team['team'] is defined %}
+                <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><img src="../static/email.png" alt="email icon"> <i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+              {% endif %}
+            </div> <!-- team-roster-footer -->
+            <div class="assets-column">
+              {% if team['assets'] is defined %}
+                {% for asset in team['assets'] %}
+                <div class="asset"> <a href="{{ asset['url'] }}"> {{ asset['title'] }} </a> </div>
+                {% endfor %}
+              {% endif %}
+            </div> <!-- team-info-footer -->
+          </div> <!-- lefthand column -->
+          <div class="righthand-column">
+            {% include "team_info.html" %}
+          </div> <!-- righthand-column -->
         </div> <!-- team-row -->
       </div> <!-- team-card-info -->
     {% endif %}

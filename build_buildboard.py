@@ -26,7 +26,7 @@ env = Environment(loader=PackageLoader('buildboard', 'templates'),
 # # # # # # #
 CRIT_T = 'crit.html'
 DIRECTORY_T = 'directory.html'
-TEAM_CARD_T = 'team-card.html'
+TEAM_CARD_T = 'team_card.html'
 TEMPLATE_NAMES = [CRIT_T, DIRECTORY_T, TEAM_CARD_T]
 TEMPLATES = {}
 # # # # # # #

@@ -1,11 +1,6 @@
 {% block team_info %}
 <div class="team-info">
   {% if team is defined %}
-    <div class="team-info-header">
-      {% if team['company'] is defined %}
-        <span class="team-info-header-company">{{ team['company']['name']}}</span> asks how might we...
-      {% endif %}
-    </div> <!-- team-info-header -->
     <div class="team-info-body">
       {% block h_m_w %} {{ team['product_narrative'] }} {% endblock %}
     </div> <!-- team-info-body -->

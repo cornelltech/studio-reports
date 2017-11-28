@@ -102,6 +102,7 @@ a {
   flex: 2;
   justify-content: center;
   align-items: center;
+  background-color: #ffffff;
 }
 
 .team-logo.cover {

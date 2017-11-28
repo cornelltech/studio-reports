@@ -1,6 +1,7 @@
 {% block team_info %}
 <div class="team-info">
   {% if team is defined %}
+    <a href="team/{{ team['repo'] }}.html"><span class="team-info-link"></span></a>
     <div class="team-info-body">
       {% block h_m_w %} {{ team['product_narrative'] }} {% endblock %}
     </div> <!-- team-info-body -->

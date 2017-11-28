@@ -2,7 +2,7 @@
 <div class="team-roster">
   {% if team is defined %}
     <div class="team-roster-row">
-      <a href="{{ prefix }}team/{{ team['repo'] }}.html"> {{ team['repo'] }} </a>
+      <div class="team-roster-teamname"> {{ team['repo'] }} </div>
     </div> <!-- team-roster-row -->
     {% if team['team'] is defined %}
       {% for person in team['team']['roster']%}

@@ -166,14 +166,14 @@ a {
   justify-content: flex-start;
 }
 
-.asset {
+.tag-placeholder {
   margin-right: 5px;
   margin-left: 5px;
   border: 1px solid;
-  border-color: #ff8969;
+  border-color: #4d4d4d;
   border-radius: 9px;
-  padding-left: 2px;
-  padding-right: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
 
   /* bring these links in front of the panel link */
   position: relative;

@@ -72,6 +72,7 @@ a {
   font-size: 14px;
   text-align: left;
   color: #4d4d4d;
+  opacity: 0.5;
 }
 
 .page-header-footer {

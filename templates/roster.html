@@ -7,7 +7,7 @@
     {% if team['team'] is defined %}
       {% for person in team['team']['roster']%}
       <div class="team-roster-row" class="team-member">
-        <img src="{{ prefix }}{{ person['picture'] }}" alt="team member icon">
+        <img src="{{ prefix }}{{ person['picture'] }}" alt="team icon">
         <span class="team-member-name">{{ person['name'] }} </span>
       </div> <!-- team-roster-row team-member -->
       {% endfor %}

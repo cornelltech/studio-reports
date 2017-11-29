@@ -74,7 +74,7 @@ def process_yaml_file(team_name):
                                                         sanified_email, individual_photo))
                 logging.info(teammate['picture'])
             except (KeyError, TypeError), e:
-                teammate['picture'] = 'static/member.png'
+                teammate['picture'] = 'static/member3x.png'
                 logging.error("can't store individual photo for member of team %s: %s" % (team_name, str(e)))
 
         # add in repo name

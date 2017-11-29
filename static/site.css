@@ -205,7 +205,7 @@ a {
 .team-roster-row img {
   height: 25px;
   width: 25px;
-  border-radius: 11px;
+  border-radius: 50%;
   padding-right: 5px;
 }
 

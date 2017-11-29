@@ -20,6 +20,7 @@ OUTPUT_DIR_NAME = "output"
 YAML_DIR_NAME = "yaml"
 TEAM_PHOTOS_DIR_NAME = "team_photos"
 COMPANY_LOGOS_DIR_NAME = "logos"
+INDIVIDUAL_PHOTOS_DIR_NAME = "individual_pictures"
 CRIT_FILE_NAME = "crit-%s.html"
 XLSX_FILE_NAME = "narratives-%s.xlsx"
 

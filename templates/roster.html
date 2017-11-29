@@ -2,12 +2,13 @@
 <div class="team-roster">
   {% if team is defined %}
     <div class="team-roster-row">
-      <div class="team-roster-teamname"> {{ team['repo'] }} </div>
+      <div class="team-roster-teamname"> Team {{ team['company']['name'] }} </div>
     </div> <!-- team-roster-row -->
     {% if team['team'] is defined %}
       {% for person in team['team']['roster']%}
       <div class="team-roster-row" class="team-member">
-        <img src="{{ prefix }}static/member.png" alt="team member icon"> {{ person['name'] }}
+        <img src="{{ prefix }}{{ person['picture'] }}" alt="team member icon">
+        <span class="team-member-name">{{ person['name'] }} </span>
       </div> <!-- team-roster-row team-member -->
       {% endfor %}
     {% endif %}

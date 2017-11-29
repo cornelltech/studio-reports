@@ -197,6 +197,20 @@ a {
   font-weight: 500;
   text-align: left;
   color: #4b4b4b;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.team-roster-row img {
+  height: 25px;
+  width: 25px;
+  border-radius: 11px;
+  padding-right: 5px;
+}
+
+.team-member-name {
+  padding-top: 2px;
 }
 
 .team-roster-teamname {

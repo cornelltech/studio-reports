@@ -63,6 +63,7 @@
 .righthand-column {
   flex: 4;
   padding-left: 15px;
+  padding-right: 25px;
 }
 
 .team-info-header {

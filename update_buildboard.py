@@ -53,3 +53,4 @@ if __name__ == '__main__':
 
 	copy_dir_to_site_directory(constants.COMPANY_LOGOS_DIR_NAME)
 	copy_dir_to_site_directory(constants.TEAM_PHOTOS_DIR_NAME)
+	copy_dir_to_site_directory(constants.INDIVIDUAL_PHOTOS_DIR_NAME)

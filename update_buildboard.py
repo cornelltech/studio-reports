@@ -45,11 +45,6 @@ if __name__ == '__main__':
 	# new site directory
 	copy_to_site_directory(constants.DIRECTORY_PAGE_NAME)
 
-	# new site individual team pages
-	copy_dir_to_site_directory(constants.TEAM_PAGES_DIR_NAME)
-
-	# static files
-	copy_dir_to_site_directory(constants.STATIC_DIR_NAME)
-
-	copy_dir_to_site_directory(constants.COMPANY_LOGOS_DIR_NAME)
-	copy_dir_to_site_directory(constants.TEAM_PHOTOS_DIR_NAME)
+	# copy over all the directories the site will need
+	for directory in constants.SITE_OUTPUT_DIRS:
+		copy_dir_to_site_directory(directory)

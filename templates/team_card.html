@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+  <link href="../static/site.css" rel="site stylesheet">
+  <link href="../static/card.css" rel="card stylesheet">
+{% endblock %}
+
+{% block product_studio_logo %}<img src="../static/logo-placeholder.png" alt="product studio logo">{% endblock %}
+{% block cornell_logo %}<img src="../static/cornell-tech-vertical.png" alt="cornell logo"> {% endblock %}
+
+
+{% block content %}
+  <div class="return-link"> <a href="../index.html"> Return to list </a> </div>
+  <div class="team-card">
+    {% if team is defined %}
+      {% if team['team'] is defined %}
+        <img class="team-photo" src="../{{ team['team']['picture'] }}"> <!-- team-photo -->
+      {% endif %}
+      <div class="team-card-info">
+        <div class="team-row">
+          <div class="lefthand-column">
+            {% with prefix="../" %}
+              {% include "roster.html" %}
+            {% endwith %}
+            <div class="team-roster-footer">
+              <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><img src="../static/repository3x.png" alt="github icon"></a>
+              {% if team['team'] is defined %}
+                <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><img src="../static/email3x.png" alt="email icon"> <i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+              {% endif %}
+            </div> <!-- team-roster-footer -->
+            <div class="assets-column">
+              {% if team['assets'] is defined %}
+                {% for asset in team['assets'] %}
+                <div class="asset"> <a href="{{ asset['url'] }}"> {{ asset['title'] }} </a> </div>
+                {% endfor %}
+              {% endif %}
+            </div> <!-- team-info-footer -->
+          </div> <!-- lefthand column -->
+          <div class="righthand-column">
+            <div class="team-info-header">
+              {% if team['company'] is defined %}
+                <div class="team-info-header-company">{{ team['company']['name']}} asked</div>
+                <div class="h-m-w"> {{ team['how_might_we']}}</div>
+              {% endif %}
+            {% include "team_info_card.html" %}
+          </div> <!-- righthand-column -->
+        </div> <!-- team-row -->
+      </div> <!-- team-card-info -->
+    {% endif %}
+  </div> <!-- team-card -->
+{% endblock %}

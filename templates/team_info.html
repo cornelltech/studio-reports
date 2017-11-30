@@ -1,19 +1,16 @@
 {% block team_info %}
 <div class="team-info">
   {% if team is defined %}
-    <div class="team-info-header">
-      {% if team['company'] is defined %}
-        <span class="team-info-header-company">{{ team['company']['name']}}</span> asks how might we...
-      {% endif %}
-    </div> <!-- team-info-header -->
+    {% block link_to_team_page %}
+    <a href="team/{{ team['repo'] }}.html"><span class="team-info-link"></span></a>
+    {% endblock %}
     <div class="team-info-body">
-      {% block h_m_w %} {{ team['how_might_we'] }} {% endblock %}
+      {% block h_m_w %} {{ team['product_narrative'] }} {% endblock %}
     </div> <!-- team-info-body -->
     <!-- <div class="team-info-spacer"></div> -->
     <div class="team-info-footer">
-      {% if team['assets'] is defined %}
-        Artifacts: {% for asset in team['assets'] %} <span class="asset"> <a href="{{ asset['url'] }}"> {{ asset['title'] }} </a> </span> {% endfor %}
-      {% endif %}
+      <span class="tag-placeholder">VR</span>
+      <span class="tag-placeholder">Health Tech</span>
     </div> <!-- team-info-footer -->
   {% endif %}
 </div> <!-- team-info -->

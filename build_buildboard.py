@@ -26,7 +26,7 @@ env = Environment(loader=PackageLoader('buildboard', 'templates'),
 # # # # # # #
 CRIT_T = 'crit.html'
 DIRECTORY_T = 'directory.html'
-TEAM_CARD_T = 'team-card.html'
+TEAM_CARD_T = 'team_card.html'
 TEMPLATE_NAMES = [CRIT_T, DIRECTORY_T, TEAM_CARD_T]
 TEMPLATES = {}
 # # # # # # #
@@ -64,8 +64,25 @@ def process_yaml_file(team_name):
                                                     team_name, company_logo))
         except (KeyError, TypeError), e:
             logging.error("can't store company logo for %s: %s" % (team_name, str(e)))
+
+        for teammate in doc['team']['roster']:
+            try:
+                individual_photo = teammate['picture']
+                sanified_email = teammate['email'].replace('@', '-')
+                teammate['picture'] = \
+                    handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.INDIVIDUAL_PHOTOS_DIR_NAME,
+                                                        sanified_email, individual_photo))
+                logging.info(teammate['picture'])
+            except (KeyError, TypeError), e:
+                teammate['picture'] = 'static/member3x.png'
+                logging.error("can't store individual photo for member %s of team %s: %s" % (teammate['email'], team_name, str(e)))
+
         # add in repo name
         doc['repo'] = team_name
+
+        # truncate PN if it's too long (we are limiting them to 140 characters)
+        # doc['product_narrative'] = doc['product_narrative'][0:140]
+
     else:
         logging.error("missing yaml: %s" % team_name)
     return doc
@@ -103,6 +120,16 @@ def save_team_photos(team_constants):
                 handle_photos.save_photo(logo_url, logo_path)
             except (KeyError, TypeError), e:
                 logging.error('repo %s missing company logo: %s' % (team_name, str(e)))
+
+            for teammate in doc['team']['roster']:
+                try:
+                    individual_photo = teammate['picture']
+                    sanified_email = teammate['email'].replace('@', '-')
+                    individual_photo_url = handle_photos.get_photo_url(team_name, individual_photo)
+                    individual_photo_path = handle_photos.save_photo_path(constants.INDIVIDUAL_PHOTOS_DIR_NAME, sanified_email, individual_photo)
+                    handle_photos.save_photo(individual_photo_url, individual_photo_path)
+                except (KeyError, TypeError), e:
+                    logging.error('repo %s missing individual photo for member %s: %s' % (team_name, teammate['email'], str(e)))
         else:
             logging.error("missing yaml: %s" % team_name)
 
@@ -151,10 +178,7 @@ def setup_output_directories(target_directory):
 		shutil.rmtree(dst)
     shutil.copytree(src, dst)
 
-    output_dirs = [constants.YAML_DIR_NAME, constants.TEAM_PAGES_DIR_NAME,
-                    constants.TEAM_PHOTOS_DIR_NAME, constants.COMPANY_LOGOS_DIR_NAME]
-
-    for directory in output_dirs:
+    for directory in constants.LOCAL_OUTPUT_DIRS:
         dir_path = os.path.join(output_dir, directory)
         create_dir(dir_path)
 

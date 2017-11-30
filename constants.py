@@ -28,3 +28,14 @@ XLSX_FILE_NAME = "narratives-%s.xlsx"
 DIRECTORY_PAGE_NAME = "index.html"
 TEAM_PAGES_DIR_NAME = "team"
 STATIC_DIR_NAME = "static"
+
+# directories that need to be created for output
+OUTPUT_DIRS = [TEAM_PAGES_DIR_NAME, TEAM_PHOTOS_DIR_NAME,
+                COMPANY_LOGOS_DIR_NAME,
+                INDIVIDUAL_PHOTOS_DIR_NAME]
+
+# for generating the site
+LOCAL_OUTPUT_DIRS = [YAML_DIR_NAME] + OUTPUT_DIRS
+
+# content that will be served from the site
+SITE_OUTPUT_DIRS = [STATIC_DIR_NAME] + OUTPUT_DIRS

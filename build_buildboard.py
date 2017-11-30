@@ -178,11 +178,7 @@ def setup_output_directories(target_directory):
 		shutil.rmtree(dst)
     shutil.copytree(src, dst)
 
-    output_dirs = [constants.YAML_DIR_NAME, constants.TEAM_PAGES_DIR_NAME,
-                    constants.TEAM_PHOTOS_DIR_NAME, constants.COMPANY_LOGOS_DIR_NAME,
-                    constants.INDIVIDUAL_PHOTOS_DIR_NAME]
-
-    for directory in output_dirs:
+    for directory in constants.LOCAL_OUTPUT_DIRS:
         dir_path = os.path.join(output_dir, directory)
         create_dir(dir_path)
 

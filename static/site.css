@@ -120,6 +120,7 @@ a {
   flex-direction: column;
   flex: 4;
   padding-left: 15px;
+  padding-right: 15px;
   position: relative
 }
 

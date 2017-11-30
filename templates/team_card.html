@@ -24,9 +24,9 @@
               {% include "roster.html" %}
             {% endwith %}
             <div class="team-roster-footer">
-              <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><img src="../static/repository.png" alt="github icon"></a>
+              <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><img src="../static/repository3x.png" alt="github icon"></a>
               {% if team['team'] is defined %}
-                <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><img src="../static/email.png" alt="email icon"> <i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+                <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><img src="../static/email3x.png" alt="email icon"> <i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
               {% endif %}
             </div> <!-- team-roster-footer -->
             <div class="assets-column">

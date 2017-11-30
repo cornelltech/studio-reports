@@ -80,6 +80,10 @@
   padding-top: 10px;
 }
 
+.team-roster-footer a img {
+  height: 20px;
+}
+
 .asset a {
   font-size: 10px;
   font-weight: 500;

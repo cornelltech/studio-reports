@@ -76,6 +76,10 @@
   border-right: 0px;
 }
 
+.team-roster-footer {
+  padding-top: 10px;
+}
+
 .asset a {
   font-size: 10px;
   font-weight: 500;

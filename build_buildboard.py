@@ -75,7 +75,7 @@ def process_yaml_file(team_name):
                 logging.info(teammate['picture'])
             except (KeyError, TypeError), e:
                 teammate['picture'] = 'static/member3x.png'
-                logging.error("can't store individual photo for member of team %s: %s" % (team_name, str(e)))
+                logging.error("can't store individual photo for member %s of team %s: %s" % (teammate['email'], team_name, str(e)))
 
         # add in repo name
         doc['repo'] = team_name
@@ -125,7 +125,7 @@ def save_team_photos(team_constants):
                     individual_photo_path = handle_photos.save_photo_path(constants.INDIVIDUAL_PHOTOS_DIR_NAME, sanified_email, individual_photo)
                     handle_photos.save_photo(individual_photo_url, individual_photo_path)
                 except (KeyError, TypeError), e:
-                    logging.error('repo %s missing individual photo: %s' % (team_name, str(e)))
+                    logging.error('repo %s missing individual photo for member %s: %s' % (team_name, teammate['email'], str(e)))
         else:
             logging.error("missing yaml: %s" % team_name)
 

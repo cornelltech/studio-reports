@@ -103,6 +103,7 @@ a {
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
+  border-radius: 5px;
 }
 
 .team-logo.cover {

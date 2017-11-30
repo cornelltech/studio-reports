@@ -79,6 +79,10 @@ def process_yaml_file(team_name):
 
         # add in repo name
         doc['repo'] = team_name
+
+        # truncate PN if it's too long (we are limiting them to 140 characters)
+        # doc['product_narrative'] = doc['product_narrative'][0:140]
+
     else:
         logging.error("missing yaml: %s" % team_name)
     return doc

@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 100px;
+  margin-top: 30px;
 }
 
 .return-link {
@@ -32,10 +32,13 @@
   width: 100%;
   height: 600px;
   flex: 1 auto;
+  border-radius: 8px;
 }
 
 .team-info {
   padding-left: 0px;
+  border-left: 0px;
+  margin-top: 0px;
 }
 
 .team-card-info {
@@ -61,7 +64,7 @@
 }
 
 .righthand-column {
-  flex: 4;
+  flex: 3;
   padding-left: 15px;
   padding-right: 25px;
 }
@@ -77,17 +80,41 @@
 }
 
 .team-roster-footer {
+  margin-top: 15px;
+  margin-right: 25px;
+  border-top: solid 1px rgba(0, 0, 0, 0.22);
+  border-bottom: solid 1px rgba(0, 0, 0, 0.22);
+}
+
+.team-details {
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  position: relative;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+
+.team-details img {
+  height: 15px;
+  padding-right: 5px;
+}
+
+.team-details-link {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+
+  z-index: 1;
+}
+
+.assets-column {
   padding-top: 10px;
-}
-
-.team-roster-footer a img {
-  height: 20px;
-}
-
-.asset a {
-  font-size: 10px;
-  font-weight: 500;
-  padding-top: 20px;
+  color: #ff8969;
 }
 
 .product-narrative {

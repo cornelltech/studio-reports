@@ -24,15 +24,27 @@
               {% include "roster.html" %}
             {% endwith %}
             <div class="team-roster-footer">
-              <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><img src="../static/repository3x.png" alt="github icon"></a>
               {% if team['team'] is defined %}
-                <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><img src="../static/email3x.png" alt="email icon"> <i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+                <div class="team-details" class="contact-team-email">
+                  <a href="mailto:{{ team['team']['roster']|map(attribute='email')|join(',')}}"><span class="team-details-link"></span></a>
+                  <img src="../static/email3x.png" alt="email icon">
+                  <span class="email-team-label">Contact Team</span>
+                </div> <!-- team-details contact-team-email -->
               {% endif %}
+              <div class="team-details" class="team-github-link">
+                <a href="https://github.com/ct-product-challenge-2017/{{ team['repo'] }}"><span class="team-details-link"></span></a>
+                <img src="../static/repository3x.png" alt="github icon">
+                <span class="email-team-label">Github Repo</span>
+              </div> <!-- team-details team-github-link -->
             </div> <!-- team-roster-footer -->
             <div class="assets-column">
               {% if team['assets'] is defined %}
                 {% for asset in team['assets'] %}
-                <div class="asset"> <a href="{{ asset['url'] }}"> {{ asset['title'] }} </a> </div>
+                <div class="team-details">
+                  <img src="../static/outlink3x.png" alt="outlink icon">
+                  <a href="{{ asset['url'] }}"><span class="team-details-link"></span></a>
+                  <span class="asset-label">{{ asset['title']}}</span>
+                </div> <!--team-details asset-->
                 {% endfor %}
               {% endif %}
             </div> <!-- team-info-footer -->

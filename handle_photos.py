@@ -12,6 +12,8 @@ def get_photo_url(repo_name, img_name):
                                                                     img_name)
 
 def save_photo_path(output_dir_name, repo_name, img_name):
+    if img_name:
+        img_name = img_name.replace('/', '-')
     return os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, output_dir_name,
                         "%s-%s" % (repo_name, img_name))
 

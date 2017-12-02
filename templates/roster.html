@@ -1,9 +1,11 @@
 {% block roster %}
 <div class="team-roster">
   {% if team is defined %}
-    <div class="team-roster-row">
-      <div class="team-roster-teamname"> Team {{ team['company']['name'] }} </div>
-    </div> <!-- team-roster-row -->
+    {% if team['company'] is defined %}
+      <div class="team-roster-row">
+        <div class="team-roster-teamname"> Team {{ team['company']['name'] }} </div>
+      </div> <!-- team-roster-row -->
+    {% endif %}
     {% if team['team'] is defined %}
       {% for person in team['team']['roster']%}
       <div class="team-roster-row" class="team-member">

@@ -4,10 +4,10 @@ import os
 import requests
 import shutil
 
-from constants import *
+from PIL import Image
 
 def get_photo_url(repo_name, img_name):
-    return 'https://raw.githubusercontent.com/%s/%s/master/%s' % (ORG_NAME,
+    return 'https://raw.githubusercontent.com/%s/%s/master/%s' % (constants.ORG_NAME,
                                                                     repo_name,
                                                                     img_name)
 
@@ -22,10 +22,11 @@ def get_photo_path_for_web(photo_path):
                                 constants.OUTPUT_DIR_NAME))
     return web_path
 
-def save_photo(url, output_path):
+def save_photo(url, output_path, size):
     logging.info('saving %s' % os.path.basename(output_path))
     access_token = 'token %s' % constants.GITHUB_ACCESS_TOKEN
     response = requests.get(url, stream=True, headers={'Authorization': access_token})
-    with open(output_path, 'wb') as outfile:
-        shutil.copyfileobj(response.raw, outfile)
+    with Image.open(response.raw) as image:
+        image.thumbnail(size, Image.ANTIALIAS)
+        image.save(output_path, image.format)
     return get_photo_path_for_web(output_path)

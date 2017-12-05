@@ -46,47 +46,6 @@ def get_yaml_doc(team_name):
     except IOError, e:
         logging.error('no file for repo %s' % team_name)
 
-def process_yaml_file(team_name):
-    doc = get_yaml_doc(team_name)
-    if doc:
-        try:
-            team_photo = doc['team']['picture']
-            doc['team']['picture'] = \
-                handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.TEAM_PHOTOS_DIR_NAME,
-                                                    team_name, team_photo))
-        except (KeyError, TypeError), e:
-            logging.error("can't store team photo for %s: %s" % (team_name, str(e)))
-
-        try:
-            company_logo = doc['company']['logo']
-            doc['company']['logo'] = \
-                handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.COMPANY_LOGOS_DIR_NAME,
-                                                    team_name, company_logo))
-        except (KeyError, TypeError), e:
-            logging.error("can't store company logo for %s: %s" % (team_name, str(e)))
-
-        for teammate in doc['team']['roster']:
-            try:
-                individual_photo = teammate['picture']
-                sanified_email = teammate['email'].replace('@', '-')
-                teammate['picture'] = \
-                    handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.INDIVIDUAL_PHOTOS_DIR_NAME,
-                                                        sanified_email, individual_photo))
-                logging.info(teammate['picture'])
-            except (KeyError, TypeError), e:
-                teammate['picture'] = 'static/member3x.png'
-                logging.error("can't store individual photo for member %s of team %s: %s" % (teammate['email'], team_name, str(e)))
-
-        # add in repo name
-        doc['repo'] = team_name
-
-        # truncate PN if it's too long (we are limiting them to 140 characters)
-        # doc['product_narrative'] = doc['product_narrative'][0:140]
-
-    else:
-        logging.error("missing yaml: %s" % team_name)
-    return doc
-
 def save_team_files(team_constants):
     for team_name in team_constants:
         logging.info('getting yaml file for %s...' % team_name)
@@ -109,27 +68,49 @@ def save_team_photos(team_constants):
                 team_photo = doc['team']['picture']
                 team_photo_url = handle_photos.get_photo_url(team_name, team_photo)
                 team_photo_path = handle_photos.save_photo_path(constants.TEAM_PHOTOS_DIR_NAME, team_name, team_photo)
-                handle_photos.save_photo(team_photo_url, team_photo_path)
-            except (KeyError, TypeError), e:
+                handle_photos.save_photo(team_photo_url, team_photo_path, constants.PHOTO_SIZES[constants.TEAM_PHOTOS_DIR_NAME])
+                doc['team']['picture'] = \
+                    handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.TEAM_PHOTOS_DIR_NAME,
+                                                        team_name, team_photo))
+            except (KeyError, TypeError, IOError), e:
                 logging.error('repo %s missing team photo: %s' % (team_name, str(e)))
 
             try:
                 company_logo = doc['company']['logo']
                 logo_url = handle_photos.get_photo_url(team_name, doc['company']['logo'])
                 logo_path = handle_photos.save_photo_path(constants.COMPANY_LOGOS_DIR_NAME, team_name, company_logo)
-                handle_photos.save_photo(logo_url, logo_path)
-            except (KeyError, TypeError), e:
+                handle_photos.save_photo(logo_url, logo_path, constants.PHOTO_SIZES[constants.COMPANY_LOGOS_DIR_NAME])
+                doc['company']['logo'] = \
+                    handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.COMPANY_LOGOS_DIR_NAME,
+                                                        team_name, company_logo))
+            except (KeyError, TypeError, IOError), e:
                 logging.error('repo %s missing company logo: %s' % (team_name, str(e)))
 
-            for teammate in doc['team']['roster']:
-                try:
-                    individual_photo = teammate['picture']
-                    sanified_email = teammate['email'].replace('@', '-')
-                    individual_photo_url = handle_photos.get_photo_url(team_name, individual_photo)
-                    individual_photo_path = handle_photos.save_photo_path(constants.INDIVIDUAL_PHOTOS_DIR_NAME, sanified_email, individual_photo)
-                    handle_photos.save_photo(individual_photo_url, individual_photo_path)
-                except (KeyError, TypeError), e:
-                    logging.error('repo %s missing individual photo for member %s: %s' % (team_name, teammate['email'], str(e)))
+            try:
+                roster = doc['team']['roster']
+                for teammate in roster:
+                    try:
+                        individual_photo = teammate['picture']
+                        sanified_email = teammate['email'].replace('@', '-')
+                        individual_photo_url = handle_photos.get_photo_url(team_name, individual_photo)
+                        individual_photo_path = handle_photos.save_photo_path(constants.INDIVIDUAL_PHOTOS_DIR_NAME, sanified_email, individual_photo)
+                        handle_photos.save_photo(individual_photo_url, individual_photo_path, constants.PHOTO_SIZES[constants.INDIVIDUAL_PHOTOS_DIR_NAME])
+                        teammate['picture'] = \
+                            handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.INDIVIDUAL_PHOTOS_DIR_NAME,
+                                                                sanified_email, individual_photo))
+
+                    except (KeyError, TypeError, IOError), e:
+                        # overwrite file with default member image for failed picture
+                        teammate['picture'] = 'static/member3x.png'
+                        logging.error('repo %s missing individual photo for member %s: %s' % (team_name, teammate['email'], str(e)))
+            except (KeyError), e:
+                logging.error('repo %s missing team roster %s' % (team_name, str(e)))
+
+            # save path updates to yaml file
+            team_yaml_file = get_yaml_path(team_name)
+            with open(team_yaml_file, 'w') as outfile:
+                yaml.dump(doc, outfile, default_flow_style=False)
+
         else:
             logging.error("missing yaml: %s" % team_name)
 
@@ -158,7 +139,11 @@ def get_crit_groups_ordered_by_room(teams_metadata):
 def load_teams_data(team_constants):
     team_data = {}
     for team_name in team_constants:
-        team_doc = process_yaml_file(team_name)
+        team_doc = get_yaml_doc(team_name)
+        if team_doc:
+            team_doc['repo'] = team_name
+        else:
+            logging.error("missing yaml: %s" % team_name)
         team_data[team_name] = team_doc
     return team_data
 

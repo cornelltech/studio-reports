@@ -203,14 +203,24 @@ a {
 }
 
 .team-roster-row img {
-  height: 25px;
-  width: 25px;
+  height: 30px;
+  width: 30px;
   border-radius: 50%;
 }
 
+.team-member-info {
+  display: flex;
+  flex-direction: column;
+}
+
 .team-member-name {
-  padding-top: 4px;
   padding-left: 5px;
+}
+
+.team-member-program {
+  padding-left: 5px;
+  color: #a6a6a6;
+  font-weight: 300;
 }
 
 .team-roster-teamname {

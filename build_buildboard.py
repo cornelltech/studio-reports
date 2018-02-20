@@ -142,6 +142,11 @@ def load_teams_data(team_constants):
         team_doc = get_yaml_doc(team_name)
         if team_doc:
             team_doc['repo'] = team_name
+
+            # check length of product narrative
+            product_narrative = team_doc['product_narrative']
+            if len(product_narrative) > 140:
+                logging.warning('product narrative for team %s is too long: %d characters' % (team_name, len(product_narrative)))
         else:
             logging.error("missing yaml: %s" % team_name)
         team_data[team_name] = team_doc

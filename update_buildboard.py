@@ -37,10 +37,11 @@ if __name__ == '__main__':
 	build_buildboard.create_dir(args.dir)
 	build_buildboard.create_all_pages(args.local_data)
 
-	copy_to_site_directory(constants.CRIT_FILE_NAME % 'A')
-	copy_to_site_directory(constants.CRIT_FILE_NAME % 'B')
-	copy_to_site_directory(constants.XLSX_FILE_NAME % 'A')
-	copy_to_site_directory(constants.XLSX_FILE_NAME % 'B')
+    # TODO: deprecate in favor of futuristic version
+	# copy_to_site_directory(constants.CRIT_FILE_NAME % 'A')
+	# copy_to_site_directory(constants.CRIT_FILE_NAME % 'B')
+	# copy_to_site_directory(constants.XLSX_FILE_NAME % 'A')
+	# copy_to_site_directory(constants.XLSX_FILE_NAME % 'B')
 
 	# new site directory
 	copy_to_site_directory(constants.DIRECTORY_PAGE_NAME)

@@ -189,12 +189,12 @@ def create_crit_pages(crit_groups, teams):
 def create_directory_page(teams):
     template = TEMPLATES[DIRECTORY_T]
     if template:
-        return template.render(teams=teams)
+        return template.render(teams=teams, semester=args.semester)
 
 def create_team_page(team):
     template = TEMPLATES[TEAM_CARD_T]
     if template:
-        return template.render(team=team)
+        return template.render(team=team, semester=args.semester)
 
 def output_crit_groups_xlsx(group, rooms, teams):
     workbook = xlsxwriter.Workbook(os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.XLSX_FILE_NAME % group))

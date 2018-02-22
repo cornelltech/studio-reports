@@ -196,6 +196,7 @@ def create_team_page(team):
     if template:
         return template.render(team=team, semester=args.semester)
 
+# TODO: deprecate in favor of futuristic version
 def output_crit_groups_xlsx(group, rooms, teams):
     workbook = xlsxwriter.Workbook(os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.XLSX_FILE_NAME % group))
     worksheet = workbook.add_worksheet()

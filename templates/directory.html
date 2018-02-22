@@ -9,11 +9,13 @@
   <div class="page-header">
     <div class="page-header-title"> Product Studio Teams </div>
     <div class="page-header-footer"> Topics:
-      {% if tags is defined and tags is not none %}
-        {% for tag in tags %}
-          <span class="tag-placeholder">{{ tag }}</span>
-        {% endfor %}
-      {% endif %}
+      <div class="tags">
+        {% if tags is defined and tags is not none %}
+          {% for tag in tags %}
+            <div class="tag-placeholder">{{ tag }}</div>
+          {% endfor %}
+        {% endif %}
+      </div>
     </div>
   </div> <!-- page-header -->
   {% for team_name in teams %}

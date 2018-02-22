@@ -116,9 +116,8 @@ def save_team_photos(team_constants):
 
 def get_teams(teams_file):
     with open(teams_file) as tf:
-        team_metadata = [team.strip() for team in tf.readlines()]
-    team_constants = [team.split("\t")[3] for team in team_metadata]
-    return (team_constants, team_metadata)
+        teams = [team.strip() for team in tf.readlines()]
+        return teams
 
 def get_crit_groups_ordered_by_room(teams_metadata):
     crit_rooms = {'A': {}, 'B' : {}}
@@ -213,6 +212,7 @@ def output_crit_groups_xlsx(group, rooms, teams):
                 row += 1
     workbook.close()
 
+# TODO: deprecate this in favor of a futuristic model
 def build_crit_pages(teams, teams_metadata):
     def create_crit_group_pages(group, data):
         crit_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.CRIT_FILE_NAME % group)
@@ -241,15 +241,14 @@ def create_all_pages(local_data):
     setup_output_directories(constants.PWD)
 
     teams_file = os.path.join(constants.PWD, constants.TEAMS_FILE_NAME)
-    (team_constants, teams_metadata) = get_teams(teams_file)
+    team_names = get_teams(teams_file)
 
     if not local_data:
-        save_team_files(team_constants)
-        save_team_photos(team_constants)
+        save_team_files(team_names)
+        save_team_photos(team_names)
 
-    teams = load_teams_data(team_constants)
+    teams = load_teams_data(team_names)
     build_new_site_design(teams)
-    build_crit_pages(teams, teams_metadata)
 
 def write_template_output_to_file(output, dst):
     if output:

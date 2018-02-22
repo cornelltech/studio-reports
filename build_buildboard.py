@@ -19,6 +19,7 @@ parser = argparse.ArgumentParser(description="Top-level flags.")
 parser.add_argument('--local-data', action='store_true')
 parser.add_argument('--log-to-stdout', action='store_true')
 parser.add_argument('--log-file', action='store')
+parser.add_argument('--semester', action='store', choices=['spring', 'fall'], required=True)
 
 g = github.Github(constants.GITHUB_ACCESS_TOKEN)
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
@@ -119,6 +120,7 @@ def get_teams(teams_file):
         teams = [team.strip() for team in tf.readlines()]
         return teams
 
+# TODO: deprecate in favor of the futuristic version
 def get_crit_groups_ordered_by_room(teams_metadata):
     crit_rooms = {'A': {}, 'B' : {}}
     for team_line in teams_metadata:

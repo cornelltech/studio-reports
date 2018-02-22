@@ -15,7 +15,7 @@
   </div> <!-- page-header -->
   {% for team_name in teams %}
     {% set team = teams[team_name] %}
-      {% if team is defined %}
+      {% if team is defined and team is not none %}
         <div class="big-row-outer">
           <div class="big-row">
             {% if semester == 'fall' %} <!-- FALL / PRODUCT STUDIO-->

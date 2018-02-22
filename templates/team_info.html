@@ -9,8 +9,11 @@
     </div> <!-- team-info-body -->
     <!-- <div class="team-info-spacer"></div> -->
     <div class="team-info-footer">
-      <!-- <span class="tag-placeholder"></span> -->
-      <!-- <span class="tag-placeholder"></span> -->
+      {% if team['tags'] is defined %}
+        {% for tag in team['tags'] %}
+          <span class="tag-placeholder">{{ tag }}</span>
+        {% endfor %}
+      {% endif %}
     </div> <!-- team-info-footer -->
   {% endif %}
 </div> <!-- team-info -->

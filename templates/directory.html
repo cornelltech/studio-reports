@@ -8,10 +8,13 @@
 {% block content %}
   <div class="page-header">
     <div class="page-header-title"> Product Studio Teams </div>
-    <!-- <div class="page-header-footer"> Topics: -->
-        <!-- <span class="tag-placeholder">VR</span> -->
-        <!-- <span class="tag-placeholder">Health Tech</span> -->
-    <!-- </div> -->
+    <div class="page-header-footer"> Topics:
+      {% if tags is defined and tags is not none %}
+        {% for tag in tags %}
+          <span class="tag-placeholder">{{ tag }}</span>
+        {% endfor %}
+      {% endif %}
+    </div>
   </div> <!-- page-header -->
   {% for team_name in teams %}
     {% set team = teams[team_name] %}

@@ -115,10 +115,10 @@ def save_team_photos(team_constants):
         else:
             logging.error("missing yaml: %s" % team_name)
 
-def get_teams(teams_file):
-    with open(teams_file) as tf:
-        teams = [team.strip() for team in tf.readlines()]
-        return teams
+def get_list(filename):
+    with open(filename) as f:
+        items = [item.strip() for item in f.readlines()]
+        return items
 
 # TODO: deprecate in favor of the futuristic version
 def get_crit_groups_ordered_by_room(teams_metadata):
@@ -187,9 +187,12 @@ def create_crit_pages(crit_groups, teams):
         return (crit_A, crit_B)
 
 def create_directory_page(teams):
+    tags_file = os.path.join(constants.PWD, constants.TAGS_FILE_NAME)
+    tags = get_list(tags_file)
+
     template = TEMPLATES[DIRECTORY_T]
     if template:
-        return template.render(teams=teams, semester=args.semester)
+        return template.render(teams=teams, tags=tags, semester=args.semester)
 
 def create_team_page(team):
     template = TEMPLATES[TEAM_CARD_T]
@@ -244,7 +247,7 @@ def create_all_pages(local_data):
     setup_output_directories(constants.PWD)
 
     teams_file = os.path.join(constants.PWD, constants.TEAMS_FILE_NAME)
-    team_names = get_teams(teams_file)
+    team_names = get_list(teams_file)
 
     if not local_data:
         save_team_files(team_names)

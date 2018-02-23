@@ -7,7 +7,12 @@
 
 {% block content %}
   <div class="page-header">
-    <div class="page-header-title"> Product Studio Teams </div>
+    {% if semester == 'fall' %}
+      <div class="page-header-title"> Product Studio Teams </div>
+    {% endif %}
+    {% if semester == 'spring' %}
+      <div class="page-header-title"> Startup Studio 2018 </div>
+    {% endif %}
     <!-- <div class="page-header-footer"> Topics: -->
         <!-- <span class="tag-placeholder">VR</span> -->
         <!-- <span class="tag-placeholder">Health Tech</span> -->

@@ -186,15 +186,15 @@ def create_crit_pages(crit_groups, teams):
 
         return (crit_A, crit_B)
 
-def create_directory_page(teams):
+def create_directory_page(teams, semester):
     template = TEMPLATES[DIRECTORY_T]
     if template:
-        return template.render(teams=teams, semester=args.semester)
+        return template.render(teams=teams, semester=semester)
 
-def create_team_page(team):
+def create_team_page(team, semester):
     template = TEMPLATES[TEAM_CARD_T]
     if template:
-        return template.render(team=team, semester=args.semester)
+        return template.render(team=team, semester=semester)
 
 # TODO: deprecate in favor of futuristic version
 def output_crit_groups_xlsx(group, rooms, teams):
@@ -228,19 +228,19 @@ def build_crit_pages(teams, teams_metadata):
         create_crit_group_pages('A', crit_groups_data[0])
         create_crit_group_pages('B', crit_groups_data[1])
 
-def build_new_site_design(teams):
-    directory = create_directory_page(teams)
+def build_new_site_design(teams, semester):
+    directory = create_directory_page(teams, semester)
     directory_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.DIRECTORY_PAGE_NAME)
     write_template_output_to_file(directory, directory_file)
 
     for team in teams:
         team_content = teams[team]
-        team_page = create_team_page(team_content)
+        team_page = create_team_page(team_content, semester)
         team_page_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.TEAM_PAGES_DIR_NAME,
                                         "%s.html" % team)
         write_template_output_to_file(team_page, team_page_file)
 
-def create_all_pages(local_data):
+def create_all_pages(local_data, semester):
     setup_output_directories(constants.PWD)
 
     teams_file = os.path.join(constants.PWD, constants.TEAMS_FILE_NAME)
@@ -251,7 +251,7 @@ def create_all_pages(local_data):
         save_team_photos(team_names)
 
     teams = load_teams_data(team_names)
-    build_new_site_design(teams)
+    build_new_site_design(teams, semester)
 
 def write_template_output_to_file(output, dst):
     if output:
@@ -294,4 +294,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     config_logging(args)
     verify_templates()
-    create_all_pages(args.local_data)
+    create_all_pages(args.local_data, args.semester)

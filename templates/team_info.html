@@ -10,8 +10,13 @@
     <!-- <div class="team-info-spacer"></div> -->
     <div class="team-info-footer">
       {% if team['tags'] is defined %}
+      <!--  YEP, this seems redundant to me, too, but it won't work without !-->
         {% for tag in team['tags'] %}
-          <span class="tag-placeholder">{{ tag }}</span>
+          {% for t in tags %}
+            {% if t == tag %}
+              <span class="tag">{{ tags[tag] }}</span>
+            {% endif %}
+          {% endfor %}
         {% endfor %}
       {% endif %}
     </div> <!-- team-info-footer -->

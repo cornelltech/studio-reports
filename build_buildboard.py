@@ -194,17 +194,15 @@ def create_crit_pages(crit_groups, teams):
 
         return (crit_A, crit_B)
 
-def create_directory_page(teams):
-    tags_file = os.path.join(constants.PWD, constants.TAGS_FILE_NAME)
-    tags = turn_tags_list_into_tags(get_list(tags_file))
+def create_directory_page(teams, tags):
     template = TEMPLATES[DIRECTORY_T]
     if template:
         return template.render(teams=teams, tags=tags, semester=args.semester)
 
-def create_team_page(team):
+def create_team_page(team, tags):
     template = TEMPLATES[TEAM_CARD_T]
     if template:
-        return template.render(team=team, semester=args.semester)
+        return template.render(team=team, tags=tags, semester=args.semester)
 
 # TODO: deprecate in favor of futuristic version
 def output_crit_groups_xlsx(group, rooms, teams):
@@ -239,13 +237,16 @@ def build_crit_pages(teams, teams_metadata):
         create_crit_group_pages('B', crit_groups_data[1])
 
 def build_new_site_design(teams):
-    directory = create_directory_page(teams)
+    tags_file = os.path.join(constants.PWD, constants.TAGS_FILE_NAME)
+    tags = turn_tags_list_into_tags(get_list(tags_file))
+
+    directory = create_directory_page(teams, tags)
     directory_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.DIRECTORY_PAGE_NAME)
     write_template_output_to_file(directory, directory_file)
 
     for team in teams:
         team_content = teams[team]
-        team_page = create_team_page(team_content)
+        team_page = create_team_page(team_content, tags)
         team_page_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.TEAM_PAGES_DIR_NAME,
                                         "%s.html" % team)
         write_template_output_to_file(team_page, team_page_file)

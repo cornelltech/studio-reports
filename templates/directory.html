@@ -47,8 +47,8 @@
 
     // given a tag, toggle the color
     function toggleTagColor(tag, selected) {
-      var bground = selected ? '#ff8969' : 'white';
-      var fground = selected ? 'white' : '#ff8969';
+      var bground = selected ? '#ff8969' : '#f8f8f8';
+      var fground = selected ? '#f8f8f8' : '#ff8969';
       tag.css('background-color', bground);
       tag.css('color', fground);
     }

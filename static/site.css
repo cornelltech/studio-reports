@@ -86,6 +86,28 @@ a {
   flex: row;
 }
 
+.tag-placeholder {
+  margin-right: 5px;
+  margin-left: 5px;
+  border: 1px solid;
+  color: #ff8969;
+  border-color: #ff8969;
+  border-radius: 9px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 2px;
+  white-space: pre;
+
+  /* bring these links in front of the panel link */
+  position: relative;
+  z-index: 2;
+}
+
+.top-header-view-all {
+  color: white;
+  background-color: #ff8969;
+}
+
 .big-row-outer {
   display: flex;
   align-items: center;
@@ -175,23 +197,6 @@ a {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-}
-
-.tag-placeholder {
-  margin-right: 5px;
-  margin-left: 5px;
-  border: 1px solid;
-  color: #ff8969;
-  border-color: #ff8969;
-  border-radius: 9px;
-  padding-left: 5px;
-  padding-right: 5px;
-  padding-bottom: 2px;
-  white-space: pre;
-
-  /* bring these links in front of the panel link */
-  position: relative;
-  z-index: 2;
 }
 
 .team-roster {

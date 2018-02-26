@@ -120,6 +120,12 @@ def get_list(filename):
         items = [item.strip() for item in f.readlines()]
         return items
 
+def turn_tags_list_into_tags(tags):
+    tag_names = {}
+    for tag in tags:
+        tag_names[tag.replace(' ', '-').replace('/', '-').lower()] = tag
+    return tag_names
+
 # TODO: deprecate in favor of the futuristic version
 def get_crit_groups_ordered_by_room(teams_metadata):
     crit_rooms = {'A': {}, 'B' : {}}
@@ -143,6 +149,8 @@ def load_teams_data(team_constants):
         team_doc = get_yaml_doc(team_name)
         if team_doc:
             team_doc['repo'] = team_name
+
+            team_doc['tags'] = turn_tags_list_into_tags(team_doc['tags'])
 
             # check length of product narrative
             product_narrative = team_doc['product_narrative']
@@ -188,8 +196,7 @@ def create_crit_pages(crit_groups, teams):
 
 def create_directory_page(teams):
     tags_file = os.path.join(constants.PWD, constants.TAGS_FILE_NAME)
-    tags = get_list(tags_file)
-
+    tags = turn_tags_list_into_tags(get_list(tags_file))
     template = TEMPLATES[DIRECTORY_T]
     if template:
         return template.render(teams=teams, tags=tags, semester=args.semester)

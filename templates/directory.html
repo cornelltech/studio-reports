@@ -3,6 +3,10 @@
 {% block head %}
   {{ super() }}
   <link href="static/site.css" rel="site stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -10,18 +14,82 @@
     <div class="page-header-title"> Product Studio Teams </div>
     <div class="page-header-footer"> Topics:
       <div class="tags">
+        <div class="tag-placeholder top-header-view-all">View All</div>
         {% if tags is defined and tags is not none %}
           {% for tag in tags %}
-            <div class="tag-placeholder">{{ tag }}</div>
+            <div class="tag-placeholder top-header-tag" data-tagname="{{tag}}">{{tags[tag]}}</div>
           {% endfor %}
         {% endif %}
       </div>
     </div>
   </div> <!-- page-header -->
+  <script>
+  $( document ).ready(function() {
+    console.log( "ready!" );
+
+    // setup tags state tracker
+    var tags_visible = new Map();
+    var viewAll = true;
+    {% for tag in tags %}
+      tags_visible.set('{{tag}}', true);
+    {% endfor %}
+
+    // View All only can be selected, not deselected
+    $('.top-header-view-all').click(function(evt) {
+      var row = $('.big-row-outer');
+      row.show();
+      toggleTagColor($('.top-header-tag'), false);
+      tags_visible.forEach((value, key) => tags_visible.set(key, true));
+
+      viewAll = true;
+      toggleTagColor($('.top-header-view-all'), true);
+    })
+
+    // given a tag, toggle the color
+    function toggleTagColor(tag, selected) {
+      var bground = selected ? '#ff8969' : 'white';
+      var fground = selected ? 'white' : '#ff8969';
+      tag.css('background-color', bground);
+      tag.css('color', fground);
+    }
+
+    // select a tag
+    $('.top-header-tag').click(function(evt) {
+      var tag = $(evt.target).data("tagname");
+      if(viewAll) {
+        
+        // hide everything else
+        viewAll = false;
+        $('.big-row-outer').hide();
+        toggleTagColor($('.top-header-view-all'), false);
+        tags_visible.forEach((value, key) => {
+          if (key != tag) tags_visible.set(key, false)
+        });
+
+        // show this one
+        var row = $('.big-row-outer.' + tag);
+        toggleTagColor($(evt.target), true);
+        row.show();
+
+      } else {
+        viewAll = false;
+        tags_visible.set(tag, !tags_visible.get(tag));
+        toggleTagColor($(evt.target), tags_visible.get(tag));
+        var row = $('.big-row-outer.' + tag);
+        row.toggle();
+      }
+    })
+  });
+  </script>
   {% for team_name in teams %}
     {% set team = teams[team_name] %}
       {% if team is defined and team is not none %}
-        <div class="big-row-outer">
+        <div class="big-row-outer
+                  {% if team['tags'] is defined %}
+                    {% for tag in team['tags'] %}
+                      {{tag}}
+                    {% endfor %}
+                  {% endif %}">
           <div class="big-row">
             {% if semester == 'fall' %} <!-- FALL / PRODUCT STUDIO-->
               {% with prefix="" %}

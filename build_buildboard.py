@@ -100,7 +100,7 @@ def save_team_photos(team_constants):
                             handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.INDIVIDUAL_PHOTOS_DIR_NAME,
                                                                 sanified_email, individual_photo))
 
-                    except (KeyError, TypeError, IOError), e:
+                    except (KeyError, TypeError, IOError, AttributeError), e:
                         # overwrite file with default member image for failed picture
                         teammate['picture'] = 'static/member3x.png'
                         logging.error('repo %s missing individual photo for member %s: %s' % (team_name, teammate['email'], str(e)))

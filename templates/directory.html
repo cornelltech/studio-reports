@@ -7,7 +7,12 @@
 
 {% block content %}
   <div class="page-header">
-    <div class="page-header-title"> Product Studio Teams </div>
+    {% if semester == 'fall' %}
+      <div class="page-header-title"> Product Studio Teams </div>
+    {% endif %}
+    {% if semester == 'spring' %}
+      <div class="page-header-title"> Startup Studio 2018 </div>
+    {% endif %}
     <!-- <div class="page-header-footer"> Topics: -->
         <!-- <span class="tag-placeholder">VR</span> -->
         <!-- <span class="tag-placeholder">Health Tech</span> -->
@@ -15,16 +20,27 @@
   </div> <!-- page-header -->
   {% for team_name in teams %}
     {% set team = teams[team_name] %}
-      {% if team is defined %}
+      {% if team is defined and team is not none %}
         <div class="big-row-outer">
           <div class="big-row">
-            {% with prefix="" %}
-              {% include "roster.html" %}
-            {% endwith %}
-            {% include "team_info.html" %}
-            {% if team['company'] is defined %}
-              <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
-            {% endif %}
+            {% if semester == 'fall' %} <!-- FALL / PRODUCT STUDIO-->
+              {% with prefix="" %}
+                {% include "roster.html" %}
+              {% endwith %}
+              {% include "team_info.html" %}
+              {% if team['company'] is defined %}
+                <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
+              {% endif %}
+            {% endif %} <!-- end FALL / PRODUCT STUDIO-->
+            {% if semester == 'spring' %} <!-- SPRING / STARTUP STUDIO-->
+              {% if team['company'] is defined %}
+                <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
+              {% endif %}
+              {% include "team_info.html" %}
+              {% with prefix="" %}
+                {% include "roster.html" %}
+              {% endwith %}
+            {% endif %} <!-- end SPRING / STARTUP STUDIO-->
           </div> <!-- big-row -->
         </div> <!-- big-row-outer -->
      {% endif %}

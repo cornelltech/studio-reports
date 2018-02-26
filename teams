@@ -1,52 +1,57 @@
-S4	Bloomberg LP	#PC011	bloomberg-skills	A	131
-S3	Gates Foundation	#PC009	bmgf-money	A	131
-S1	WCMC	#PC099	wcmc-handwritten-charts	A	131
-S4	Amazon	#PC004	amazon-photo-video-sharing	A	141
-S2	AutoDesk	#PC006	autodesk-urban-mobility	A	141
-S2	eBay	#PC028	ebay-complementary-fashion	A	141
-S1	MSK	#PC053	msk-vr	A	141
-S3	Bloomberg LP	#PC013	bloomberg-cryptocurrencies	A	151
-S2	VaynerMedia	#PC090	vaynermedia-fake-news	A	151
-S3	Verizon	#PC092	verizon-customer-experience	A	151
-S3	Betterment	#PC008	betterment-blockchain	A	3rd Bowtie East
-S2	Toyota	#PC042	toyota-trust-selfdriving-cars	A	3rd Bowtie East
-S4	XO Group	#PC101	xogroup-wedding	A	3rd Bowtie East
-S2	Amazon	#PC005	amazon-commuters	A	3rd Bowtie West
-S4	My Little Health Bot	#PC057	littlehealthboth-robot-retailer	A	3rd Bowtie West
-S3	Mastercard	#PC050	mastercard-transaction-data	A	3rd Bowtie West
-S3	Blue Ridge Labs	#PC014	blueridgelabs-immigrants	A	L23
-S4	Data & Society	#PC024	datasociety-tolerance	A	L23
-S4	NYTimes	#PC059	nytimes-bundles	A	L23
-S3	Roku	#PC073	roku-tv-advertising	A	L23
-S4	Dow Jones	#PC100	dowjones-ai-newsroom	A	Master Loft
-S1	IBM	#PC039	ibm-cancer	A	Master Loft
-S2	Uber	#PC088	uber-communities	A	Master Loft
-S3	Bloomberg LP	#PC012	bloomberg-college	A	Master Loft's Prow
-S4	CampusWire	#PC017	campuswire-student-qa	A	Master Loft's Prow
-S1	Lilly	#PC048	lilly-alzheimer	A	Master Loft's Prow
-S3	Capital One Labs	#PC019	capitalonelabs-blockchain	B	131
-S1	Lilly	#PC049	lilly-objective-data	B	131
-S1	Groceryships	#PC036	groceryships-healthy-choices	B	131
-S2	Grammarly	#PC035	grammarly	B	141
-S3	Domino Data Labs	#PC027	domino-marketplace	B	141
-S1	Mitre	#PC055	mitre-informed-decision	B	141
-S1	Oscar	#PC063	oscar-patient-relationships	B	141
-S4	frog	#PC033	frog-ar-vr	B	151
-S2	Uniqlo	#PC043	inamoto-inventory	B	151
-S4	SAP	#PC076	sap-ar-vr	B	151
-S2	ConEd	#PC023	coned-ev-charging	B	3rd Bowtie East
-S1	Kaltura	#PC046	kaltura-inspection	B	3rd Bowtie East
-S1	WATTx	#PC094	wattx-data-sharing	B	3rd Bowtie East
-S4	Bloomberg LP	#PC010	bloomberg-volunteering	B	3rd Bowtie West
-S2	Qualcomm	#PC071	qualcomm-credibility	B	3rd Bowtie West
-S3	Verizon	#PC091	verizon-civic	B	3rd Bowtie West
-S1	HALE Health	#PC037	hale-health-chronic-diseases	B	L23
-S1	Nielsen	#PC060	nielsen-pos	B	L23
-S2	Two Sigma	#PC087	twosigma-airports	B	L23
-S4	BMW	#PC016	bmw-personalization	B	Master Loft
-S3	Jet Blue	#PC045	jetblue-loyalty-program	B	Master Loft
-S2	PureHouse	#PC069	purehouse-coliving	B	Master Loft
-S1	Samsung	#PC075	samsung-smart-home	B	Master Loft
-S3	Citi	#PC021	citi-transportation	B	Master Loft's Prow
-S2	JCrew	#PC044	jcrew-brick-mortar	B	Master Loft's Prow
-S4	Two Sigma	#PC086	twosigma-game-halite	B	Master Loft's Prow
+CTSS18-1
+CTSS18-2
+CTSS18-3
+CTSS18-4
+CTSS18-5
+CTSS18-6
+CTSS18-7
+CTSS18-8
+CTSS18-9
+CTSS18-10
+CTSS18-11
+CTSS18-12
+CTSS18-13
+CTSS18-14
+CTSS18-15
+CTSS18-16
+CTSS18-17
+CTSS18-18
+CTSS18-19
+CTSS18-20
+CTSS18-21
+CTSS18-22
+CTSS18-23
+CTSS18-24
+CTSS18-25
+CTSS18-26
+CTSS18-27
+CTSS18-28
+CTSS18-29
+CTSS18-30
+CTSS18-32
+CTSS18-33
+CTSS18-34
+CTSS18-35
+CTSS18-36
+CTSS18-37
+CTSS18-38
+CTSS18-39
+CTSS18-40
+CTSS18-41
+CTSS18-42
+CTSS18-43
+CTSS18-44
+CTSS18-45
+CTSS18-46
+CTSS18-47
+CTSS18-48
+CTSS18-49
+CTSS18-50
+CTSS18-51
+CTSS18-31
+CTSS18-52
+CTSS18-53
+CTSS18-54
+CTSS18-55
+CTSS18-56
+CTSS18-57

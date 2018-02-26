@@ -53,7 +53,12 @@
             <div class="team-info-header">
               {% if team['company'] is defined %}
                 <div class="team-info-header-company">{{ team['company']['name']}} asked</div>
-                <div class="h-m-w"> {{ team['how_might_we']}}</div>
+                {% if semester == 'fall' %}
+                  <div class="h-m-w"> {{ team['how_might_we']}}</div>
+                {% endif %}
+                {% if semester == 'spring' %}
+                  <div class="h-m-w"> {{ team['product_hmw']}}</div>
+                {% endif %}
               {% endif %}
             {% include "team_info_card.html" %}
           </div> <!-- righthand-column -->

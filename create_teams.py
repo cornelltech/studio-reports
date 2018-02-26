@@ -18,7 +18,7 @@ GITHUB_ACCESS_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', None)
 STUDENTS_TO_TEAMS = "teams2students.txt"
 
 
-TEAMS_FILE = "create-team-repos"
+TEAMS_FILE = "teams-sp18.txt"
 ORG_NAME = "ct-product-challenge-2017"
 STUDIO_TEAM_ID = 2477099
 
@@ -82,6 +82,7 @@ def populate_all_teams(g):
 
 if __name__ == '__main__':
     g = github.Github(GITHUB_ACCESS_TOKEN)
+    # create_all_teams(g)
     populate_all_teams(g)
     # ts = create_teams_map()
     # for t in ts.keys():

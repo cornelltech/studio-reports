@@ -19,6 +19,7 @@ parser = argparse.ArgumentParser(description="Top-level flags.")
 parser.add_argument('--local-data', action='store_true')
 parser.add_argument('--log-to-stdout', action='store_true')
 parser.add_argument('--log-file', action='store')
+parser.add_argument('--semester', action='store', choices=['spring', 'fall'], required=True)
 
 g = github.Github(constants.GITHUB_ACCESS_TOKEN)
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
@@ -99,7 +100,7 @@ def save_team_photos(team_constants):
                             handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.INDIVIDUAL_PHOTOS_DIR_NAME,
                                                                 sanified_email, individual_photo))
 
-                    except (KeyError, TypeError, IOError), e:
+                    except (KeyError, TypeError, IOError, AttributeError), e:
                         # overwrite file with default member image for failed picture
                         teammate['picture'] = 'static/member3x.png'
                         logging.error('repo %s missing individual photo for member %s: %s' % (team_name, teammate['email'], str(e)))
@@ -116,10 +117,10 @@ def save_team_photos(team_constants):
 
 def get_teams(teams_file):
     with open(teams_file) as tf:
-        team_metadata = [team.strip() for team in tf.readlines()]
-    team_constants = [team.split("\t")[3] for team in team_metadata]
-    return (team_constants, team_metadata)
+        teams = [team.strip() for team in tf.readlines()]
+        return teams
 
+# TODO: deprecate in favor of the futuristic version
 def get_crit_groups_ordered_by_room(teams_metadata):
     crit_rooms = {'A': {}, 'B' : {}}
     for team_line in teams_metadata:
@@ -142,6 +143,11 @@ def load_teams_data(team_constants):
         team_doc = get_yaml_doc(team_name)
         if team_doc:
             team_doc['repo'] = team_name
+
+            # check length of product narrative
+            product_narrative = team_doc['product_narrative']
+            if len(product_narrative) > 140:
+                logging.warning('product narrative for team %s is too long: %d characters' % (team_name, len(product_narrative)))
         else:
             logging.error("missing yaml: %s" % team_name)
         team_data[team_name] = team_doc
@@ -180,16 +186,17 @@ def create_crit_pages(crit_groups, teams):
 
         return (crit_A, crit_B)
 
-def create_directory_page(teams):
+def create_directory_page(teams, semester):
     template = TEMPLATES[DIRECTORY_T]
     if template:
-        return template.render(teams=teams)
+        return template.render(teams=teams, semester=semester)
 
-def create_team_page(team):
+def create_team_page(team, semester):
     template = TEMPLATES[TEAM_CARD_T]
     if template:
-        return template.render(team=team)
+        return template.render(team=team, semester=semester)
 
+# TODO: deprecate in favor of futuristic version
 def output_crit_groups_xlsx(group, rooms, teams):
     workbook = xlsxwriter.Workbook(os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.XLSX_FILE_NAME % group))
     worksheet = workbook.add_worksheet()
@@ -208,6 +215,7 @@ def output_crit_groups_xlsx(group, rooms, teams):
                 row += 1
     workbook.close()
 
+# TODO: deprecate this in favor of a futuristic model
 def build_crit_pages(teams, teams_metadata):
     def create_crit_group_pages(group, data):
         crit_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.CRIT_FILE_NAME % group)
@@ -220,31 +228,30 @@ def build_crit_pages(teams, teams_metadata):
         create_crit_group_pages('A', crit_groups_data[0])
         create_crit_group_pages('B', crit_groups_data[1])
 
-def build_new_site_design(teams):
-    directory = create_directory_page(teams)
+def build_new_site_design(teams, semester):
+    directory = create_directory_page(teams, semester)
     directory_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.DIRECTORY_PAGE_NAME)
     write_template_output_to_file(directory, directory_file)
 
     for team in teams:
         team_content = teams[team]
-        team_page = create_team_page(team_content)
+        team_page = create_team_page(team_content, semester)
         team_page_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.TEAM_PAGES_DIR_NAME,
                                         "%s.html" % team)
         write_template_output_to_file(team_page, team_page_file)
 
-def create_all_pages(local_data):
+def create_all_pages(local_data, semester):
     setup_output_directories(constants.PWD)
 
     teams_file = os.path.join(constants.PWD, constants.TEAMS_FILE_NAME)
-    (team_constants, teams_metadata) = get_teams(teams_file)
+    team_names = get_teams(teams_file)
 
     if not local_data:
-        save_team_files(team_constants)
-        save_team_photos(team_constants)
+        save_team_files(team_names)
+        save_team_photos(team_names)
 
-    teams = load_teams_data(team_constants)
-    build_new_site_design(teams)
-    build_crit_pages(teams, teams_metadata)
+    teams = load_teams_data(team_names)
+    build_new_site_design(teams, semester)
 
 def write_template_output_to_file(output, dst):
     if output:
@@ -287,4 +294,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     config_logging(args)
     verify_templates()
-    create_all_pages(args.local_data)
+    create_all_pages(args.local_data, args.semester)

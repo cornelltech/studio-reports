@@ -11,7 +11,12 @@
 
 {% block content %}
   <div class="page-header">
-    <div class="page-header-title"> Product Studio Teams </div>
+    {% if semester == 'fall' %}
+      <div class="page-header-title"> Product Studio Teams </div>
+    {% endif %}
+    {% if semester == 'spring' %}
+      <div class="page-header-title"> Startup Studio 2018 </div>
+    {% endif %}
     <div class="page-header-footer"> Topics:
       <div class="tags">
         <div class="tag top-header-view-all">View All</div>
@@ -22,6 +27,7 @@
         {% endif %}
       </div>
     </div>
+
   </div> <!-- page-header -->
   <script>
   $( document ).ready(function() {

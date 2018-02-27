@@ -101,7 +101,7 @@ def save_team_photos(team_constants):
                             handle_photos.get_photo_path_for_web(handle_photos.save_photo_path(constants.INDIVIDUAL_PHOTOS_DIR_NAME,
                                                                 sanified_email, individual_photo))
 
-                    except (KeyError, TypeError, IOError), e:
+                    except (KeyError, TypeError, IOError, AttributeError), e:
                         # overwrite file with default member image for failed picture
                         teammate['picture'] = 'static/member3x.png'
                         logging.error('repo %s missing individual photo for member %s: %s' % (team_name, teammate['email'], str(e)))
@@ -197,15 +197,15 @@ def create_crit_pages(crit_groups, teams):
 
         return (crit_A, crit_B)
 
-def create_directory_page(teams, tags):
+def create_directory_page(teams, tags, semester):
     template = TEMPLATES[DIRECTORY_T]
     if template:
-        return template.render(teams=teams, tags=tags, semester=args.semester)
+        return template.render(teams=teams, tags=tags, semester=semester)
 
-def create_team_page(team, tags):
+def create_team_page(team, tags, semester):
     template = TEMPLATES[TEAM_CARD_T]
     if template:
-        return template.render(team=team, tags=tags, semester=args.semester)
+        return template.render(team=team, tags=tags, semester=semester)
 
 # TODO: deprecate in favor of futuristic version
 def output_crit_groups_xlsx(group, rooms, teams):
@@ -239,22 +239,22 @@ def build_crit_pages(teams, teams_metadata):
         create_crit_group_pages('A', crit_groups_data[0])
         create_crit_group_pages('B', crit_groups_data[1])
 
-def build_new_site_design(teams):
+def build_new_site_design(teams, semester):
     tags_file = os.path.join(constants.PWD, constants.TAGS_FILE_NAME)
     tags = turn_tags_list_into_tags(get_list(tags_file))
 
-    directory = create_directory_page(teams, tags)
+    directory = create_directory_page(teams, tags, semester)
     directory_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.DIRECTORY_PAGE_NAME)
     write_template_output_to_file(directory, directory_file)
 
     for team in teams:
         team_content = teams[team]
-        team_page = create_team_page(team_content, tags)
+        team_page = create_team_page(team_content, tags, semester)
         team_page_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.TEAM_PAGES_DIR_NAME,
                                         "%s.html" % team)
         write_template_output_to_file(team_page, team_page_file)
 
-def create_all_pages(local_data):
+def create_all_pages(local_data, semester):
     setup_output_directories(constants.PWD)
 
     teams_file = os.path.join(constants.PWD, constants.TEAMS_FILE_NAME)
@@ -265,7 +265,7 @@ def create_all_pages(local_data):
         save_team_photos(team_names)
 
     teams = load_teams_data(team_names)
-    build_new_site_design(teams)
+    build_new_site_design(teams, semester)
 
 def write_template_output_to_file(output, dst):
     if output:
@@ -308,4 +308,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     config_logging(args)
     verify_templates()
-    create_all_pages(args.local_data)
+    create_all_pages(args.local_data, args.semester)

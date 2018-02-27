@@ -33,6 +33,7 @@
     {% for tag in tags %}
       tags_visible.set('{{tag}}', true);
     {% endfor %}
+    console.log('t', tags_visible);
 
     // View All only can be selected, not deselected
     $('.top-header-view-all').click(function(evt) {
@@ -72,11 +73,49 @@
         row.show();
 
       } else {
-        viewAll = false;
         tags_visible.set(tag, !tags_visible.get(tag));
         toggleTagColor($(evt.target), tags_visible.get(tag));
         var row = $('.big-row-outer.' + tag);
-        row.toggle();
+        // console.log(row);
+        if (row) {
+          var classes = row.attr("class").split('  ');
+          row.toggle();
+          var truthy = false;
+          classes.forEach((c) => {
+            c = c.replace(/ /g,'');
+            if (tags_visible.has(c)) {
+              console.log(c);
+              console.log('c != tag?', c!=tag);
+              console.log('tags_visible.get(c)?', tags_visible.get(c));
+              truthy = truthy || (c != tag && tags_visible.get(c))
+            } else {
+              console.log(c, 'not in tags');
+            }
+          })
+          // var truthy = classes.reduce((acc, c) => {
+          //   c = c.replace(/ /g,'');
+          //
+          //   if (tags_visible.has(c)) {
+          //     console.log('adding:', (c != tag && tags_visible.get(c)));
+          //     return acc || (c != tag && tags_visible.get(c));
+          //   } else {
+          //     return acc;
+          //   }
+          // });
+          console.log('fff');
+          console.log(classes);
+          console.log('&?', truthy);
+        }
+
+        classes.forEach((c) => {
+          if(c != tag && tags_visible.get(c)) {
+            var savedRow = $('.big-row-outer.' + c);
+            console.log('sss');
+            console.log(savedRow);
+            savedRow.show();
+          }
+        })
+        // console.log(row.attr("class").split('  '));
       }
     })
   });
@@ -84,12 +123,8 @@
   {% for team_name in teams %}
     {% set team = teams[team_name] %}
       {% if team is defined and team is not none %}
-        <div class="big-row-outer
-                  {% if team['tags'] is defined %}
-                    {% for tag in team['tags'] %}
-                      {{tag}}
-                    {% endfor %}
-                  {% endif %}">
+        <div class="big-row-outer {% if team['tags'] is defined %}
+                    {% for tag in team['tags'] %} {{tag}} {% endfor %}{% endif %}">
           <div class="big-row">
             {% if semester == 'fall' %} <!-- FALL / PRODUCT STUDIO-->
               {% with prefix="" %}

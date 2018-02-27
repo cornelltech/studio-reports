@@ -14,10 +14,17 @@
     <div class="page-header-title"> Product Studio Teams </div>
     <div class="page-header-footer"> Topics:
       <div class="tags">
+<<<<<<< HEAD
         <div class="tag top-header-view-all">View All</div>
         {% if tags is defined and tags is not none %}
           {% for tag in tags %}
             <div class="tag top-header-tag" data-tagname="{{tag}}">{{tags[tag]}}</div>
+=======
+        <div class="tag-placeholder top-header-view-all">View All</div>
+        {% if tags is defined and tags is not none %}
+          {% for tag in tags %}
+            <div class="tag-placeholder top-header-tag" data-tagname="{{tag}}">{{tags[tag]}}</div>
+>>>>>>> d2b0544b3f1c8ed7a5426b61e4b935a79591bc69
           {% endfor %}
         {% endif %}
       </div>
@@ -33,7 +40,10 @@
     {% for tag in tags %}
       tags_visible.set('{{tag}}', true);
     {% endfor %}
+<<<<<<< HEAD
     console.log('t', tags_visible);
+=======
+>>>>>>> d2b0544b3f1c8ed7a5426b61e4b935a79591bc69
 
     // View All only can be selected, not deselected
     $('.top-header-view-all').click(function(evt) {

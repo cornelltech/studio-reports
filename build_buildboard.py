@@ -150,8 +150,10 @@ def load_teams_data(team_constants):
         team_doc = get_yaml_doc(team_name)
         if team_doc:
             team_doc['repo'] = team_name
-
-            team_doc['tags'] = turn_tags_list_into_tags(team_doc['tags'])
+            try:
+                team_doc['tags'] = turn_tags_list_into_tags(team_doc['tags'])
+            except (KeyError):
+                logging.error('tags missing for team %s' % team_name)
 
             # check length of product narrative
             product_narrative = team_doc['product_narrative']

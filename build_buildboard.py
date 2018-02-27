@@ -23,7 +23,8 @@ parser.add_argument('--semester', action='store', choices=['spring', 'fall'], re
 
 g = github.Github(constants.GITHUB_ACCESS_TOKEN)
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
-                    autoescape=select_autoescape(['html', 'xml']))
+                    autoescape=select_autoescape(['html', 'xml']),
+                    lstrip_blocks=True, trim_blocks=True)
 # # # # # # #
 CRIT_T = 'crit.html'
 DIRECTORY_T = 'directory.html'

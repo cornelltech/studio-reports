@@ -23,7 +23,8 @@ parser.add_argument('--semester', action='store', choices=['spring', 'fall'], re
 
 g = github.Github(constants.GITHUB_ACCESS_TOKEN)
 env = Environment(loader=PackageLoader('buildboard', 'templates'),
-                    autoescape=select_autoescape(['html', 'xml']))
+                    autoescape=select_autoescape(['html', 'xml']),
+                    lstrip_blocks=True, trim_blocks=True)
 # # # # # # #
 CRIT_T = 'crit.html'
 DIRECTORY_T = 'directory.html'
@@ -115,10 +116,16 @@ def save_team_photos(team_constants):
         else:
             logging.error("missing yaml: %s" % team_name)
 
-def get_teams(teams_file):
-    with open(teams_file) as tf:
-        teams = [team.strip() for team in tf.readlines()]
-        return teams
+def get_list(filename):
+    with open(filename) as f:
+        items = [item.strip() for item in f.readlines()]
+        return items
+
+def turn_tags_list_into_tags(tags):
+    tag_names = {}
+    for tag in tags:
+        tag_names[tag.replace(' ', '-').replace('/', '-').lower()] = tag
+    return tag_names
 
 # TODO: deprecate in favor of the futuristic version
 def get_crit_groups_ordered_by_room(teams_metadata):
@@ -143,6 +150,10 @@ def load_teams_data(team_constants):
         team_doc = get_yaml_doc(team_name)
         if team_doc:
             team_doc['repo'] = team_name
+            try:
+                team_doc['tags'] = turn_tags_list_into_tags(team_doc['tags'])
+            except (KeyError):
+                logging.error('tags missing for team %s' % team_name)
 
             # check length of product narrative
             product_narrative = team_doc['product_narrative']
@@ -186,15 +197,15 @@ def create_crit_pages(crit_groups, teams):
 
         return (crit_A, crit_B)
 
-def create_directory_page(teams, semester):
+def create_directory_page(teams, tags, semester):
     template = TEMPLATES[DIRECTORY_T]
     if template:
-        return template.render(teams=teams, semester=semester)
+        return template.render(teams=teams, tags=tags, semester=semester)
 
-def create_team_page(team, semester):
+def create_team_page(team, tags, semester):
     template = TEMPLATES[TEAM_CARD_T]
     if template:
-        return template.render(team=team, semester=semester)
+        return template.render(team=team, tags=tags, semester=semester)
 
 # TODO: deprecate in favor of futuristic version
 def output_crit_groups_xlsx(group, rooms, teams):
@@ -229,13 +240,16 @@ def build_crit_pages(teams, teams_metadata):
         create_crit_group_pages('B', crit_groups_data[1])
 
 def build_new_site_design(teams, semester):
-    directory = create_directory_page(teams, semester)
+    tags_file = os.path.join(constants.PWD, constants.TAGS_FILE_NAME)
+    tags = turn_tags_list_into_tags(get_list(tags_file))
+
+    directory = create_directory_page(teams, tags, semester)
     directory_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.DIRECTORY_PAGE_NAME)
     write_template_output_to_file(directory, directory_file)
 
     for team in teams:
         team_content = teams[team]
-        team_page = create_team_page(team_content, semester)
+        team_page = create_team_page(team_content, tags, semester)
         team_page_file = os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.TEAM_PAGES_DIR_NAME,
                                         "%s.html" % team)
         write_template_output_to_file(team_page, team_page_file)
@@ -244,7 +258,7 @@ def create_all_pages(local_data, semester):
     setup_output_directories(constants.PWD)
 
     teams_file = os.path.join(constants.PWD, constants.TEAMS_FILE_NAME)
-    team_names = get_teams(teams_file)
+    team_names = get_list(teams_file)
 
     if not local_data:
         save_team_files(team_names)

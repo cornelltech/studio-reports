@@ -13,6 +13,7 @@ GITHUB_ACCESS_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', None)
 ORG_NAME = "ct-product-challenge-2017"
 YAML_FILE_NAME = "report.yaml"
 TEAMS_FILE_NAME = "teams"
+TAGS_FILE_NAME = "tags"
 SECTIONS = ['S1', 'S2', 'S3', 'S4']
 
 PWD = os.path.dirname(os.path.realpath(__file__))

@@ -14,6 +14,7 @@ ORG_NAME = "ct-product-challenge-2017"
 YAML_FILE_NAME = "report.yaml"
 TEAMS_FILE_NAME = "teams"
 TAGS_FILE_NAME = "tags"
+SECTIONS_FILE_NAME = "sections.csv"
 SECTIONS = ['S1', 'S2', 'S3', 'S4']
 
 PWD = os.path.dirname(os.path.realpath(__file__))
@@ -24,7 +25,7 @@ COMPANY_LOGOS_DIR_NAME = "logos"
 INDIVIDUAL_PHOTOS_DIR_NAME = "individual_pictures"
 # TODO: deprecate in favor of futuristic version
 # CRIT_FILE_NAME = "crit-%s.html"
-# XLSX_FILE_NAME = "narratives-%s.xlsx"
+XLSX_FILE_NAME = "narratives.xlsx"
 
 # new site design names
 DIRECTORY_PAGE_NAME = "index.html"

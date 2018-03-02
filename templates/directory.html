@@ -89,7 +89,7 @@
           classes.forEach((c) => {
             c = c.replace(/ /g,'');
             if (tags_visible.has(c)) {
-              truthy = truthy || (c != tag && tags_visible.get(c))
+              truthy = truthy || tags_visible.get(c);
             } else {
               console.log(c, 'not a real tag');
             }

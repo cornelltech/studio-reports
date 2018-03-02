@@ -127,6 +127,13 @@ def turn_tags_list_into_tags(tags):
         tag_names[tag.replace(' ', '-').replace('/', '-').lower()] = tag
     return tag_names
 
+def turn_sections_list_into_dict(sections):
+    sections_dict = {}
+    for team in sections:
+        t = team.split(',')
+        sections_dict[t[0]] = t[1]
+    return sections_dict
+
 # TODO: deprecate in favor of the futuristic version
 def get_crit_groups_ordered_by_room(teams_metadata):
     crit_rooms = {'A': {}, 'B' : {}}
@@ -207,23 +214,51 @@ def create_team_page(team, tags, semester):
     if template:
         return template.render(team=team, tags=tags, semester=semester)
 
-# TODO: deprecate in favor of futuristic version
-def output_crit_groups_xlsx(group, rooms, teams):
-    workbook = xlsxwriter.Workbook(os.path.join(constants.PWD, constants.OUTPUT_DIR_NAME, constants.XLSX_FILE_NAME % group))
+def pns_to_xlsx(sections, teams):
+    workbook = xlsxwriter.Workbook(os.path.join(constants.PWD,
+                                    constants.OUTPUT_DIR_NAME,
+                                    constants.XLSX_FILE_NAME))
     worksheet = workbook.add_worksheet()
-    columns = {'Team Name': 'A%d', 'Narrative': 'B%d', 'Room': 'C%d'}
+    columns = {'Team ID': 'A%d', 'Section': 'B%d', 'Company Name': 'C%d',
+                'Team Members': 'D%d', 'Emails': 'E%d', 'Program': 'F%d',
+                'Product Narrative': 'G%d'}
     row = 1
     for col in columns:
         worksheet.write(columns[col] % row, col)
-    row += 1
-    for room in rooms:
-        for team in rooms[room]:
-            worksheet.write(columns['Team Name'] % row, team)
-            team_data = teams[team]
-            if team_data:
-                worksheet.write(columns['Narrative'] % row, team_data['product_narrative'])
-                worksheet.write(columns['Room'] % row, room)
-                row += 1
+
+    for team in teams:
+        worksheet.write(columns['Team ID'] % row, team)
+        worksheet.write(columns['Section'] % row, sections[team])
+        team_data = teams[team]
+        if team_data:
+            worksheet.write(columns['Company Name'] % row, team_data['company']['name'])
+            worksheet.write(columns['Product Narrative'] % row, team_data['product_narrative'])
+            team_members = team_data['team']['roster']
+            names, emails, programs, = '', '', ''
+            for member in team_members:
+                try:
+                    if member['name']:
+                        names += member['name'] + '\n'
+                    else:
+                        logging.error('team %s missing name for some members' % team)
+                    if member['email']:
+                        emails += member['email'] + '\n'
+                    else:
+                        logging.error('team %s missing email for some members' % team)
+                    if member['program']:
+                        programs += member['program'] + '\n'
+                    else:
+                        logging.error('team %s missing program for some members' % team)
+                except (KeyError), e:
+                    print 'team %s missing info for some members' % team
+                    logging.error('team %s missing info for some members' % team)
+
+            worksheet.write(columns['Team Members'] % row, names)
+            worksheet.write(columns['Emails'] % row, emails)
+            worksheet.write(columns['Program'] % row, programs)
+        else:
+            logging.error('team %s has no roster' % team)
+        row += 1
     workbook.close()
 
 # TODO: deprecate this in favor of a futuristic model
@@ -260,12 +295,16 @@ def create_all_pages(local_data, semester):
     teams_file = os.path.join(constants.PWD, constants.TEAMS_FILE_NAME)
     team_names = get_list(teams_file)
 
+    sections_file = os.path.join(constants.PWD, constants.SECTIONS_FILE_NAME)
+    sections = turn_sections_list_into_dict(get_list(sections_file))
+
     if not local_data:
         save_team_files(team_names)
         save_team_photos(team_names)
 
     teams = load_teams_data(team_names)
     build_new_site_design(teams, semester)
+    pns_to_xlsx(sections, teams)
 
 def write_template_output_to_file(output, dst):
     if output:

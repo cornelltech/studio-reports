@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+  <link href="static/site.css" rel="site stylesheet">
+{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div class="page-header-title"> Startup Studio Teams </div>
+    <!-- <div class="page-header-footer"> Topics: -->
+        <!-- <span class="tag-placeholder">VR</span> -->
+        <!-- <span class="tag-placeholder">Health Tech</span> -->
+    <!-- </div> -->
+  </div> <!-- page-header -->
+  {% for team_name in teams %}
+    {% set team = teams[team_name] %}
+      {% if team is defined %}
+        <div class="big-row-outer">
+          <div class="big-row">
+            {% if team['company'] is defined %}
+              <div class="team-logo cover" style="background-image:url({{ team['company']['logo'] }})"> </div> <!-- team-logo -->
+            {% endif %}
+            {% include "team_info.html" %}
+            {% with prefix="" %}
+              {% include "roster.html" %}
+            {% endwith %}
+          </div> <!-- big-row -->
+        </div> <!-- big-row-outer -->
+     {% endif %}
+  {% endfor %}
+  <div class="bottom-spacer"> </div>
+{% endblock %}

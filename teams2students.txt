@@ -1,0 +1,279 @@
+CTSS18-1	ns867
+CTSS18-1	lolfxo
+CTSS18-1	jh2566
+CTSS18-1	YuichiroYasutomo
+CTSS18-1	km796
+
+CTSS18-2	rramphal100
+CTSS18-2	samanthayip
+CTSS18-2	hxing9974
+CTSS18-2	laurawei
+
+CTSS18-3	dingaaling
+CTSS18-3	romCohen
+CTSS18-3	krushisrael
+
+CTSS18-4	hanjing5
+CTSS18-4	mahsu
+CTSS18-4	tasaitz
+CTSS18-4	Vijay-P
+CTSS18-4	rgr88
+
+CTSS18-5	bwang13
+CTSS18-5	tahemverma
+
+CTSS18-6	andreasthoma
+CTSS18-6	jldork
+CTSS18-6	thomasmatecki
+CTSS18-6	kaypolo
+
+CTSS18-7	atl67
+CTSS18-7	moyk
+CTSS18-7	alanlovecoding
+CTSS18-7	rzhu9
+
+CTSS18-8	bensuaydin
+CTSS18-8	jmh463
+CTSS18-8	nmadd
+CTSS18-8	zeeshanh
+
+CTSS18-9	yh742
+CTSS18-9	fk257
+CTSS18-9	jeg357
+CTSS18-9	gauravChaturvedi
+
+CTSS18-10	shetharp
+CTSS18-10	vufrancois
+CTSS18-10	kman2121
+CTSS18-10	mwhite494
+
+CTSS18-11	lhf-leo
+CTSS18-11	owenw
+CTSS18-11	harrisonzzh
+CTSS18-11	jimzhu1993
+
+CTSS18-12	scienceguyjd
+CTSS18-12	ekaplan6
+CTSS18-12	JGCampagnaro
+CTSS18-12	sprihabhandari
+
+CTSS18-13	arikimon
+CTSS18-13	Joeabisleiman
+CTSS18-13	andimitre
+CTSS18-13	FaniNM
+CTSS18-13	ntquigley
+
+CTSS18-14	suziray
+CTSS18-14	jak528
+CTSS18-14	charlie9660
+CTSS18-14	alextops
+
+CTSS18-15	steveleee
+CTSS18-15	iltimasd
+CTSS18-15	khemicooper
+CTSS18-15	aaj58
+
+CTSS18-16	sdl83
+CTSS18-16	ac4649
+CTSS18-16	RomoliBakshi
+CTSS18-16	Eliza-908
+CTSS18-16	zackthebruce
+
+CTSS18-17	sddioulde
+CTSS18-17	jhurwitz22
+CTSS18-17	zpardey
+
+CTSS18-18	larochea23
+CTSS18-18	shamanthegde
+CTSS18-18	jjaqkho
+CTSS18-18	sb2483
+CTSS18-18	emontag
+
+CTSS18-19	zenyui
+CTSS18-19	lukeahn
+CTSS18-19	marcoberlot
+CTSS18-19	j3sue
+
+CTSS18-20	emforeman11
+CTSS18-20	benolsn
+
+CTSS18-21	michaelbloomberg
+CTSS18-21	adr85fms
+CTSS18-21	carolinapeisch
+CTSS18-21	noopurP
+CTSS18-21	aleotheoreo
+
+CTSS18-22	fredzhou93
+CTSS18-22	yukunhe
+CTSS18-22	lhuang58
+
+CTSS18-23	nnisa
+CTSS18-23	yl89757jj
+CTSS18-23	vinsonwxy
+
+CTSS18-24	leohunt
+CTSS18-24	zongchengyang
+CTSS18-24	leonmz
+CTSS18-24	szhou036
+
+CTSS18-25	sindhu732
+CTSS18-25	raoulnanavati
+CTSS18-25	nanajai
+CTSS18-25	mshatkhin23
+CTSS18-25	eyvindn
+
+CTSS18-26	anle1991
+CTSS18-26	pengfuyuzhen
+CTSS18-26	ike35
+CTSS18-26	chingchenkuo
+
+CTSS18-27	Jacob-Jiah
+CTSS18-27	jm2646
+CTSS18-27	Yiiii
+CTSS18-27	zxcynk
+
+CTSS18-28	XinLi424
+CTSS18-28	shanshanZ417
+CTSS18-28	wangvincentt
+CTSS18-28	ricardo-zhang
+
+CTSS18-29	kchan26
+CTSS18-29	zn8ae
+CTSS18-29	kristenwang
+CTSS18-29	Yan-J
+
+CTSS18-30	AlexKH22
+CTSS18-30	EliLevin
+CTSS18-30	Detective2016
+CTSS18-30	chinmaya27
+CTSS18-30	iliyatabakov
+
+CTSS18-31	yl4bg
+CTSS18-31	hz2287
+CTSS18-31	baihuajun24
+CTSS18-31	kaa1el
+CTSS18-31	thumlx12
+
+CTSS18-32	dkijc
+CTSS18-32	christycui
+CTSS18-32	JaneJoungyeunLee
+CTSS18-32	ehawk823
+
+CTSS18-33	tolanij
+CTSS18-33	eli2017
+CTSS18-33	actorres
+CTSS18-33	aimeehuang0
+
+CTSS18-34	Capozzim
+CTSS18-34	LeahTak
+CTSS18-34	Allykeller
+CTSS18-34	sm11
+
+CTSS18-35	terry99999
+CTSS18-35	bettychou1993
+CTSS18-35	ak2422
+CTSS18-35	ssugathan
+
+CTSS18-36	xizizubob
+CTSS18-36	zm57
+CTSS18-36	jf442
+CTSS18-36	yeyixin1993
+
+CTSS18-37	MSheinfeld
+CTSS18-37	RyanLupton
+CTSS18-37	ngd34
+CTSS18-37	christstuart
+
+CTSS18-38	MollyMao11
+CTSS18-38	mkaufman09
+CTSS18-38	xuanruizhang0203
+CTSS18-38	jb2548
+CTSS18-38	benjaminvick
+
+CTSS18-39	ksn23
+CTSS18-39	lannieme
+CTSS18-39	David-Z-Gu
+CTSS18-39	neelparekh
+
+CTSS18-40	krajabi
+CTSS18-40	utsavvakil
+CTSS18-40	dm458
+
+CTSS18-41	tejkati
+CTSS18-41	sjaroslawski
+CTSS18-41	rjw253
+CTSS18-41	cameron16
+CTSS18-41	is395
+
+CTSS18-42	trishalaneeraj
+CTSS18-42	marjesmarjes
+CTSS18-42	rohun-tripathi
+CTSS18-42	JQ95
+
+CTSS18-43	Martimax21
+CTSS18-43	interactivetech
+CTSS18-43	gretaz0623
+
+CTSS18-44	jonleecutler
+CTSS18-44	shimieshimshim
+CTSS18-44	sarankrish
+CTSS18-44	zacharysilverstein
+
+CTSS18-45	ZexiLiu
+CTSS18-45	zhuzhu0128
+CTSS18-45	virtuositeit
+
+CTSS18-46	LucienHuang
+CTSS18-46	arp122
+CTSS18-46	gautamc1106
+CTSS18-46	roycboyc
+CTSS18-46	coderKr
+
+CTSS18-47	ergreen
+CTSS18-47	eyates415
+
+CTSS18-48	dfrost5
+CTSS18-48	friendlybeast1010
+CTSS18-48	ragodrich
+
+CTSS18-49	ebk46
+CTSS18-49	Derek316x
+CTSS18-49	cf457
+
+CTSS18-50	chumengxu
+CTSS18-50	annaguidi
+CTSS18-50	vdh9
+CTSS18-50	Zbacker
+
+CTSS18-51	ym224
+CTSS18-51	julhawk
+CTSS18-51	cwestbury
+CTSS18-51	chena931
+CTSS18-51	yz1339
+
+CTSS18-52	sunsshadow
+CTSS18-52	jmagid15
+CTSS18-52	techlover10
+CTSS18-52	davis667
+
+CTSS18-53	nishkumar
+CTSS18-53	pzjc
+
+CTSS18-54	hyunjacoblee
+CTSS18-54	SherlinC
+CTSS18-54	hj394
+CTSS18-54	mg2342
+
+CTSS18-55	xuwanggr
+CTSS18-55	dqlsll123
+CTSS18-55	flyingcow1
+CTSS18-55	brokenmouse
+
+CTSS18-56	DK-key
+CTSS18-56	RenranZhou
+CTSS18-56	ak2399
+
+CTSS18-57	mikemike07
+CTSS18-57	bayernstar
+CTSS18-57	MengjiaoZHU
+CTSS18-57	zonec0

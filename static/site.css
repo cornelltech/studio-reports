@@ -2,6 +2,7 @@
 body {
   background-color: #f8f8f8;
   font-family: 'Fira Sans';
+  margin: 0px;
 }
 
 a {
@@ -22,6 +23,8 @@ a {
   justify-content: center;
   align-items: center;
   padding-top: 15px;
+  min-width: 100px;
+  margin-right: 20px;
 }
 
 .studio-logo {
@@ -63,6 +66,7 @@ a {
 .tags {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   width: 100%;
   overflow-x: auto;
 }
@@ -87,15 +91,16 @@ a {
 }
 
 .tag {
-  margin-right: 5px;
-  margin-left: 5px;
+  margin-right: 2px;
+  margin-left: 2px;
+  margin: 2px;
   border: 1px solid;
   color: #ff8969;
   border-color: #ff8969;
   border-radius: 9px;
   padding-left: 5px;
   padding-right: 5px;
-  padding-bottom: 2px;
+  padding-bottom: 0px;
   white-space: pre;
 
   /* bring these links in front of the panel link */
@@ -139,6 +144,7 @@ a {
   -moz-background-size: 80%;
   -o-background-size: 80%;
   background-size: 80%;
+  min-width: 100px;
 }
 
 .team-info {
@@ -150,6 +156,7 @@ a {
   position: relative;
   border-left: solid 2px rgba(0, 0, 0, 0.22);
   margin-top: 18px;
+  margin-left: 20px;
   padding-top: 10px;
 }
 

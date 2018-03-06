@@ -105,8 +105,8 @@ def save_team_photos(team_constants):
                         # overwrite file with default member image for failed picture
                         teammate['picture'] = 'static/member3x.png'
                         logging.error('repo %s missing individual photo for member %s: %s' % (team_name, teammate['email'], str(e)))
-            except (KeyError), e:
-                logging.error('repo %s missing team roster %s' % (team_name, str(e)))
+            except (KeyError, TypeError), e:
+                logging.error('repo %s has problems with team roster %s' % (team_name, str(e)))
 
             # save path updates to yaml file
             team_yaml_file = get_yaml_path(team_name)
@@ -233,25 +233,28 @@ def pns_to_xlsx(sections, teams):
         if team_data:
             worksheet.write(columns['Company Name'] % row, team_data['company']['name'])
             worksheet.write(columns['Product Narrative'] % row, team_data['product_narrative'])
-            team_members = team_data['team']['roster']
             names, emails, programs, = '', '', ''
-            for member in team_members:
-                try:
-                    if member['name']:
-                        names += member['name'] + '\n'
-                    else:
-                        logging.error('team %s missing name for some members' % team)
-                    if member['email']:
-                        emails += member['email'] + '\n'
-                    else:
-                        logging.error('team %s missing email for some members' % team)
-                    if member['program']:
-                        programs += member['program'] + '\n'
-                    else:
-                        logging.error('team %s missing program for some members' % team)
-                except (KeyError), e:
-                    print 'team %s missing info for some members' % team
-                    logging.error('team %s missing info for some members' % team)
+            try:
+                team_members = team_data['team']['roster']
+                for member in team_members:
+                    try:
+                        if member['name']:
+                            names += member['name'] + '\n'
+                        else:
+                            logging.error('team %s missing name for some members' % team)
+                        if member['email']:
+                            emails += member['email'] + '\n'
+                        else:
+                            logging.error('team %s missing email for some members' % team)
+                        if member['program']:
+                            programs += member['program'] + '\n'
+                        else:
+                            logging.error('team %s missing program for some members' % team)
+                    except (KeyError), e:
+                        logging.error('team %s missing info for some members' % team)
+            except (KeyError, TypeError), e:
+                logging.error('error in roster for team %s' % team)
+
 
             worksheet.write(columns['Team Members'] % row, names)
             worksheet.write(columns['Emails'] % row, emails)

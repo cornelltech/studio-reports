@@ -26,6 +26,7 @@ INDIVIDUAL_PHOTOS_DIR_NAME = "individual_pictures"
 # TODO: deprecate in favor of futuristic version
 # CRIT_FILE_NAME = "crit-%s.html"
 XLSX_FILE_NAME = "narratives.xlsx"
+BOOK_FILE_NAME = "book.xlsx"
 
 # new site design names
 DIRECTORY_PAGE_NAME = "index.html"

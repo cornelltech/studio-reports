@@ -37,6 +37,7 @@ if __name__ == '__main__':
 	build_buildboard.create_dir(args.dir)
 	build_buildboard.create_all_pages(args.local_data, args.semester)
 	copy_to_site_directory(constants.XLSX_FILE_NAME)
+	copy_to_site_directory(constants.BOOK_FILE_NAME)
 
     # TODO: deprecate in favor of futuristic version
 	# copy_to_site_directory(constants.CRIT_FILE_NAME % 'A')

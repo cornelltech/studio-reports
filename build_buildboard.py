@@ -264,6 +264,53 @@ def pns_to_xlsx(sections, teams):
         row += 1
     workbook.close()
 
+def create_book_data(teams):
+    workbook = xlsxwriter.Workbook(os.path.join(constants.PWD,
+                                    constants.OUTPUT_DIR_NAME,
+                                    constants.BOOK_FILE_NAME))
+    worksheet = workbook.add_worksheet()
+    columns = {'Team Name': 'A%d', 'How Might We': 'B%d', 'Product Narrative': 'C%d',
+                'Team Members': 'D%d', 'Team Programs': 'E%d', 'Company Logo': 'F%d',
+                'Team Photo': 'G%d', 'Team ID': 'H%d'}
+    row = 1
+    for col in columns:
+        worksheet.write(columns[col] % row, col)
+
+    for team in teams:
+        worksheet.write(columns['Team ID'] % row, team)
+        team_data = teams[team]
+        if team_data:
+            names, programs, = '', ''
+            try:
+                worksheet.write(columns['Team Name'] % row, team_data['company']['name'])
+                worksheet.write(columns['Product Narrative'] % row, team_data['product_narrative'])
+                worksheet.write(columns['How Might We'] % row, team_data['product_hmw'])
+                worksheet.write(columns['Company Logo'] % row, team_data['company']['logo'])
+                worksheet.write(columns['Team Photo'] % row, team_data['team']['picture'])
+                team_members = team_data['team']['roster']
+                for member in team_members:
+                    try:
+                        if member['name']:
+                            names += member['name'] + '\n'
+                        else:
+                            logging.error('team %s missing name for some members' % team)
+                        if member['program']:
+                            programs += member['program'] + '\n'
+                        else:
+                            logging.error('team %s missing program for some members' % team)
+                    except (KeyError), e:
+                        logging.error('team %s missing info for some members' % team)
+            except (KeyError, TypeError), e:
+                logging.error('error in roster for team %s' % team)
+
+
+            worksheet.write(columns['Team Members'] % row, names)
+            worksheet.write(columns['Team Programs'] % row, programs)
+        else:
+            logging.error('team %s has no roster' % team)
+        row += 1
+    workbook.close()
+
 # TODO: deprecate this in favor of a futuristic model
 def build_crit_pages(teams, teams_metadata):
     def create_crit_group_pages(group, data):
@@ -308,6 +355,7 @@ def create_all_pages(local_data, semester):
     teams = load_teams_data(team_names)
     build_new_site_design(teams, semester)
     pns_to_xlsx(sections, teams)
+    create_book_data(teams)
 
 def write_template_output_to_file(output, dst):
     if output:

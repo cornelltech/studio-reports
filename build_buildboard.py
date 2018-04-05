@@ -282,11 +282,6 @@ def create_book_data(teams):
         if team_data:
             names, programs, = '', ''
             try:
-                worksheet.write(columns['Team Name'] % row, team_data['company']['name'])
-                worksheet.write(columns['Product Narrative'] % row, team_data['product_narrative'])
-                worksheet.write(columns['How Might We'] % row, team_data['product_hmw'])
-                worksheet.write(columns['Company Logo'] % row, team_data['company']['logo'])
-                worksheet.write(columns['Team Photo'] % row, team_data['team']['picture'])
                 team_members = team_data['team']['roster']
                 for member in team_members:
                     try:
@@ -302,10 +297,28 @@ def create_book_data(teams):
                         logging.error('team %s missing info for some members' % team)
             except (KeyError, TypeError), e:
                 logging.error('error in roster for team %s' % team)
-
-
             worksheet.write(columns['Team Members'] % row, names)
             worksheet.write(columns['Team Programs'] % row, programs)
+            try:
+                worksheet.write(columns['Team Name'] % row, team_data['company']['name'])
+            except (KeyError), e:
+                logging.error('error in company name for team %s' % team)
+            try:
+                worksheet.write(columns['Product Narrative'] % row, team_data['product_narrative'])
+            except (KeyError), e:
+                logging.error('error in product_narrative for team %s' % team)
+            try:
+                worksheet.write(columns['How Might We'] % row, team_data['product_hmw'])
+            except (KeyError), e:
+                logging.error('error in product_hmw for team %s' % team)
+            try:
+                worksheet.write(columns['Company Logo'] % row, team_data['company']['logo'])
+            except (KeyError), e:
+                logging.error('error in company logo for team %s' % team)
+            try:
+                worksheet.write(columns['Team Photo'] % row, team_data['team']['picture'])
+            except (KeyError), e:
+                logging.error('error in team photo for team %s' % team)
         else:
             logging.error('team %s has no roster' % team)
         row += 1

@@ -12,6 +12,6 @@ PyJWT==1.5.3
 python-dotenv==0.6.5
 PyYAML==3.12
 requests==2.18.4
-urllib3==1.22
+urllib3==1.26.5
 Werkzeug==0.12.2
 XlsxWriter==1.0.2
